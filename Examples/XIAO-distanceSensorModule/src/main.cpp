@@ -1,31 +1,38 @@
-#include <Arduino.h>
-#include <Wire.h>
+#include <PCA95x5.h>
+#include <VL53L0X.h>
 
-#include "./lib/clsPCA9555.h"
+const int numOfSensors = 4;
+const char firstAddr = 0x30;
 
-#define PCA9555_ADDR 0x20
+VL53L0X distanceSensor[4];
+
+PCA9555 ioex;
+
+const int xshutPin[] = {P02, P01, P00, P17};
 
 void deviceScanner(void);
 
-PCA9555 xshut(PCA9555_ADDR);
+void ioexInit(void);
+void distanceSensorInit(void);
 
 void setup() {
-    // initialize serial communication and i2c
-    Serial.begin(9600);
-    Wire.begin();
+    Serial.begin(2000000);  // PCとの通信を開通
+    Wire.begin();           // I2C通信を開通
 
-    while (Serial.read() == -1) {
-    }
-
-    // scan for i2c devices
-    deviceScanner();
+    ioexInit();  // GPIOエキスパンダの初期化
+    distanceSensorInit();
 }
 
 void loop() {
-    // put your main code here, to run repeatedly:
+    for (int i = 0; i < numOfSensors; i++) {
+        Serial.print(distanceSensor[i].readRangeContinuousMillimeters());
+        Serial.print("\t");
+    }
+
+    Serial.println();
 }
 
-void deviceScanner(void) {
+void deviceScanner(void) {  //デバイスの接続チェック
     char error, address;
     int nDevices;
 
@@ -54,6 +61,38 @@ void deviceScanner(void) {
     else
         Serial.println("done\n");
 
-    while (1)
-        ;
+    delay(1000);
+}
+
+void ioexInit(void) {
+    ioex.attach(Wire);
+    ioex.polarity(PCA95x5::Polarity::ORIGINAL_ALL);
+    ioex.direction(PCA95x5::Direction::OUT_ALL);
+    ioex.write(PCA95x5::Level::L_ALL);
+}
+
+void distanceSensorInit(void) {
+    for (int i = 0; i < numOfSensors; i++) {
+        ioex.write(xshutPin[i], PCA95x5::Level::H);  // VL53L0Xの電源をON
+        distanceSensor[i].setTimeout(500);
+
+        if (!distanceSensor[i].init()) {  // ERROR
+            Serial.println("Failed to detect and initialize sensor!");
+            while (1) {  // FIXME:無限ループは流石にまずいので修正すること
+            }
+        }
+
+        distanceSensor[i].setAddress(firstAddr + i);  //順にアドレスを割り当て
+
+        //測定距離を広げる
+        distanceSensor[i].setSignalRateLimit(0.1);
+        distanceSensor[i].setVcselPulsePeriod(VL53L0X::VcselPeriodPreRange, 18);
+        distanceSensor[i].setVcselPulsePeriod(VL53L0X::VcselPeriodFinalRange,
+                                              14);
+
+        distanceSensor[i].setMeasurementTimingBudget(20000);  //高速化
+        // distanceSensor[i].setMeasurementTimingBudget(200000);//精度重視
+
+        distanceSensor[i].startContinuous();  //計測開始
+    }
 }

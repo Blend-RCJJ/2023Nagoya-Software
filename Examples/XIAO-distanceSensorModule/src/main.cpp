@@ -1,14 +1,14 @@
 #include <PCA95x5.h>
 #include <VL53L0X.h>
 
-const int numOfSensors = 4;
+const int numOfSensors = 12;
 const char firstAddr = 0x30;
 
-VL53L0X distanceSensor[4];
+VL53L0X distanceSensor[numOfSensors];
 
 PCA9555 ioex;
 
-const int xshutPin[] = {P02, P01, P00, P17};
+const int xshutPin[] = {P02, P01, P00, P17,P16,P15,P14,P13,P12,P11,P04,P03};
 
 void deviceScanner(void);
 

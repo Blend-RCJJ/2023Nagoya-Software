@@ -4,6 +4,8 @@
 const int ledPin = A0;
 const int numOfLeds = 4;
 
+const int sensor = A1;
+
 Adafruit_NeoPixel strip =
     Adafruit_NeoPixel(A0, numOfLeds, NEO_GRB + NEO_KHZ800);
 
@@ -11,6 +13,10 @@ void setup() {
     // Initialize the NeoPixels
     strip.begin();
     strip.show();
+    
+    
+    pinMode(sensor,INPUT);
+    Serial.begin(9600);
 
     for (int i = 0; i < numOfLeds; i++) {
         strip.setPixelColor(i, 255, 255, 255);
@@ -20,5 +26,6 @@ void setup() {
 }
 
 void loop() {
-    // put your main code here, to run repeatedly:
+    int i = analogRead(sensor);
+    Serial.println(i);
 }

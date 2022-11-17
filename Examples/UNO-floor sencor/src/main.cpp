@@ -1,13 +1,31 @@
 #include <Arduino.h>
+#include <Adafruit_NeoPixel.h>
+
+const int ledPin = A0;
+const int numOfLeds = 4;
+
 const int sensor = A1;
+
+Adafruit_NeoPixel strip =
+    Adafruit_NeoPixel(A0, numOfLeds, NEO_GRB + NEO_KHZ800);
+
 void setup() {
-  pinMode(sensor,INPUT);
-  Serial.begin(9600);
-  // put your setup code here, to run once:
+    // Initialize the NeoPixels
+    strip.begin();
+    strip.show();
+    
+    
+    pinMode(sensor,INPUT);
+    Serial.begin(9600);
+
+    for (int i = 0; i < numOfLeds; i++) {
+        strip.setPixelColor(i, 255, 255, 255);
+    }
+    strip.setBrightness(50);
+    strip.show();
 }
 
 void loop() {
-  int i = analogRead(sensor);
-  Serial.println(i);
-  // put your main code here, to run repeatedly:
+    int i = analogRead(sensor);
+    Serial.println(i);
 }

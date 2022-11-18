@@ -17,11 +17,11 @@ void setup() {
     strip.show();
 
     pinMode(sensor, INPUT);
-    Serial.begin(9600);
+    Serial.begin(115200);
 }
 
-long color[3] = {strip.Color(255, 0, 0), strip.Color(0, 20, 0),
-                 strip.Color(0, 0, 230)};
+long color[3] = {strip.Color(255, 0, 0), strip.Color(0, 210, 0),
+                 strip.Color(0, 0, 220)};
 
 void loop() {
     for (int j = 0; j < 3; j++) {
@@ -33,8 +33,8 @@ void loop() {
 
         delay(5);
         val[j] = analogRead(sensor);
-        Serial.print(val[j]);
-        Serial.print("\t");
+        // Serial.print(val[j]);
+        // Serial.print("\t");
     }
 
     if (val[0] < val[1]) {
@@ -51,14 +51,14 @@ void loop() {
         }
     }
 
-    // int cutoff = 600;
-    // if(val[0]<=cutoff){
-    //     if(val[1]<=cutoff){
-    //         if(val[2]<=cutoff){
-    //             Serial.print("\tやっぱり白かも");
-    //         }
-    //     }
-    // }
+    int cutoff = 130;
+    if(val[0]<=cutoff){
+        if(val[1]<=cutoff){
+            if(val[2]<=cutoff){
+                Serial.print("\tやっぱり白かも");
+            }
+        }
+    }
 
     Serial.println("");
 }

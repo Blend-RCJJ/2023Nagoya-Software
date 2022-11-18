@@ -2,7 +2,7 @@
 #include <VL53L0X.h>
 
 const int numOfSensors = 12;
-const char firstAddr   = 0x30;
+const char firstAddr = 0x30;
 
 VL53L0X distanceSensor[numOfSensors];
 
@@ -25,12 +25,22 @@ void setup() {
 }
 
 void loop() {
-    for (int i = 0; i < numOfSensors; i++) {
-        Serial.print(distanceSensor[i].readRangeContinuousMillimeters());
-        Serial.print("\t");
-    }
+    // for (int i = 0; i < numOfSensors; i++) {
+    //     Serial.print(distanceSensor[i].readRangeContinuousMillimeters());
+    //     Serial.print("\t");
+    // }
+    Serial.write('F');
+    Serial.write('l');
 
-    Serial.println();
+    int temp[12] = {0};
+    for (int i = 0; i < numOfSensors; i++) {
+        temp[i] = distanceSensor[i].readRangeContinuousMillimeters();
+    }
+    for (int i = 0; i < numOfSensors; i++) {
+        Serial.write(highByte(temp[i]) & 0B01111111);
+        Serial.write(lowByte(temp[i]));
+    }
+    delay(30);
 }
 
 void deviceScanner(void) {  //デバイスの接続チェック

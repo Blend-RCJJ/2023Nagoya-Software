@@ -40,7 +40,7 @@ void loop() {
         Serial.write(highByte(temp[i]) & 0B01111111);
         Serial.write(lowByte(temp[i]));
     }
-    delay(30);
+    delay(50);
 }
 
 void deviceScanner(void) {  //デバイスの接続チェック

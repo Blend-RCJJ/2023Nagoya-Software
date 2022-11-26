@@ -5,11 +5,8 @@
 #include <Adafruit_BNO055.h>
 
 /* Set the delay between fresh samples */
-#define BNO055_SAMPLERATE_DELAY_MS (100)
+#define BNO055_SAMPLERATE_DELAY_MS (2)
 
-// Check I2C device address and correct line below (by default address is 0x29
-// or 0x28)
-//                                   id, address
 Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28, &Wire);
 
 /**************************************************************************/
@@ -101,9 +98,12 @@ void displayCalStatus(void) {
 */
 /**************************************************************************/
 void setup(void) {
+        Wire.setSDA(PB9);
+    Wire.setSCL(PB8);
+    Wire.begin();
     Serial.setTx(PA9);
     Serial.setRx(PA10);
-    Serial.begin(115200);
+    Serial.begin(9600);
 
     while (!Serial) delay(10);  // wait for serial port to open!
 
@@ -112,7 +112,8 @@ void setup(void) {
 
     /* Initialise the sensor */
     if (!bno.begin()) {
-        /* There was a problem detecting the BNO055 ... check your connections
+        /* There was a problem detecting the BNO055 ... check your
+        connections
          */
         Serial.print(
             "Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
@@ -145,13 +146,13 @@ void loop(void) {
     /* Display the floating point data */
     Serial.print("X: ");
     Serial.print(event.orientation.x, 4);
-    Serial.print("\tY: ");
-    Serial.print(event.orientation.y, 4);
-    Serial.print("\tZ: ");
-    Serial.print(event.orientation.z, 4);
+    // Serial.print("\tY: ");
+    // Serial.print(event.orientation.y, 4);
+    // Serial.print("\tZ: ");
+    // Serial.print(event.orientation.z, 4);
 
     /* Optional: Display calibration status */
-    displayCalStatus();
+    // displayCalStatus();
 
     /* Optional: Display sensor status (debug only) */
     // displaySensorStatus();

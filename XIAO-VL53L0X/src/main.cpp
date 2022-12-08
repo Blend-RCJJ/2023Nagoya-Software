@@ -26,18 +26,24 @@ void setup() {
 }
 
 void loop() {
-    Serial.write('F');
-    Serial.write('l');
+    int rawData[12] = {0};
+    for (int i = 0; i < numOfSensors; i++) {
+        rawData[i] = distanceSensor[i].readRangeContinuousMillimeters();
+    }
 
-    int temp[12] = {0};
+    int checkDigit = 0;
+
+    Serial1.write("VL");
     for (int i = 0; i < numOfSensors; i++) {
-        temp[i] = distanceSensor[i].readRangeContinuousMillimeters();
+        Serial1.write(checkDigit += highByte(rawData[i]));
+        Serial1.write(checkDigit += lowByte(rawData[i]));
+
+        Serial.print(rawData[i]);
+        Serial.print("\t");
     }
-    for (int i = 0; i < numOfSensors; i++) {
-        Serial.write(highByte(temp[i]) & 0B01111111);
-        Serial.write(lowByte(temp[i]));
-    }
-    delay(50);
+    Serial1.write(checkDigit % 256);
+
+    Serial.print("\n");
 }
 
 bool deviceScanner(void) {
@@ -82,7 +88,7 @@ void ioexInit(void) {
 void distanceSensorInit(void) {
     for (int i = 0; i < numOfSensors; i++) {
         ioex.write(xshutPin[i], PCA95x5::Level::H);  // VL53L0Xの電源をON
-        distanceSensor[i].setTimeout(500);
+        distanceSensor[i].setTimeout(100);
 
         if (!distanceSensor[i].init()) {  // ERROR
             Serial.println("ERR1: Failed to detect and initialize sensor!");

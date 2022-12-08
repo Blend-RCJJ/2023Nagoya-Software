@@ -13,10 +13,11 @@ class VL53L0X {
 
     HardwareSerial *serialPtr;
 
-    int distance[12] = {0};
+    int val[12] = {0};
     int getDistance();
 
    private:
+   int _valTemp[12] = {0};
 };
 
 #endif

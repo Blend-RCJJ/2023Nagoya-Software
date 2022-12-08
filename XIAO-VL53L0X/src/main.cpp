@@ -35,15 +35,15 @@ void loop() {
 
     Serial1.write("VL");
     for (int i = 0; i < numOfSensors; i++) {
-        Serial1.write(checkDigit += highByte(rawData[i]));
-        Serial1.write(checkDigit += lowByte(rawData[i]));
+        Serial1.write(highByte(rawData[i]) & 0xFF);
+        Serial1.write(lowByte(rawData[i]) & 0xFF);
 
-        Serial.print(rawData[i]);
-        Serial.print("\t");
+        checkDigit += highByte(rawData[i]) & 0xFF;
+        checkDigit += lowByte(rawData[i]) & 0xFF;
     }
     Serial1.write(checkDigit % 256);
 
-    Serial.print("\n");
+    delay(1);
 }
 
 bool deviceScanner(void) {

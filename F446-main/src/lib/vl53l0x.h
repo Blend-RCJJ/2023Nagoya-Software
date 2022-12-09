@@ -9,7 +9,7 @@
 
 class VL53L0X {
    public:
-    VL53L0X();
+    VL53L0X(HardwareSerial *p);
 
     HardwareSerial *serialPtr;
 

@@ -1,7 +1,7 @@
 #include "bno055.h"
 
-BNO055::BNO055() {
-    *sensorPtr = NULL;
+BNO055::BNO055(Adafruit_BNO055 *p) {
+    sensorPtr = p;
 }
 
 void BNO055::init(void) {

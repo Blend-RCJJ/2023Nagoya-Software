@@ -2,8 +2,8 @@
 
 extern HardwareSerial uart1;
 
-VL53L0X::VL53L0X() {
-    serialPtr = NULL;
+VL53L0X::VL53L0X(HardwareSerial *p) {
+    serialPtr = p;
 }
 
 int VL53L0X::getDistance(void) {
@@ -30,7 +30,7 @@ int VL53L0X::getDistance(void) {
             }
         }
 
-        while(serialPtr->available() > 0) {
+        while (serialPtr->available() > 0) {
             serialPtr->read();
         }
 

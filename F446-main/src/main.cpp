@@ -40,6 +40,5 @@ void setup() {
 void loop() {
     int battery = 100;
     led.battery(1);
-
     led.show();
 }

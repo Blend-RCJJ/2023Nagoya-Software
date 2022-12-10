@@ -1,5 +1,7 @@
 #include <Arduino.h>
-#include <Adafruit_NeoPixel.h>
+
+#include "./lib/IO-Kit.h"
+#include "./lib/RTOS-Kit.h"
 
 HardwareSerial uart1(PA10, PA9);
 HardwareSerial uart4(PA1, PA0);
@@ -8,6 +10,7 @@ HardwareSerial uart4(PA1, PA0);
 #include "./lib/vl53l0x.h"
 #include "./lib/bno055.h"
 #include "./lib/ws2812b.h"
+#include "./lib/mlt8530.h"
 
 Adafruit_NeoPixel stripL = Adafruit_NeoPixel(7, PA15, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripR = Adafruit_NeoPixel(7, PB13, NEO_GRB + NEO_KHZ800);
@@ -23,7 +26,56 @@ WS2812B led(50);
 
 SMS_STS st;
 
-const int speakerPin = PB6;
+MLT8530 speaker;
+
+RTOS_Kit app;
+
+TaskHandle_t buzzerAppHandler;
+
+void buzzerApp(App) {
+    while (1) {
+        speaker.setFrequncy(440);
+        delay(100);
+        speaker.mute();
+        delay(100);
+    }
+}
+
+void blinkApp(App) {
+    while (1) {
+        pinMode(PB12, OUTPUT);
+        digitalWrite(PB12, HIGH);
+        delay(150);
+        digitalWrite(PB12, LOW);
+        delay(150);
+    }
+}
+
+void mainApp(App) {
+    uart1.println("Hello World!");
+    delay(3000);
+
+    uart1.println("buzzerApp再開");
+    app.start(buzzerApp);
+    delay(3000);
+
+    uart1.println("buzzerApp停止, blinkApp再開");
+    app.stop(buzzerApp);
+    app.start(blinkApp);
+    delay(3000);
+
+    uart1.println("All of apps Stop");
+    app.stop(buzzerApp);
+    app.stop(blinkApp);
+    delay(3000);
+
+    uart1.println("All of apps Start");
+    app.start(buzzerApp);
+    app.start(blinkApp);
+
+    while (1) {
+    }
+}
 
 void setup() {
     Wire.setSDA(PB9);
@@ -35,10 +87,14 @@ void setup() {
     uart1.setRx(PA10);
     uart1.setTx(PA9);
     uart1.begin(115200);
+
+    app.create(mainApp);
+    app.create(blinkApp);
+    app.create(buzzerApp);
+
+    app.startRTOS();
 }
 
 void loop() {
-    int battery = 100;
-    led.battery(1);
-    led.show();
+    // Nothing to do.
 }

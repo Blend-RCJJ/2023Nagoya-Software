@@ -25,6 +25,7 @@ SMS_STS st;
 
 const int speakerPin = PB6;
 
+
 void setup() {
     Wire.setSDA(PB9);
     Wire.setSCL(PB8);

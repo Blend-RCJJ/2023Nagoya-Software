@@ -4,6 +4,7 @@ extern HardwareSerial uart1;
 
 VL53L0X::VL53L0X(HardwareSerial *p) {
     serialPtr = p;
+    serialPtr->begin(1000000);
 }
 
 int VL53L0X::getDistance(void) {

@@ -72,5 +72,5 @@ void loop() {
 
     stripTop.show();
 
-    delay(10);
+    delay(20);
 }

@@ -1,5 +1,8 @@
 #include <Arduino.h>
 #include <Adafruit_NeoPixel.h>
+#include <STM32FreeRTOS.h>
+
+#include "./lib/IO-Kit.h"
 
 HardwareSerial uart1(PA10, PA9);
 HardwareSerial uart4(PA1, PA0);
@@ -8,6 +11,7 @@ HardwareSerial uart4(PA1, PA0);
 #include "./lib/vl53l0x.h"
 #include "./lib/bno055.h"
 #include "./lib/ws2812b.h"
+#include "./lib/mlt8530.h"
 
 Adafruit_NeoPixel stripL = Adafruit_NeoPixel(7, PA15, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripR = Adafruit_NeoPixel(7, PB13, NEO_GRB + NEO_KHZ800);
@@ -23,7 +27,7 @@ WS2812B led(50);
 
 SMS_STS st;
 
-const int speakerPin = PB6;
+MLT8530 speaker;
 
 void setup() {
     Wire.setSDA(PB9);
@@ -38,6 +42,11 @@ void setup() {
 }
 
 void loop() {
+    speaker.setFrequncy(440);
+    delay(1000);
+    speaker.mute();
+    delay(1000);
+
     int battery = 100;
     led.battery(1);
     led.show();

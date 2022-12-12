@@ -35,39 +35,39 @@ TaskHandle_t buzzerAppHandler;
 void buzzerApp(App) {
     while (1) {
         speaker.setFrequncy(440);
-        delay(100);
+        app.delay(100);
         speaker.mute();
-        delay(100);
+        app.delay(100);
     }
 }
 
 void blinkApp(App) {
+    pinMode(PB12, OUTPUT);
     while (1) {
-        pinMode(PB12, OUTPUT);
         digitalWrite(PB12, HIGH);
-        delay(150);
+        app.delay(150);
         digitalWrite(PB12, LOW);
-        delay(150);
+        app.delay(150);
     }
 }
 
 void mainApp(App) {
     uart1.println("Hello World!");
-    delay(3000);
+    app.delay(3000);
 
     uart1.println("buzzerApp再開");
     app.start(buzzerApp);
-    delay(3000);
+    app.delay(3000);
 
     uart1.println("buzzerApp停止, blinkApp再開");
     app.stop(buzzerApp);
     app.start(blinkApp);
-    delay(3000);
+    app.delay(3000);
 
     uart1.println("All of apps Stop");
     app.stop(buzzerApp);
     app.stop(blinkApp);
-    delay(3000);
+    app.delay(3000);
 
     uart1.println("All of apps Start");
     app.start(buzzerApp);
@@ -88,10 +88,11 @@ void setup() {
     uart1.setTx(PA9);
     uart1.begin(115200);
 
-    app.create(mainApp);
+    app.create(mainApp, firstPriority);
     app.create(blinkApp);
     app.create(buzzerApp);
 
+    app.start(mainApp);
     app.startRTOS();
 }
 

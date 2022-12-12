@@ -25,6 +25,7 @@ SMS_STS st;
 
 const int speakerPin = PB6;
 
+
 void setup() {
     Wire.setSDA(PB9);
     Wire.setSCL(PB8);
@@ -38,7 +39,9 @@ void setup() {
 }
 
 void loop() {
-    int battery = 100;
-    led.battery(1);
+    //int battery = 100;
+    //led.battery(1);
+    led.setAllColor(led.yellow);
     led.show();
+    led.setLeftColor(led.green);
 }

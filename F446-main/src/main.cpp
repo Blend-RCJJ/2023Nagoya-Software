@@ -47,15 +47,27 @@ void VictimDectationLED(App) {
 }  // 被災者発見シグナルApp
 
 void mainApp(App) {
-    uart1.println("LEDApp開始");
-    app.start(VictimDectationLED);
+    // uart1.println("LEDApp開始");
+    // app.start(VictimDectationLED);
 
-    while (1) {
-        app.delay(100);
-    }
+    // while (1) {
+    //     app.delay(100);
+    // }
 }
 
 void setup() {
+    led.start(24);
+    led.show();
+
+    led.leftBootLED(7);
+    led.show();
+
+    led.rightBootLED(7);
+    led.show();
+
+    led.tktk(100000);
+    led.show();
+
     Wire.setSDA(PB9);
     Wire.setSCL(PB8);
     Wire.begin();

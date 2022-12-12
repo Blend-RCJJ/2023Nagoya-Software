@@ -102,6 +102,75 @@ void WS2812B::battery(int percent) {
     // 寝れぬなら　書くまで待とう　プログラム by 家康
 }
 
+void WS2812B::start(int numOfLED) {
+    for (int numOfLED = 0; numOfLED <= 24; numOfLED++) {
+        if (numOfLED % 3 == 0) {
+            delay(25);
+            stripUI.setPixelColor(numOfLED, 255, 0, 0);
+            show();
+        } else if (numOfLED % 3 == 1) {
+            delay(50);
+            stripUI.setPixelColor(numOfLED, 0, 255, 0);
+            show();
+        } else {
+            delay(75);
+            stripUI.setPixelColor(numOfLED, 100, 100, 100);
+            show();
+        }
+    }
+    show();
+}
+
+void WS2812B::leftBootLED(int LEDOfLeft) {
+    for (int LEDOfLeft = 7; LEDOfLeft >= 0; LEDOfLeft--) {
+        if (LEDOfLeft % 3 == 0) {
+            delay(25);
+            stripL.setPixelColor(LEDOfLeft, 255, 0, 0);
+            show();
+        } else if (LEDOfLeft % 3 == 1) {
+            delay(50);
+            stripL.setPixelColor(LEDOfLeft, 0, 255, 0);
+            show();
+        } else {
+            delay(75);
+            stripL.setPixelColor(LEDOfLeft, 100, 100, 100);
+            show();
+        }
+    }
+    show();
+}
+
+void WS2812B::rightBootLED(int LEDofRight) {
+    for (int LEDOfRight = 0; LEDOfRight <= 7; LEDOfRight++) {
+        if (LEDOfRight % 3 == 0) {
+            delay(25);
+            stripR.setPixelColor(LEDOfRight, 255, 0, 0);
+            show();
+        } else if (LEDOfRight % 3 == 1) {
+            delay(50);
+            stripR.setPixelColor(LEDOfRight, 0, 255, 0);
+            show();
+        } else {
+            delay(75);
+            stripR.setPixelColor(LEDOfRight, 100, 100, 100);
+            show();
+        }
+    }
+    show();
+}
+
+void WS2812B::tktk(int number){
+    while(1){
+    static int number = 0;
+     setUIBrightness(127 * sin(number / 50.0) + 127);
+        setRightBrightness(127 * sin(number / 50.0) + 127);
+        setLeftBrightness(127 * sin(number / 50.0) + 127);
+        show();
+        number++;
+    }
+
+}
+
 void WS2812B::show(void) {
     stripR.show();
     stripL.show();

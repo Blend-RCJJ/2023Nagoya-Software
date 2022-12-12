@@ -5,6 +5,25 @@ extern Adafruit_NeoPixel stripR;
 extern Adafruit_NeoPixel stripUI;
 extern Adafruit_NeoPixel stripTop;
 
+unsigned long WS2812B::colorRGB(int red, int green, int blue){
+    return stripR.Color(red,green,blue);
+}
+unsigned long WS2812B::colorHSV(int hue, int saturation, int brightness){
+    return stripR.ColorHSV(hue*256,saturation,brightness);
+}
+void WS2812B::setAllColor(unsigned long color){
+    for(int i = 0; i < 24; i++){
+    stripUI.setPixelColor(i,color);
+    }
+}
+    
+    void WS2812B::setLeftColor(unsigned long color){
+    for(int i = 0; i < 7; i++){
+    stripL.setPixelColor(i,color);
+    }
+
+}
+
 WS2812B::WS2812B(int brightness) {
     stripR.begin();
     stripR.setBrightness(brightness);

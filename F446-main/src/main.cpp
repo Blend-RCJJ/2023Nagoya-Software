@@ -39,7 +39,9 @@ void setup() {
 }
 
 void loop() {
-    int battery = 100;
-    led.battery(1);
+    //int battery = 100;
+    //led.battery(1);
+    led.setAllColor(led.yellow);
     led.show();
+    led.setLeftColor(led.green);
 }

@@ -6,11 +6,17 @@
 HardwareSerial uart1(PA10, PA9);
 HardwareSerial uart4(PA1, PA0);
 
+RTOS_Kit app;
+
 #include "./SCServo/SCServo.h"
 #include "./lib/bno055.h"
 #include "./lib/mlt8530.h"
+<<<<<<< HEAD
 #include "./lib/vl53l0x.h"
 #include "./lib/ws2812b.h"
+=======
+#include "./lib/switchUI.h"
+>>>>>>> develop
 
 Adafruit_NeoPixel stripL   = Adafruit_NeoPixel(7, PA15, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripR   = Adafruit_NeoPixel(7, PB13, NEO_GRB + NEO_KHZ800);
@@ -21,14 +27,12 @@ Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28, &Wire);
 
 VL53L0X distanceSensor(&uart4);
 BNO055 gyro(&bno);
-
 WS2812B led(50);
-
-SMS_STS st;
-
 MLT8530 speaker;
+SMS_STS st;
+SWITCHUI ui;
 
-RTOS_Kit app;
+#include "./app/sensorApp.h"
 
 void VictimDectationLED(App) {
     while (1) {
@@ -80,8 +84,10 @@ void setup() {
 
     app.create(mainApp, firstPriority);
     app.create(VictimDectationLED);
+    app.create(inputMonitoringApp, firstPriority);
 
     app.start(mainApp);
+    app.start(inputMonitoringApp);
     app.startRTOS();
 }
 

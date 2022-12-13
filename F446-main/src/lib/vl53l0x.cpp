@@ -41,3 +41,10 @@ int VL53L0X::getDistance(void) {
         return 1;
     }
 }
+
+void VL53L0X::calcVector(void){
+    for(int n = 0; n < 12; n++){
+        vecX[n] = val[n]*sin(radians(n*30));
+        vecY[n] = val[n]*cos(radians(n*30));
+    }
+}

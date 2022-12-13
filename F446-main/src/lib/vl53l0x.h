@@ -14,10 +14,14 @@ class VL53L0X {
     HardwareSerial *serialPtr;
 
     int val[12] = {0};
+
+    int vecX[12] = {0};
+    int vecY[12] = {0};
+
     int getDistance();
+    void calcVector(void);  // 定義しときました〜
 
    private:
-   int _valTemp[12] = {0};
+    int _valTemp[12] = {0};
 };
-
 #endif

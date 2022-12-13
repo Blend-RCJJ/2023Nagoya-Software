@@ -20,12 +20,12 @@ extern SWITCHUI ui;
 void inputMonitoringApp(App) {
     while (1) {
         distanceSensor.getDistance();
+        distanceSensor.calcVector();
+
         gyro.read();
         ui.read();
 
         app.delay(10);
-
-        uart1.println("hello!");
     }
 }
 

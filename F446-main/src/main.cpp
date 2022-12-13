@@ -11,12 +11,9 @@ RTOS_Kit app;
 #include "./SCServo/SCServo.h"
 #include "./lib/bno055.h"
 #include "./lib/mlt8530.h"
-<<<<<<< HEAD
 #include "./lib/vl53l0x.h"
 #include "./lib/ws2812b.h"
-=======
 #include "./lib/switchUI.h"
->>>>>>> develop
 
 Adafruit_NeoPixel stripL   = Adafruit_NeoPixel(7, PA15, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripR   = Adafruit_NeoPixel(7, PB13, NEO_GRB + NEO_KHZ800);

@@ -16,8 +16,14 @@ class WS2812B {
     WS2812B(int brightness);
 
     void battery(int percent);
+    void start(int numOfLED);
+    void leftBootLED(int LEDOfLeft);
+    void rightBootLED(int LEDOfRight);
+    void tktk(int number);
 
     void show(void);
+
+    int maxBrightness;
 
     unsigned long colorRGB(int red, int green, int blue);
     unsigned long colorHSV(int hue, int saturation, int brightness);
@@ -27,8 +33,15 @@ class WS2812B {
     unsigned long blue = colorHSV(180,255,255);
     unsigned long pink = colorHSV(0,125,255);
     unsigned long yellow = colorHSV(45,255,255);
-    void setAllColor(unsigned long color);
+    unsigned long white = colorHSV(255,0,255);
+
+    void setUIColor(unsigned long color);
     void setLeftColor(unsigned long color);
+    void setRightColor(unsigned long color);
+
+    void setUIBrightness(int brightness);
+    void setRightBrightness(int brightness);
+    void setLeftBrightness(int brightness);
 
    private:
 };

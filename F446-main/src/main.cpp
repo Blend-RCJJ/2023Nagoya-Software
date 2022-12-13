@@ -6,11 +6,14 @@
 HardwareSerial uart1(PA10, PA9);
 HardwareSerial uart4(PA1, PA0);
 
+RTOS_Kit app;
+
 #include "./SCServo/SCServo.h"
 #include "./lib/vl53l0x.h"
 #include "./lib/bno055.h"
 #include "./lib/ws2812b.h"
 #include "./lib/mlt8530.h"
+#include "./lib/switchUI.h"
 
 Adafruit_NeoPixel stripL = Adafruit_NeoPixel(7, PA15, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripR = Adafruit_NeoPixel(7, PB13, NEO_GRB + NEO_KHZ800);
@@ -21,24 +24,22 @@ Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28, &Wire);
 
 VL53L0X distanceSensor(&uart4);
 BNO055 gyro(&bno);
-
 WS2812B led(50);
-
-SMS_STS st;
-
 MLT8530 speaker;
+SMS_STS st;
+SWITCHUI ui;
 
-RTOS_Kit app;
+#include "./app/sensorApp.h"
 
 TaskHandle_t buzzerAppHandler;
 
 void buzzerApp(App) {
-    while (1) {
-        speaker.setFrequncy(440);
-        app.delay(100);
-        speaker.mute();
-        app.delay(100);
-    }
+    // while (1) {
+    //     speaker.setFrequncy(440);
+    //     app.delay(100);
+    //     speaker.mute();
+    //     app.delay(100);
+    // }
 }
 
 void blinkApp(App) {
@@ -52,31 +53,19 @@ void blinkApp(App) {
 }
 
 void mainApp(App) {
-    uart1.println("Hello World!");
-    app.delay(3000);
-
-    uart1.println("buzzerApp再開");
-    app.start(buzzerApp);
-    app.delay(3000);
-
-    uart1.println("buzzerApp停止, blinkApp再開");
-    app.stop(buzzerApp);
-    app.start(blinkApp);
-    app.delay(3000);
-
-    uart1.println("All of apps Stop");
-    app.stop(buzzerApp);
-    app.stop(blinkApp);
-    app.delay(3000);
-
-    uart1.println("All of apps Start");
-    app.start(buzzerApp);
-    app.start(blinkApp);
-
     while (1) {
+        if (ui.button[0]) {
+            led.setLeftColor(led.red);
+        } else if (ui.button[1]) {
+            led.setLeftColor(led.green);
+        } else if (ui.toggle) {
+            led.setLeftColor(led.blue);
+        } else {
+            led.setLeftColor(led.yellow);
+        }
+        led.show();
     }
 }
-
 
 void setup() {
     Wire.setSDA(PB9);
@@ -91,9 +80,10 @@ void setup() {
 
     app.create(mainApp, firstPriority);
     app.create(blinkApp);
-    app.create(buzzerApp);
+    app.create(inputMonitoringApp, firstPriority);
 
     app.start(mainApp);
+    app.start(inputMonitoringApp);
     app.startRTOS();
 }
 

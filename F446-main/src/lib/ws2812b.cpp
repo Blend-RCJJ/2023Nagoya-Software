@@ -159,16 +159,18 @@ void WS2812B::rightBootLED(int LEDofRight) {
     show();
 }
 
-void WS2812B::tktk(int number){
-    while(1){
-    static int number = 0;
-     setUIBrightness(127 * sin(number / 50.0) + 127);
+void WS2812B::tktk(int number) {
+    while (1) {
+        static int number = 0;
+        setUIBrightness(127 * sin(number / 50.0) + 127);
         setRightBrightness(127 * sin(number / 50.0) + 127);
         setLeftBrightness(127 * sin(number / 50.0) + 127);
         show();
         number++;
+        if(number == 1000000){
+            break;
+        }
     }
-
 }
 
 void WS2812B::show(void) {

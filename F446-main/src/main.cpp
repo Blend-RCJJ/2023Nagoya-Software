@@ -61,9 +61,9 @@ void TurnLeft(App) {
         // st.WriteSpe(2, -5000, 0);
         // st.WriteSpe(3, 5000, 0);
         // delay(100);  // 時計回りに回転
-                     // if (gyro.deg == 90) {
-                     //     break;
-                     // }
+        // if (gyro.deg == 90) {
+        //     break;
+        // }
         // }
     }
 }
@@ -103,18 +103,41 @@ void setup() {
     uart1.begin(115200);
 
     // while (1) {
-    //     led.bootIllumination();
+    led.bootIllumination();
     //     uart1.println("bootIllumination");
     // }
 
     uart5.begin(1000000);
     st.pSerial = &uart5;
-    delay(1000);
 
-    st.unLockEprom(1);
     st.WheelMode(1);
-    st.EnableTorque(1, 1);
-    st.LockEprom(1);
+
+    for (int i = 1; i <= 4; i++) {
+        st.unLockEprom(i);
+        st.EnableTorque(i, 1);
+        st.LockEprom(i);
+    }
+
+    while (1) {
+        int val = 8000;
+        st.WriteSpe(1, val, 0);
+        delay(5);
+        st.WriteSpe(2, val, 0);
+        delay(5);
+        st.WriteSpe(3, val, 0);
+        delay(5);
+        st.WriteSpe(4, val, 0);
+        delay(1000);
+        val *= -1;
+        st.WriteSpe(1, val, 0);
+        delay(5);
+        st.WriteSpe(2, val, 0);
+        delay(5);
+        st.WriteSpe(3, val, 0);
+        delay(5);
+        st.WriteSpe(4, val, 0);
+        delay(1000);
+    }
 
     Wire.setSDA(PB9);
     Wire.setSCL(PB8);
@@ -128,7 +151,6 @@ void setup() {
     app.create(TurnLeft);
 
     app.start(mainApp);
-    app.start(Drive);
     app.start(inputMonitoringApp);
     app.startRTOS();
 }

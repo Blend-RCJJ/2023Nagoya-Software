@@ -8,9 +8,11 @@ extern Adafruit_NeoPixel stripTop;
 unsigned long WS2812B::colorRGB(int red, int green, int blue) {
     return stripR.Color(red, green, blue);
 }
+
 unsigned long WS2812B::colorHSV(int hue, int saturation, int brightness) {
     return stripR.ColorHSV(hue * 256, saturation, brightness);
 }
+
 void WS2812B::setUIColor(unsigned long color) {
     for (int i = 0; i < 24; i++) {
         stripUI.setPixelColor(i, color);
@@ -27,6 +29,20 @@ void WS2812B::setRightColor(unsigned long color) {
     for (int i = 0; i < 7; i++) {
         stripR.setPixelColor(i, color);
     }
+}
+
+void WS2812B::bootIllumination(void) {
+    for (int i = 0; i < 24; i++) {  //上面
+        stripTop.setPixelColor(i, colorHSV(map(i, 0, 24, 0, 255), 255, 255));
+        stripTop.show();
+        delay(20);
+    }
+    for (int i = 0; i < 24; i++)
+    {
+        stripTop.setPixelColor(i,0,0,0);
+    }
+    stripTop.show();
+    
 }
 
 WS2812B::WS2812B(int brightness) {
@@ -159,16 +175,18 @@ void WS2812B::rightBootLED(int LEDofRight) {
     show();
 }
 
-void WS2812B::tktk(int number){
-    while(1){
-    static int number = 0;
-     setUIBrightness(127 * sin(number / 50.0) + 127);
+void WS2812B::tktk(int number) {
+    while (1) {
+        static int number = 0;
+        setUIBrightness(127 * sin(number / 50.0) + 127);
         setRightBrightness(127 * sin(number / 50.0) + 127);
         setLeftBrightness(127 * sin(number / 50.0) + 127);
         show();
         number++;
+        if (number == 1000000) {
+            break;
+        }
     }
-
 }
 
 void WS2812B::show(void) {

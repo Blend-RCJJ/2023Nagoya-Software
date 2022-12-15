@@ -29,4 +29,21 @@ void inputMonitoringApp(App) {
     }
 }
 
+// void TurnLeft(App) {
+//     while (1) {
+//         distanceSensor.val[12];
+//         gyro.deg;
+
+//         if (distanceSensor.val[0] <= 90) {
+//             st.WriteSpe(1, -5000, 0);
+//             st.WriteSpe(4, 5000, 0);
+//             st.WriteSpe(2, -5000, 0);
+//             st.WriteSpe(3, 5000, 0);  // 時計回りに回転
+//             if (gyro.deg == 90) {
+//                 break;
+//             }
+//         }
+//     }
+// }
+
 #endif

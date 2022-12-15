@@ -32,7 +32,10 @@ SWITCHUI ui;
 
 #include "./app/sensorApp.h"
 
-#define SPEED 50
+#define SPEED1 -80
+#define SPEED2 -80
+#define SPEED3 80
+#define SPEED4 80
 
 void VictimDectationLED(App) {
     while (1) {
@@ -52,23 +55,29 @@ void VictimDectationLED(App) {
 
 void Drive(App) {
     while (1) {
-        st.WriteSpe(1,SPEED*100,0);
-        app.delay(6000);
-        st.WriteSpe(1, 0, 0);
-        app.delay(1000);
-        st.WriteSpe(1, -SPEED*100, 0);
-        app.delay(6000);
-        st.WriteSpe(1, 0, 0);
-        app.delay(1000);
+        st.WriteSpe(1, SPEED1 * 70, 0);
+        st.WriteSpe(4, SPEED4 * 70, 0);
+        st.WriteSpe(2, SPEED2 * 70, 0);
+        st.WriteSpe(3, SPEED3 * 70, 0);
+        app.delay(2000);
+
+        st.WriteSpe(1, -SPEED1 * 70, 0);
+        st.WriteSpe(4, SPEED4 * 70, 0);
+        st.WriteSpe(2, -SPEED2 * 70, 0);
+        st.WriteSpe(3, SPEED3 * 70, 0);  // 時計回りに回転
+        app.delay(375);
     }
 }
 
 void mainApp(App) {
-    uart1.println("LEDApp開始");
+    uart1.println("DriveApp開始");
     app.start(Drive);
+    app.delay(10000);
+    app.stop(Drive);
 
     while (1) {
-        app.delay(100);
+        uart1.println(gyro.deg);
+        app.delay(10);
     }
 }
 
@@ -108,8 +117,10 @@ void setup() {
     app.create(VictimDectationLED);
     app.create(inputMonitoringApp, firstPriority);
     app.create(Drive);
+    app.create(inputMonitoringApp);
 
     app.start(mainApp);
+    app.start(Drive);
     app.start(inputMonitoringApp);
     app.startRTOS();
 }

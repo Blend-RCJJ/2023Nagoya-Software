@@ -16,9 +16,9 @@ RTOS_Kit app;
 #include "./lib/vl53l0x.h"
 #include "./lib/ws2812b.h"
 
-Adafruit_NeoPixel stripL = Adafruit_NeoPixel(7, PA15, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel stripR = Adafruit_NeoPixel(7, PB13, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel stripUI = Adafruit_NeoPixel(24, PB14, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripL   = Adafruit_NeoPixel(7, PA15, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripR   = Adafruit_NeoPixel(7, PB13, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripUI  = Adafruit_NeoPixel(24, PB14, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripTop = Adafruit_NeoPixel(24, PC1, NEO_GRB + NEO_KHZ800);
 
 Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28, &Wire);
@@ -53,25 +53,54 @@ void VictimDectationLED(App) {
     }
 }  // 被災者発見シグナルApp
 
+void left(App) {
+    st.WriteSpe(1, 5000, 0);
+    st.WriteSpe(4, 5000, 0);
+    st.WriteSpe(2, 5000, 0);
+    st.WriteSpe(3, 5000, 0);
+    app.delay(100);
+    if (gyro.deg == 90) {
+        app.stop(left);
+    }
+    // 時計回りに回転
+}
+
 void TurnLeft(App) {
+    pinMode(PB12, OUTPUT);
     while (1) {
-        // if (distanceSensor.val[0] <= 90) {
-        // st.WriteSpe(1, -5000, 0);
-        // st.WriteSpe(4, 5000, 0);
-        // st.WriteSpe(2, -5000, 0);
-        // st.WriteSpe(3, 5000, 0);
-        // delay(100);  // 時計回りに回転
-                     // if (gyro.deg == 90) {
-                     //     break;
-                     // }
-        // }
+        if (distanceSensor.val[0] == 0) {
+            break;
+        }
+
+        if (distanceSensor.val[0] <= 120) {
+            app.start(left);
+            app.delay(100);
+
+            digitalWrite(PB12, LOW);
+        } else {
+            digitalWrite(PB12, HIGH);
+        }
     }
 }
+
+// void Drive(App) {
+//     while (1) {
+//         st.WriteSpe(1, -5000, 0);
+//         st.WriteSpe(4, 5000, 0);
+//         st.WriteSpe(2, -5000, 0);
+//         st.WriteSpe(3, 5000, 0);
+//         if (distanceSensor.val[0] <= 120) {
+//             app.start(TurnLeft);
+//             app.delay(100);
+//         }
+//     }
+// }
 
 void mainApp(App) {
     uart1.println("turnLeftApp開始");
     app.start(TurnLeft);
-    app.delay(500);
+    app.delay(200);
+    led.bootIllumination();
 
     while (1) {
         for (int i = 0; i < 12; i++) {
@@ -125,10 +154,12 @@ void setup() {
     app.create(mainApp, firstPriority);
     app.create(VictimDectationLED);
     app.create(inputMonitoringApp, firstPriority);
+    // app.create(Drive);
     app.create(TurnLeft);
+    app.create(left);
 
     app.start(mainApp);
-    app.start(Drive);
+    // app.start(Drive);
     app.start(inputMonitoringApp);
     app.startRTOS();
 }

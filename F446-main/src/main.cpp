@@ -6,6 +6,7 @@
 HardwareSerial uart1(PA10, PA9);
 HardwareSerial uart4(PA1, PA0);
 HardwareSerial uart5(PD2, PC12);
+HardwareSerial uart6(PC7, PC6);
 
 RTOS_Kit app;
 
@@ -14,6 +15,7 @@ RTOS_Kit app;
 #include "./lib/switchUI.h"
 #include "./lib/vl53l0x.h"
 #include "./lib/ws2812b.h"
+#include "./lib/sts3032.h"
 
 Adafruit_NeoPixel stripL = Adafruit_NeoPixel(7, PA15, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripR = Adafruit_NeoPixel(7, PB13, NEO_GRB + NEO_KHZ800);
@@ -26,8 +28,8 @@ VL53L0X distanceSensor(&uart4);
 BNO055 gyro(&bno);
 WS2812B led(80);
 MLT8530 speaker;
-// SMS_STS st;
 SWITCHUI ui;
+STS3032 servo(&uart5);
 
 #include "./app/sensorApp.h"
 
@@ -101,22 +103,36 @@ void setup() {
     uart1.setTx(PA9);
     uart1.begin(115200);
 
+    uart6.setRx(PC7);
+    uart6.setTx(PC6);
+    uart6.begin(115200);
+
+    while (1) {
+        if (uart6.available() > 0) {
+            char temp = uart6.read();
+            uart1.println(temp);
+
+        // uart1.println("100");
+    }
+
     led.setLeftColor(led.blue);
     led.setRightColor(led.blue);
     speaker.bootSound();
     led.bootIllumination();
 
-    uart5.begin(1000000);
-    // st.pSerial = &uart5;
+    while (1) {
+        for (int i = 0; i < 4; i++) {
+            servo.directDrive(i, 50);
+        }
+        delay(1000);
 
-    // st.WheelMode(1);
+        for (int i = 0; i < 4; i++) {
+            servo.directDrive(i, -50);
+        }
+        delay(1000);
+    }
 
-    // for (int i = 1; i <= 4; i++) {
-    //     st.unLockEprom(i);
-    //     st.EnableTorque(i, 1);
-    //     st.LockEprom(i);
-    // }
-
+    // st.WheelMode(1)
     // while (1) {
     //     int val = 8000;
     //     st.WriteSpe(1, val, 0);

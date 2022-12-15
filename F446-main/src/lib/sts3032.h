@@ -9,15 +9,15 @@
 
 #include "./SCServo/SCServo.h"
 
-extern SMS_STS st;
-
 class STS3032 {
    public:
-    STS3032(int Servo_Motor);
+    STS3032(HardwareSerial *ptr);
+    HardwareSerial *serialPtr;
 
-    unsigned long currentspeed = st.WriteSpe(1, SPEED * 100, 0);
-
-    void Servo_Speed(unsigned long currentspeed);
+    const int maximumSpeed = 7000;
+    const int baudRate = 1000000;
+    void directDrive(int id, int percent, int acceleration = 0);
+    void drive(int velocity, int angularVelocity);
 
    private:
 };

@@ -9,7 +9,6 @@ HardwareSerial uart5(PD2, PC12);
 
 RTOS_Kit app;
 
-#include "./SCServo/SCServo.h"
 #include "./lib/bno055.h"
 #include "./lib/mlt8530.h"
 #include "./lib/switchUI.h"
@@ -27,7 +26,7 @@ VL53L0X distanceSensor(&uart4);
 BNO055 gyro(&bno);
 WS2812B led(80);
 MLT8530 speaker;
-SMS_STS st;
+// SMS_STS st;
 SWITCHUI ui;
 
 #include "./app/sensorApp.h"
@@ -102,42 +101,42 @@ void setup() {
     uart1.setTx(PA9);
     uart1.begin(115200);
 
-    // while (1) {
+    led.setLeftColor(led.blue);
+    led.setRightColor(led.blue);
+    speaker.bootSound();
     led.bootIllumination();
-    //     uart1.println("bootIllumination");
-    // }
 
     uart5.begin(1000000);
-    st.pSerial = &uart5;
+    // st.pSerial = &uart5;
 
-    st.WheelMode(1);
+    // st.WheelMode(1);
 
-    for (int i = 1; i <= 4; i++) {
-        st.unLockEprom(i);
-        st.EnableTorque(i, 1);
-        st.LockEprom(i);
-    }
+    // for (int i = 1; i <= 4; i++) {
+    //     st.unLockEprom(i);
+    //     st.EnableTorque(i, 1);
+    //     st.LockEprom(i);
+    // }
 
-    while (1) {
-        int val = 8000;
-        st.WriteSpe(1, val, 0);
-        delay(5);
-        st.WriteSpe(2, val, 0);
-        delay(5);
-        st.WriteSpe(3, val, 0);
-        delay(5);
-        st.WriteSpe(4, val, 0);
-        delay(1000);
-        val *= -1;
-        st.WriteSpe(1, val, 0);
-        delay(5);
-        st.WriteSpe(2, val, 0);
-        delay(5);
-        st.WriteSpe(3, val, 0);
-        delay(5);
-        st.WriteSpe(4, val, 0);
-        delay(1000);
-    }
+    // while (1) {
+    //     int val = 8000;
+    //     st.WriteSpe(1, val, 0);
+    //     delay(5);
+    //     st.WriteSpe(2, val, 0);
+    //     delay(5);
+    //     st.WriteSpe(3, val, 0);
+    //     delay(5);
+    //     st.WriteSpe(4, val, 0);
+    //     delay(1000);
+    //     val *= -1;
+    //     st.WriteSpe(1, val, 0);
+    //     delay(5);
+    //     st.WriteSpe(2, val, 0);
+    //     delay(5);
+    //     st.WriteSpe(3, val, 0);
+    //     delay(5);
+    //     st.WriteSpe(4, val, 0);
+    //     delay(1000);
+    // }
 
     Wire.setSDA(PB9);
     Wire.setSCL(PB8);

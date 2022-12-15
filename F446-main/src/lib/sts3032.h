@@ -11,19 +11,15 @@
 
 extern SMS_STS st;
 
-#define SPEED 50
-
-class STS3032{
-    public:
+class STS3032 {
+   public:
     STS3032(int Servo_Motor);
 
+    unsigned long currentspeed = st.WriteSpe(1, SPEED * 100, 0);
 
-    unsigned long currentspeed = st.WriteSpe(1,SPEED*100,0);
-
-    
     void Servo_Speed(unsigned long currentspeed);
 
-    private:
+   private:
 };
 
 #endif

@@ -14,7 +14,7 @@ extern VL53L0X distanceSensor;
 extern BNO055 gyro;
 extern WS2812B led;
 extern MLT8530 speaker;
-extern SMS_STS st;
+// extern SMS_STS st;
 extern SWITCHUI ui;
 
 void inputMonitoringApp(App) {

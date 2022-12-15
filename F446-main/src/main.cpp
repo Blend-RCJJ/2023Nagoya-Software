@@ -53,52 +53,47 @@ void VictimDectationLED(App) {
     }
 }  // 被災者発見シグナルApp
 
-void left(App) {
-    st.WriteSpe(1, 5000, 0);
-    st.WriteSpe(4, 5000, 0);
-    st.WriteSpe(2, 5000, 0);
-    st.WriteSpe(3, 5000, 0);
-    app.delay(100);
-    if (gyro.deg == 90) {
-        app.stop(left);
+void left(void) {
+    while (gyro.deg <= 90) {
+        st.WriteSpe(1, 5000, 0);
+        st.WriteSpe(2, 5000, 0);
+        st.WriteSpe(3, 5000, 0);
+        st.WriteSpe(4, 5000, 0);
+
+        break;
     }
-    // 時計回りに回転
+    while ((distanceSensor.val[0] <= 120) && (gyro.deg <= 180)) {
+        st.WriteSpe(1, 5000, 0);
+        st.WriteSpe(2, 5000, 0);
+        st.WriteSpe(3, 5000, 0);
+        st.WriteSpe(4, 5000, 0);
+
+        break;
+    }
 }
 
-void TurnLeft(App) {
+void Drive(App) {
     pinMode(PB12, OUTPUT);
-    while (1) {
-        if (distanceSensor.val[0] == 0) {
-            break;
-        }
 
-        if (distanceSensor.val[0] <= 120) {
-            app.start(left);
-            app.delay(100);
+    while (1) {
+        if (distanceSensor.val[0] <= 120 && distanceSensor.val[0] != 0) {
+            left();
 
             digitalWrite(PB12, LOW);
         } else {
             digitalWrite(PB12, HIGH);
+
+            st.WriteSpe(1, -5000, 0);
+            st.WriteSpe(2, -5000, 0);
+            st.WriteSpe(3, 5000, 0);
+            st.WriteSpe(4, 5000, 0);
         }
     }
 }
 
-// void Drive(App) {
-//     while (1) {
-//         st.WriteSpe(1, -5000, 0);
-//         st.WriteSpe(4, 5000, 0);
-//         st.WriteSpe(2, -5000, 0);
-//         st.WriteSpe(3, 5000, 0);
-//         if (distanceSensor.val[0] <= 120) {
-//             app.start(TurnLeft);
-//             app.delay(100);
-//         }
-//     }
-// }
-
 void mainApp(App) {
     uart1.println("turnLeftApp開始");
-    app.start(TurnLeft);
+    app.start(Drive);
     app.delay(200);
     led.bootIllumination();
 
@@ -154,12 +149,9 @@ void setup() {
     app.create(mainApp, firstPriority);
     app.create(VictimDectationLED);
     app.create(inputMonitoringApp, firstPriority);
-    // app.create(Drive);
-    app.create(TurnLeft);
-    app.create(left);
+    app.create(Drive);
 
     app.start(mainApp);
-    // app.start(Drive);
     app.start(inputMonitoringApp);
     app.startRTOS();
 }

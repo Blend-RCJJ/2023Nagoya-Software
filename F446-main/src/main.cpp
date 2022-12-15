@@ -52,23 +52,29 @@ void mainApp(App) {
     // app.start(VictimDectationLED);
 
     while (1) {
-        uart1(distanceSensor.val[12]);
-        app.delay(100);
+        for (int i = 0; i < 12; i++) {
+            uart1.print(distanceSensor.val[i]);
+            uart1.print("\t");
+        }
+        // uart1.print("\n");
+        uart1.println(gyro.deg);
+
+        app.delay(300);
     }
 }
 
 void setup() {
-    led.start(24);
-    led.show();
+    // led.start(24);
+    // led.show();
 
-    led.leftBootLED(7);
-    led.show();
+    // led.leftBootLED(7);
+    // led.show();
 
-    led.rightBootLED(7);
-    led.show();
+    // led.rightBootLED(7);
+    // led.show();
 
-    led.tktk(100000);
-    led.show();
+    // led.tktk(100000);
+    // led.show();
 
     Wire.setSDA(PB9);
     Wire.setSCL(PB8);
@@ -83,6 +89,7 @@ void setup() {
     app.create(mainApp, firstPriority);
     app.create(VictimDectationLED);
     app.create(inputMonitoringApp, firstPriority);
+    app.create(TurnLeft);
 
     app.start(mainApp);
     app.start(inputMonitoringApp);

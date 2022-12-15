@@ -29,4 +29,14 @@ void inputMonitoringApp(App) {
     }
 }
 
+void TurnLeft(App){
+    whille(1){
+        distanceSensor.val[12]();
+        if(val[0] <= 90){
+            
+        }
+
+    }
+}
+
 #endif

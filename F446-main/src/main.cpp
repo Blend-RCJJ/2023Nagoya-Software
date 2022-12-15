@@ -16,16 +16,16 @@ RTOS_Kit app;
 #include "./lib/vl53l0x.h"
 #include "./lib/ws2812b.h"
 
-Adafruit_NeoPixel stripL   = Adafruit_NeoPixel(7, PA15, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel stripR   = Adafruit_NeoPixel(7, PB13, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel stripUI  = Adafruit_NeoPixel(24, PB14, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripL = Adafruit_NeoPixel(7, PA15, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripR = Adafruit_NeoPixel(7, PB13, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripUI = Adafruit_NeoPixel(24, PB14, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripTop = Adafruit_NeoPixel(24, PC1, NEO_GRB + NEO_KHZ800);
 
 Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28, &Wire);
 
 VL53L0X distanceSensor(&uart4);
 BNO055 gyro(&bno);
-WS2812B led(50);
+WS2812B led(80);
 MLT8530 speaker;
 SMS_STS st;
 SWITCHUI ui;
@@ -94,6 +94,15 @@ void setup() {
     // led.tktk(100000);
     // led.show();
 
+    uart1.setRx(PA10);
+    uart1.setTx(PA9);
+    uart1.begin(115200);
+
+    // while (1) {
+    //     led.bootIllumination();
+    //     uart1.println("bootIllumination");
+    // }
+
     uart5.begin(1000000);
     st.pSerial = &uart5;
     delay(1000);
@@ -108,10 +117,6 @@ void setup() {
     Wire.begin();
 
     gyro.init();
-
-    uart1.setRx(PA10);
-    uart1.setTx(PA9);
-    uart1.begin(115200);
 
     app.create(mainApp, firstPriority);
     app.create(VictimDectationLED);

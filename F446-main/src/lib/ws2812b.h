@@ -21,6 +21,8 @@ class WS2812B {
     void rightBootLED(int LEDOfRight);
     void tktk(int number);
 
+    void bootIllumination(void);
+
     void show(void);
 
     int maxBrightness;

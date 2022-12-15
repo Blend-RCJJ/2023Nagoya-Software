@@ -11,9 +11,9 @@ RTOS_Kit app;
 #include "./SCServo/SCServo.h"
 #include "./lib/bno055.h"
 #include "./lib/mlt8530.h"
+#include "./lib/switchUI.h"
 #include "./lib/vl53l0x.h"
 #include "./lib/ws2812b.h"
-#include "./lib/switchUI.h"
 
 Adafruit_NeoPixel stripL   = Adafruit_NeoPixel(7, PA15, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripR   = Adafruit_NeoPixel(7, PB13, NEO_GRB + NEO_KHZ800);
@@ -51,9 +51,10 @@ void mainApp(App) {
     // uart1.println("LEDApp開始");
     // app.start(VictimDectationLED);
 
-    // while (1) {
-    //     app.delay(100);
-    // }
+    while (1) {
+        uart1(distanceSensor.val[12]);
+        app.delay(100);
+    }
 }
 
 void setup() {

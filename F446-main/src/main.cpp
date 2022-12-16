@@ -16,9 +16,9 @@ RTOS_Kit app;
 #include "./lib/vl53l0x.h"
 #include "./lib/ws2812b.h"
 
-Adafruit_NeoPixel stripL = Adafruit_NeoPixel(7, PA15, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel stripR = Adafruit_NeoPixel(7, PB13, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel stripUI = Adafruit_NeoPixel(24, PB14, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripL   = Adafruit_NeoPixel(7, PA15, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripR   = Adafruit_NeoPixel(7, PB13, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripUI  = Adafruit_NeoPixel(24, PB14, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripTop = Adafruit_NeoPixel(24, PC1, NEO_GRB + NEO_KHZ800);
 
 Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28, &Wire);
@@ -53,25 +53,14 @@ void VictimDectationLED(App) {
     }
 }  // 被災者発見シグナルApp
 
-void TurnLeft(App) {
-    while (1) {
-        // if (distanceSensor.val[0] <= 90) {
-        // st.WriteSpe(1, -5000, 0);
-        // st.WriteSpe(4, 5000, 0);
-        // st.WriteSpe(2, -5000, 0);
-        // st.WriteSpe(3, 5000, 0);
-        // delay(100);  // 時計回りに回転
-                     // if (gyro.deg == 90) {
-                     //     break;
-                     // }
-        // }
-    }
-}
+
+
 
 void mainApp(App) {
-    uart1.println("turnLeftApp開始");
-    app.start(TurnLeft);
-    app.delay(500);
+    uart1.println("turnRightApp開始");
+    app.start(propagateRight);
+    app.delay(200);
+    led.bootIllumination();
 
     while (1) {
         for (int i = 0; i < 12; i++) {
@@ -125,10 +114,11 @@ void setup() {
     app.create(mainApp, firstPriority);
     app.create(VictimDectationLED);
     app.create(inputMonitoringApp, firstPriority);
-    app.create(TurnLeft);
+    app.create(DriveLeft);
+    app.create(DriveRight);
+    app.create(propagateRight);
 
     app.start(mainApp);
-    app.start(Drive);
     app.start(inputMonitoringApp);
     app.startRTOS();
 }

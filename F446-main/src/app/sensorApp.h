@@ -31,37 +31,37 @@ void inputMonitoringApp(App) {
 
 void left(void) {
     while (gyro.deg <= 80) {
-        st.WriteSpe(1, 5000, 0);
-        st.WriteSpe(2, 5000, 0);
-        st.WriteSpe(3, 5000, 0);
-        st.WriteSpe(4, 5000, 0);
+        // st.WriteSpe(1, 5000, 0);
+        // st.WriteSpe(2, 5000, 0);
+        // st.WriteSpe(3, 5000, 0);
+        // st.WriteSpe(4, 5000, 0);
         delay(1000);
 
         break;
     }
     while ((distanceSensor.val[0] <= 120) && (gyro.deg <= 170)) {
-        st.WriteSpe(1, 5000, 0);
-        st.WriteSpe(2, 5000, 0);
-        st.WriteSpe(3, 5000, 0);
-        st.WriteSpe(4, 5000, 0);
+        // st.WriteSpe(1, 5000, 0);
+        // st.WriteSpe(2, 5000, 0);
+        // st.WriteSpe(3, 5000, 0);
+        // st.WriteSpe(4, 5000, 0);
         delay(1000);
 
         break;
     }
     while ((distanceSensor.val[0] <= 120) && (gyro.deg <= 260)) {
-        st.WriteSpe(1, 5000, 0);
-        st.WriteSpe(2, 5000, 0);
-        st.WriteSpe(3, 5000, 0);
-        st.WriteSpe(4, 5000, 0);
+        // st.WriteSpe(1, 5000, 0);
+        // st.WriteSpe(2, 5000, 0);
+        // st.WriteSpe(3, 5000, 0);
+        // st.WriteSpe(4, 5000, 0);
         delay(1000);
 
         break;
     }
     while ((distanceSensor.val[0] <= 120) && (gyro.deg <= 350)) {
-        st.WriteSpe(1, 5000, 0);
-        st.WriteSpe(2, 5000, 0);
-        st.WriteSpe(3, 5000, 0);
-        st.WriteSpe(4, 5000, 0);
+        // st.WriteSpe(1, 5000, 0);
+        // st.WriteSpe(2, 5000, 0);
+        // st.WriteSpe(3, 5000, 0);
+        // st.WriteSpe(4, 5000, 0);
         delay(1000);
 
         break;
@@ -79,47 +79,47 @@ void DriveLeft(App) {
         } else {
             digitalWrite(PB12, HIGH);
 
-            st.WriteSpe(1, -5000, 0);
-            st.WriteSpe(2, -5000, 0);
-            st.WriteSpe(3, 5000, 0);
-            st.WriteSpe(4, 5000, 0);
+            // st.WriteSpe(1, -5000, 0);
+            // st.WriteSpe(2, -5000, 0);
+            // st.WriteSpe(3, 5000, 0);
+            // st.WriteSpe(4, 5000, 0);
         }
     }
 }
 
 void right(void) {
     while (gyro.deg <= 80) {
-        st.WriteSpe(1, -5000, 0);
-        st.WriteSpe(2, -5000, 0);
-        st.WriteSpe(3, -5000, 0);
-        st.WriteSpe(4, -5000, 0);
+        // st.WriteSpe(1, -5000, 0);
+        // st.WriteSpe(2, -5000, 0);
+        // st.WriteSpe(3, -5000, 0);
+        // st.WriteSpe(4, -5000, 0);
         delay(1000);
 
         break;
     }
     while ((distanceSensor.val[0] <= 120) && (gyro.deg <= 170)) {
-        st.WriteSpe(1, -5000, 0);
-        st.WriteSpe(2, -5000, 0);
-        st.WriteSpe(3, -5000, 0);
-        st.WriteSpe(4, -5000, 0);
+        // st.WriteSpe(1, -5000, 0);
+        // st.WriteSpe(2, -5000, 0);
+        // st.WriteSpe(3, -5000, 0);
+        // st.WriteSpe(4, -5000, 0);
         delay(1000);
 
         break;
     }
     while ((distanceSensor.val[0] <= 120) && (gyro.deg <= 260)) {
-        st.WriteSpe(1, -5000, 0);
-        st.WriteSpe(2, -5000, 0);
-        st.WriteSpe(3, -5000, 0);
-        st.WriteSpe(4, -5000, 0);
+        // st.WriteSpe(1, -5000, 0);
+        // st.WriteSpe(2, -5000, 0);
+        // st.WriteSpe(3, -5000, 0);
+        // st.WriteSpe(4, -5000, 0);
         delay(1000);
 
         break;
     }
     while ((distanceSensor.val[0] <= 120) && (gyro.deg <= 350)) {
-        st.WriteSpe(1, -5000, 0);
-        st.WriteSpe(2, -5000, 0);
-        st.WriteSpe(3, -5000, 0);
-        st.WriteSpe(4, -5000, 0);
+        // st.WriteSpe(1, -5000, 0);
+        // st.WriteSpe(2, -5000, 0);
+        // st.WriteSpe(3, -5000, 0);
+        // st.WriteSpe(4, -5000, 0);
         delay(1000);
 
         break;
@@ -137,33 +137,33 @@ void DriveRight(App) {
         } else {
             digitalWrite(PB12, HIGH);
 
-            st.WriteSpe(1, -5000, 0);
-            st.WriteSpe(2, -5000, 0);
-            st.WriteSpe(3, 5000, 0);
-            st.WriteSpe(4, 5000, 0);
+            // st.WriteSpe(1, -5000, 0);
+            // st.WriteSpe(2, -5000, 0);
+            // st.WriteSpe(3, 5000, 0);
+            // st.WriteSpe(4, 5000, 0);
         }
     }
 }
 
 void straight(void) {
-    st.WriteSpe(1, -5000, 0);
-    st.WriteSpe(2, -5000, 0);
-    st.WriteSpe(3, 5000, 0);
-    st.WriteSpe(4, 5000, 0);
+    // st.WriteSpe(1, -5000, 0);
+    // st.WriteSpe(2, -5000, 0);
+    // st.WriteSpe(3, 5000, 0);
+    // st.WriteSpe(4, 5000, 0);
 }
 
 void propagateRight(App) {
     while (1) {
-        straight();
-        if (distanceSensor.val[3] >= 100) {
-            st.WriteSpe(1, 5000, 0);
-            st.WriteSpe(2, 5000, 0);
-            st.WriteSpe(3, -5000, 0);
-            st.WriteSpe(4, -5000, 0);
-            delay(1000);
-        } else {
-            straight();
-        }
+        // straight();
+        // if (distanceSensor.val[3] >= 100) {
+        //     st.WriteSpe(1, 5000, 0);
+        //     st.WriteSpe(2, 5000, 0);
+        //     st.WriteSpe(3, -5000, 0);
+        //     st.WriteSpe(4, -5000, 0);
+        //     delay(1000);
+        // } else {
+        //     straight();
+        // }
     }
 }
 

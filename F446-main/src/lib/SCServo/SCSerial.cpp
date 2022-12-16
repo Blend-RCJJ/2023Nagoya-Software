@@ -10,31 +10,19 @@
 
 SCSerial::SCSerial()
 {
-<<<<<<< HEAD:F446-main/src/SCServo/SCSerial.cpp
-	IOTimeOut = 1;
-=======
 	IOTimeOut = 0;
->>>>>>> develop:F446-main/src/lib/SCServo/SCSerial.cpp
 	pSerial = NULL;
 }
 
 SCSerial::SCSerial(u8 End):SCS(End)
 {
-<<<<<<< HEAD:F446-main/src/SCServo/SCSerial.cpp
-	IOTimeOut = 1;
-=======
 	IOTimeOut = 0;
->>>>>>> develop:F446-main/src/lib/SCServo/SCSerial.cpp
 	pSerial = NULL;
 }
 
 SCSerial::SCSerial(u8 End, u8 Level):SCS(End, Level)
 {
-<<<<<<< HEAD:F446-main/src/SCServo/SCSerial.cpp
-	IOTimeOut = 1;
-=======
 	IOTimeOut = 0;
->>>>>>> develop:F446-main/src/lib/SCServo/SCSerial.cpp
 	pSerial = NULL;
 }
 

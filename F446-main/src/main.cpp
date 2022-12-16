@@ -53,47 +53,12 @@ void VictimDectationLED(App) {
     }
 }  // 被災者発見シグナルApp
 
-void left(void) {
-    while (gyro.deg <= 90) {
-        st.WriteSpe(1, 5000, 0);
-        st.WriteSpe(2, 5000, 0);
-        st.WriteSpe(3, 5000, 0);
-        st.WriteSpe(4, 5000, 0);
 
-        break;
-    }
-    while ((distanceSensor.val[0] <= 120) && (gyro.deg <= 180)) {
-        st.WriteSpe(1, 5000, 0);
-        st.WriteSpe(2, 5000, 0);
-        st.WriteSpe(3, 5000, 0);
-        st.WriteSpe(4, 5000, 0);
 
-        break;
-    }
-}
-
-void Drive(App) {
-    pinMode(PB12, OUTPUT);
-
-    while (1) {
-        if (distanceSensor.val[0] <= 120 && distanceSensor.val[0] != 0) {
-            left();
-
-            digitalWrite(PB12, LOW);
-        } else {
-            digitalWrite(PB12, HIGH);
-
-            st.WriteSpe(1, -5000, 0);
-            st.WriteSpe(2, -5000, 0);
-            st.WriteSpe(3, 5000, 0);
-            st.WriteSpe(4, 5000, 0);
-        }
-    }
-}
 
 void mainApp(App) {
-    uart1.println("turnLeftApp開始");
-    app.start(Drive);
+    uart1.println("turnRightApp開始");
+    app.start(propagateRight);
     app.delay(200);
     led.bootIllumination();
 
@@ -149,7 +114,9 @@ void setup() {
     app.create(mainApp, firstPriority);
     app.create(VictimDectationLED);
     app.create(inputMonitoringApp, firstPriority);
-    app.create(Drive);
+    app.create(DriveLeft);
+    app.create(DriveRight);
+    app.create(propagateRight);
 
     app.start(mainApp);
     app.start(inputMonitoringApp);

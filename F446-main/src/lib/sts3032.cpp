@@ -25,3 +25,45 @@ void STS3032::directDrive(int id, int percent, int acceleration) {
     serialServo.WriteSpe(id + 1, sendData, acceleration);
     // uart1.println(sendData);
 }
+
+void STS3032::driveAngularVelocity(int velocity, int angularVelocity) {
+    int data[2];
+    data[0] = angularVelocity - velocity;
+    data[1] = angularVelocity + velocity;
+
+    for (int i = 0; i < 2; i++) {
+        data[i] = constrain(data[i], -100, 100);
+    }
+
+    for (int i = 0; i < 2; i++) {
+        directDrive(i, data[0]);
+    }
+
+    for (int i = 2; i < 4; i++) {
+        directDrive(i, data[1]);
+    }
+}
+
+void STS3032::drive(int velocity, int angle) {
+    const double Kp = -4;
+
+    // 0-360変換
+    while (angle < 0) {
+        angle += 360;
+    }
+    angle %= 360;
+
+    int angularVelocity = gyro.deg - angle;
+
+    //-180から180変換
+    while (angularVelocity < 0) {
+        angularVelocity += 360;
+    }
+    if (angularVelocity > 180) {
+        angularVelocity -= 360;
+    }
+
+    angularVelocity *= Kp;
+
+    driveAngularVelocity(velocity, angularVelocity);
+}

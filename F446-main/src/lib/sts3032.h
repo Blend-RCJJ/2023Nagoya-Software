@@ -8,6 +8,9 @@
 #endif
 
 #include "./SCServo/SCServo.h"
+#include "./lib/bno055.h"
+
+extern BNO055 gyro;
 
 class STS3032 {
    public:
@@ -17,7 +20,8 @@ class STS3032 {
     const int maximumSpeed = 7000;
     const int baudRate = 1000000;
     void directDrive(int id, int percent, int acceleration = 0);
-    void drive(int velocity, int angularVelocity);
+    void drive(int velocity, int angle);
+    void driveAngularVelocity(int velocity, int angularVelocity);
 
    private:
 };

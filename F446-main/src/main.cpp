@@ -15,7 +15,6 @@ RTOS_Kit app;
 #include "./lib/switchUI.h"
 #include "./lib/vl53l0x.h"
 #include "./lib/ws2812b.h"
-#include "./lib/sts3032.h"
 
 Adafruit_NeoPixel stripL = Adafruit_NeoPixel(7, PA15, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripR = Adafruit_NeoPixel(7, PB13, NEO_GRB + NEO_KHZ800);
@@ -29,6 +28,9 @@ BNO055 gyro(&bno);
 WS2812B led(80);
 MLT8530 speaker;
 SWITCHUI ui;
+
+#include "./lib/sts3032.h"
+
 STS3032 servo(&uart5);
 
 #include "./app/sensorApp.h"
@@ -70,19 +72,10 @@ void TurnLeft(App) {
 }
 
 void mainApp(App) {
-    uart1.println("turnLeftApp開始");
-    app.start(TurnLeft);
-    app.delay(500);
-
     while (1) {
-        for (int i = 0; i < 12; i++) {
-            uart1.print(distanceSensor.val[i]);
-            uart1.print("\t");
-        }
-        // uart1.print("\n");
-        uart1.println(gyro.deg);
-
-        app.delay(300);
+        // servo.driveAngularVelocity(0, 80);
+        servo.drive(0, 180);
+        app.delay(10);
     }
 }
 
@@ -103,56 +96,22 @@ void setup() {
     uart1.setTx(PA9);
     uart1.begin(115200);
 
-    uart6.setRx(PC7);
-    uart6.setTx(PC6);
-    uart6.begin(115200);
+    // uart6.setRx(PC7);
+    // uart6.setTx(PC6);
+    // uart6.begin(115200);
 
-    while (1) {
-        if (uart6.available() > 0) {
-            char temp = uart6.read();
-            uart1.println(temp);
+    // while (1) {
+    //     if (uart6.available() > 0) {
+    //         char temp = uart6.read();
+    //         uart1.println(temp);
 
-        // uart1.println("100");
-    }
+    //     // uart1.println("100");
+    // }
 
     led.setLeftColor(led.blue);
     led.setRightColor(led.blue);
     speaker.bootSound();
     led.bootIllumination();
-
-    while (1) {
-        for (int i = 0; i < 4; i++) {
-            servo.directDrive(i, 50);
-        }
-        delay(1000);
-
-        for (int i = 0; i < 4; i++) {
-            servo.directDrive(i, -50);
-        }
-        delay(1000);
-    }
-
-    // st.WheelMode(1)
-    // while (1) {
-    //     int val = 8000;
-    //     st.WriteSpe(1, val, 0);
-    //     delay(5);
-    //     st.WriteSpe(2, val, 0);
-    //     delay(5);
-    //     st.WriteSpe(3, val, 0);
-    //     delay(5);
-    //     st.WriteSpe(4, val, 0);
-    //     delay(1000);
-    //     val *= -1;
-    //     st.WriteSpe(1, val, 0);
-    //     delay(5);
-    //     st.WriteSpe(2, val, 0);
-    //     delay(5);
-    //     st.WriteSpe(3, val, 0);
-    //     delay(5);
-    //     st.WriteSpe(4, val, 0);
-    //     delay(1000);
-    // }
 
     Wire.setSDA(PB9);
     Wire.setSCL(PB8);

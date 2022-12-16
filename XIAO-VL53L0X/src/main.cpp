@@ -31,6 +31,8 @@ void loop() {
         rawData[i] = distanceSensor[i].readRangeContinuousMillimeters();
     }
 
+    Serial.println(rawData[0]);
+
     int checkDigit = 0;
 
     Serial1.write("VL");

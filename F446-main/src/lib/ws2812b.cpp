@@ -37,11 +37,11 @@ void WS2812B::bootIllumination(void) {
         stripTop.show();
         delay(20);
     }
-    for (int i = 0; i < 24; i++)
-    {
-        stripTop.setPixelColor(i,0,0,0);
-    }
-    stripTop.show();
+    // for (int i = 0; i < 24; i++)
+    // {
+    //     stripTop.setPixelColor(i,0,0,0);
+    // }
+    // stripTop.show();
     
 }
 

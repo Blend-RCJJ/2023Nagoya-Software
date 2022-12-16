@@ -15,6 +15,8 @@ class MLT8530 {
 
     void setFrequncy(int freq);
     void mute(void);
+
+    void bootSound(void);
 };
 
 #endif

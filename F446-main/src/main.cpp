@@ -6,10 +6,10 @@
 HardwareSerial uart1(PA10, PA9);
 HardwareSerial uart4(PA1, PA0);
 HardwareSerial uart5(PD2, PC12);
+HardwareSerial uart6(PC7, PC6);
 
 RTOS_Kit app;
 
-#include "./SCServo/SCServo.h"
 #include "./lib/bno055.h"
 #include "./lib/mlt8530.h"
 #include "./lib/switchUI.h"
@@ -27,8 +27,11 @@ VL53L0X distanceSensor(&uart4);
 BNO055 gyro(&bno);
 WS2812B led(80);
 MLT8530 speaker;
-SMS_STS st;
 SWITCHUI ui;
+
+#include "./lib/sts3032.h"
+
+STS3032 servo(&uart5);
 
 #include "./app/sensorApp.h"
 
@@ -61,27 +64,18 @@ void TurnLeft(App) {
         // st.WriteSpe(2, -5000, 0);
         // st.WriteSpe(3, 5000, 0);
         // delay(100);  // 時計回りに回転
-                     // if (gyro.deg == 90) {
-                     //     break;
-                     // }
+        // if (gyro.deg == 90) {
+        //     break;
+        // }
         // }
     }
 }
 
 void mainApp(App) {
-    uart1.println("turnLeftApp開始");
-    app.start(TurnLeft);
-    app.delay(500);
-
     while (1) {
-        for (int i = 0; i < 12; i++) {
-            uart1.print(distanceSensor.val[i]);
-            uart1.print("\t");
-        }
-        // uart1.print("\n");
-        uart1.println(gyro.deg);
-
-        app.delay(300);
+        // servo.driveAngularVelocity(0, 80);
+        servo.drive(0, 180);
+        app.delay(10);
     }
 }
 
@@ -102,19 +96,22 @@ void setup() {
     uart1.setTx(PA9);
     uart1.begin(115200);
 
+    // uart6.setRx(PC7);
+    // uart6.setTx(PC6);
+    // uart6.begin(115200);
+
     // while (1) {
-    //     led.bootIllumination();
-    //     uart1.println("bootIllumination");
+    //     if (uart6.available() > 0) {
+    //         char temp = uart6.read();
+    //         uart1.println(temp);
+
+    //     // uart1.println("100");
     // }
 
-    uart5.begin(1000000);
-    st.pSerial = &uart5;
-    delay(1000);
-
-    st.unLockEprom(1);
-    st.WheelMode(1);
-    st.EnableTorque(1, 1);
-    st.LockEprom(1);
+    led.setLeftColor(led.blue);
+    led.setRightColor(led.blue);
+    speaker.bootSound();
+    led.bootIllumination();
 
     Wire.setSDA(PB9);
     Wire.setSCL(PB8);
@@ -128,7 +125,6 @@ void setup() {
     app.create(TurnLeft);
 
     app.start(mainApp);
-    app.start(Drive);
     app.start(inputMonitoringApp);
     app.startRTOS();
 }

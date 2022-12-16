@@ -10,19 +10,19 @@
 
 SCSerial::SCSerial()
 {
-	IOTimeOut = 100;
+	IOTimeOut = 0;
 	pSerial = NULL;
 }
 
 SCSerial::SCSerial(u8 End):SCS(End)
 {
-	IOTimeOut = 100;
+	IOTimeOut = 0;
 	pSerial = NULL;
 }
 
 SCSerial::SCSerial(u8 End, u8 Level):SCS(End, Level)
 {
-	IOTimeOut = 100;
+	IOTimeOut = 0;
 	pSerial = NULL;
 }
 

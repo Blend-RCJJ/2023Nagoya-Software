@@ -29,7 +29,6 @@ void inputMonitoringApp(App) {
     }
 }
 
-
 void DriveLeft(App) {
     pinMode(PB12, OUTPUT);
 
@@ -96,25 +95,27 @@ void largeDrive(App) {
             distanceSensor.val[3] = 2000;
         }
 
-        if (distanceSensor.val[6] > 2000) {
-            distanceSensor.val[6] = 2000;
-        }
-
-        if (distanceSensor.val[3] <= 90) {
-            servo.drive(20, angle - 30);
+        if (distanceSensor.val[9] > 2000) {
+            distanceSensor.val[9] = 2000;
         }
         if (distanceSensor.val[9] <= 90) {
             servo.drive(20, angle + 30);
         }
+        if (distanceSensor.val[3] <= 90) {
+            servo.drive(20, angle - 30);
+        }
 
         if (distanceSensor.val[0] <= 120) {
-            if (distanceSensor.val[3] < distanceSensor.val[9]) {
+            if ((distanceSensor.val[3] < distanceSensor.val[9]) &&
+                distanceSensor.val[0] <= 120) {
                 angle -= 90;
 
                 servo.drive(0, angle);
                 app.delay(600);
             }
-        } else if (distanceSensor.val[3] > distanceSensor.val[9]) {
+        }
+        if ((distanceSensor.val[3] > distanceSensor.val[9]) &&
+            distanceSensor.val[0] <= 120) {
             angle += 90;
             servo.drive(0, angle);
 

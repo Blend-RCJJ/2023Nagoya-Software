@@ -84,7 +84,7 @@ void mainApp(App) {
     while (1) {
         // servo.driveAngularVelocity(0, 80);
         // servo.drive(0, 180);
-        app.start(topLED);
+        // app.start(topLED);
         uart1.println(distanceSensor.val[0]);
         uart1.println(gyro.deg);
         app.delay(10);
@@ -123,7 +123,7 @@ void setup() {
     led.setLeftColor(led.blue);
     led.setRightColor(led.blue);
     speaker.bootSound();
-    // led.bootIllumination();
+    led.bootIllumination();
 
     Wire.setSDA(PB9);
     Wire.setSCL(PB8);

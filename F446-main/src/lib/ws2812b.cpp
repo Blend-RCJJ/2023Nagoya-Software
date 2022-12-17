@@ -31,6 +31,12 @@ void WS2812B::setRightColor(unsigned long color) {
     }
 }
 
+void WS2812B::setTopColor(unsigned long color){
+    for(int i = 0; i < 24; i++){
+        stripTop.setPixelColor(i,color);
+    }
+}
+
 void WS2812B::bootIllumination(void) {
     for (int i = 0; i < 24; i++) {  //上面
         stripTop.setPixelColor(i, colorHSV(map(i, 0, 24, 0, 255), 255, 255));
@@ -206,4 +212,8 @@ void WS2812B::setRightBrightness(int brightness) {
 
 void WS2812B::setLeftBrightness(int brightness) {
     stripL.setBrightness(brightness * maxBrightness / 255);
+}
+
+void WS2812B::setTopBrightness(int brightness){
+    stripTop.setBrightness(brightness * maxBrightness / 255);
 }

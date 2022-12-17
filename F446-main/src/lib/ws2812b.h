@@ -40,10 +40,12 @@ class WS2812B {
     void setUIColor(unsigned long color);
     void setLeftColor(unsigned long color);
     void setRightColor(unsigned long color);
+    void setTopColor(unsigned long color);
 
     void setUIBrightness(int brightness);
     void setRightBrightness(int brightness);
     void setLeftBrightness(int brightness);
+    void setTopBrightness(int brightness);
 
    private:
 };

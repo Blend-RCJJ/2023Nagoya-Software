@@ -56,18 +56,12 @@ void VictimDectationLED(App) {
     }
 }  // 被災者発見シグナルApp
 
-void TurnLeft(App) {
+void topLED(App) {
     while (1) {
-        // if (distanceSensor.val[0] <= 90) {
-        // st.WriteSpe(1, -5000, 0);
-        // st.WriteSpe(4, 5000, 0);
-        // st.WriteSpe(2, -5000, 0);
-        // st.WriteSpe(3, 5000, 0);
-        // delay(100);  // 時計回りに回転
-                     // if (gyro.deg == 90) {
-                     //     break;
-                     // }
-        // }
+        led.setTopBrightness(distanceSensor.val[0]/8);
+        led.setTopColor(led.red);
+        led.show();
+        app.delay(100);
     }
 }
 
@@ -75,13 +69,17 @@ void TurnLeft(App) {
 
 void mainApp(App) {
     uart1.println("turnLeftApp開始");
-    app.start(TurnLeft);
-    app.delay(500);
+    app.start(propagateRight);
+    app.delay(10);
 
     while (1) {
         // servo.driveAngularVelocity(0, 80);
-        servo.drive(0, 180);
+        // servo.drive(0, 180);
+        app.start(topLED);
+        uart1.println(distanceSensor.val[0]);
+        uart1.println(gyro.deg);
         app.delay(10);
+
     }
 }
 
@@ -117,7 +115,7 @@ void setup() {
     led.setLeftColor(led.blue);
     led.setRightColor(led.blue);
     speaker.bootSound();
-    led.bootIllumination();
+    // led.bootIllumination();
 
     Wire.setSDA(PB9);
     Wire.setSCL(PB8);
@@ -131,6 +129,7 @@ void setup() {
     app.create(DriveLeft);
     app.create(DriveRight);
     app.create(propagateRight);
+    app.create(topLED);
 
     app.start(mainApp);
     app.start(inputMonitoringApp);

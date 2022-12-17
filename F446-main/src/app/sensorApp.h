@@ -29,100 +29,21 @@ void inputMonitoringApp(App) {
     }
 }
 
-void left(void) {
-    while (gyro.deg <= 80) {
-        // st.WriteSpe(1, 5000, 0);
-        // st.WriteSpe(2, 5000, 0);
-        // st.WriteSpe(3, 5000, 0);
-        // st.WriteSpe(4, 5000, 0);
-        delay(1000);
-
-        break;
-    }
-    while ((distanceSensor.val[0] <= 120) && (gyro.deg <= 170)) {
-        // st.WriteSpe(1, 5000, 0);
-        // st.WriteSpe(2, 5000, 0);
-        // st.WriteSpe(3, 5000, 0);
-        // st.WriteSpe(4, 5000, 0);
-        delay(1000);
-
-        break;
-    }
-    while ((distanceSensor.val[0] <= 120) && (gyro.deg <= 260)) {
-        // st.WriteSpe(1, 5000, 0);
-        // st.WriteSpe(2, 5000, 0);
-        // st.WriteSpe(3, 5000, 0);
-        // st.WriteSpe(4, 5000, 0);
-        delay(1000);
-
-        break;
-    }
-    while ((distanceSensor.val[0] <= 120) && (gyro.deg <= 350)) {
-        // st.WriteSpe(1, 5000, 0);
-        // st.WriteSpe(2, 5000, 0);
-        // st.WriteSpe(3, 5000, 0);
-        // st.WriteSpe(4, 5000, 0);
-        delay(1000);
-
-        break;
-    }
-}
-
 void DriveLeft(App) {
     pinMode(PB12, OUTPUT);
 
     while (1) {
         if (distanceSensor.val[0] <= 120 && distanceSensor.val[0] != 0) {
-            left();
+            servo.drive(0, 90);
 
             digitalWrite(PB12, LOW);
         } else {
             digitalWrite(PB12, HIGH);
-
-            // st.WriteSpe(1, -5000, 0);
-            // st.WriteSpe(2, -5000, 0);
-            // st.WriteSpe(3, 5000, 0);
-            // st.WriteSpe(4, 5000, 0);
+            servo.directDrive(0, 100);
+            servo.directDrive(1, 100);
+            servo.directDrive(2, 100);
+            servo.directDrive(3, 100);
         }
-    }
-}
-
-void right(void) {
-    while (gyro.deg <= 80) {
-        // st.WriteSpe(1, -5000, 0);
-        // st.WriteSpe(2, -5000, 0);
-        // st.WriteSpe(3, -5000, 0);
-        // st.WriteSpe(4, -5000, 0);
-        delay(1000);
-
-        break;
-    }
-    while ((distanceSensor.val[0] <= 120) && (gyro.deg <= 170)) {
-        // st.WriteSpe(1, -5000, 0);
-        // st.WriteSpe(2, -5000, 0);
-        // st.WriteSpe(3, -5000, 0);
-        // st.WriteSpe(4, -5000, 0);
-        delay(1000);
-
-        break;
-    }
-    while ((distanceSensor.val[0] <= 120) && (gyro.deg <= 260)) {
-        // st.WriteSpe(1, -5000, 0);
-        // st.WriteSpe(2, -5000, 0);
-        // st.WriteSpe(3, -5000, 0);
-        // st.WriteSpe(4, -5000, 0);
-        delay(1000);
-
-        break;
-    }
-    while ((distanceSensor.val[0] <= 120) && (gyro.deg <= 350)) {
-        // st.WriteSpe(1, -5000, 0);
-        // st.WriteSpe(2, -5000, 0);
-        // st.WriteSpe(3, -5000, 0);
-        // st.WriteSpe(4, -5000, 0);
-        delay(1000);
-
-        break;
     }
 }
 
@@ -130,42 +51,49 @@ void DriveRight(App) {
     pinMode(PB12, OUTPUT);
 
     while (1) {
-        if (distanceSensor.val[0] <= 120 && distanceSensor.val[0] != 0) {
-            right();
+        if ((distanceSensor.val[0] <= 120 && distanceSensor.val[0] != 0) &&
+            gyro.deg < 90) {
+            servo.drive(0, 90);
+            app.delay(300);
 
             digitalWrite(PB12, LOW);
+        } else if (distanceSensor.val[0] <= 120 &&
+                   (((gyro.deg >= 80) && (gyro.deg <= 100))) &&
+                   distanceSensor.val[0] != 0) {
+            servo.drive(0, 180);
+            app.delay(550);
+        } else if (distanceSensor.val[0] <= 120 &&
+                   (((gyro.deg >= 170) && (gyro.deg <= 190))) &&
+                   distanceSensor.val[0] != 0) {
+            servo.drive(0, 270);
+            app.delay(550);
+        } else if (distanceSensor.val[0] <= 120 &&
+                   (((gyro.deg >= 260) && (gyro.deg <= 280))) &&
+                   distanceSensor.val[0] != 0) {
+            servo.drive(0, 0);
+            app.delay(550);
         } else {
+            servo.directDrive(0, -80);
+            servo.directDrive(1, -80);
+            servo.directDrive(2, 80);
+            servo.directDrive(3, 80);
             digitalWrite(PB12, HIGH);
-
-            // st.WriteSpe(1, -5000, 0);
-            // st.WriteSpe(2, -5000, 0);
-            // st.WriteSpe(3, 5000, 0);
-            // st.WriteSpe(4, 5000, 0);
         }
     }
 }
 
-void straight(void) {
-    // st.WriteSpe(1, -5000, 0);
-    // st.WriteSpe(2, -5000, 0);
-    // st.WriteSpe(3, 5000, 0);
-    // st.WriteSpe(4, 5000, 0);
-}
-
 void propagateRight(App) {
     while (1) {
-        // straight();
-        // if (distanceSensor.val[3] >= 100) {
-        //     st.WriteSpe(1, 5000, 0);
-        //     st.WriteSpe(2, 5000, 0);
-        //     st.WriteSpe(3, -5000, 0);
-        //     st.WriteSpe(4, -5000, 0);
-        //     delay(1000);
-        // } else {
-        //     straight();
-        // }
+        if (distanceSensor.val[0] >= 120 && distanceSensor.val[3] >= 100) {
+            servo.drive(0, 90);
+        } else {
+            servo.directDrive(0, -80);
+            servo.directDrive(1, -80);
+            servo.directDrive(2, 80);
+            servo.directDrive(3, 80);
+        }
     }
-}
+}  //[3]がでかくなる時→右　前方接近→[3]or[9]の値がでかい方向に曲がる
 
 // void TurnLeft(App) {
 //     while (1) {

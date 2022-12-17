@@ -207,9 +207,52 @@ void onlyLeft(App) {
     }
 }
 
+// void propageRight(App) {
+//     while (1) {
+//         static int angle = 0;
 
-void propageRight(App){
-     
-}
+//         if (angle >= 360) {
+//             angle = 0;
+//         }
+//         if (angle <= -360) {
+//             angle = 0;
+//         }
+//         if (distanceSensor.val[3] > 2000) {
+//             distanceSensor.val[3] = 2000;
+//         }
+
+//         if (distanceSensor.val[3] >= 120) {
+//             for (int i = 0; i < 3; i++) {
+//                 servo.driveAngularVelocity(50, 0);
+//                 app.delay(500);
+//                 angle += 30;
+//             }
+//             servo.drive(0, angle);
+
+//             app.delay(600);
+//         }
+//         if (distanceSensor.val[3] <= 120) {
+//             servo.drive(50, angle);
+//             app.delay(100);
+//         }
+//         if (distanceSensor.val[0] <= 120) {
+//             if ((distanceSensor.val[3] < distanceSensor.val[9]) &&
+//                 distanceSensor.val[0] <= 120) {
+//                 angle -= 90;
+
+//                 servo.drive(0, angle);
+//                 app.delay(600);
+//             }
+
+//             if ((distanceSensor.val[3] > distanceSensor.val[9]) &&
+//                 distanceSensor.val[0] <= 120) {
+//                 angle += 90;
+//                 servo.drive(0, angle);
+//                 app.delay(600);
+//             }
+//         }
+//         // servo.drive(50,angle);
+//     }
+// }
 
 #endif

@@ -68,7 +68,7 @@ void topLED(App) {
 void mainApp(App) {
     while (1) {
         app.start(largeDrive);
-        app.delay(10000);
+        app.delay(60000);
         app.stop(largeDrive);
         app.start(onlyRight);
         app.delay(30000);
@@ -76,7 +76,9 @@ void mainApp(App) {
         app.start(onlyLeft);
         app.delay(30000);
         app.stop(onlyLeft);
-    }
+
+    app.delay(100);
+     }
 
     while (1) {
         // servo.driveAngularVelocity(0, 80);
@@ -137,7 +139,7 @@ void setup() {
     app.create(onlyRight);
     app.create(onlyLeft);
     app.create(topLED);
-    app.create(propageRight);
+
 
     app.start(mainApp);
     app.start(inputMonitoringApp);

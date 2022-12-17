@@ -4,6 +4,7 @@ extern Adafruit_NeoPixel stripL;
 extern Adafruit_NeoPixel stripR;
 extern Adafruit_NeoPixel stripUI;
 extern Adafruit_NeoPixel stripTop;
+extern Adafruit_NeoPixel stripFloor;
 
 unsigned long WS2812B::colorRGB(int red, int green, int blue) {
     return stripR.Color(red, green, blue);
@@ -31,10 +32,17 @@ void WS2812B::setRightColor(unsigned long color) {
     }
 }
 
-void WS2812B::setTopColor(unsigned long color){
-    for(int i = 0; i < 24; i++){
-        stripTop.setPixelColor(i,color);
+void WS2812B::setTopColor(unsigned long color) {
+    for (int i = 0; i < 24; i++) {
+        stripTop.setPixelColor(i, color);
     }
+}
+
+void WS2812B::setFloorColor(unsigned long color) {
+    for (int i = 0; i < 3; i++) {
+        stripFloor.setPixelColor(i, color);
+    }
+    stripFloor.show();
 }
 
 void WS2812B::bootIllumination(void) {
@@ -48,7 +56,6 @@ void WS2812B::bootIllumination(void) {
     //     stripTop.setPixelColor(i,0,0,0);
     // }
     // stripTop.show();
-    
 }
 
 WS2812B::WS2812B(int brightness) {
@@ -69,6 +76,10 @@ WS2812B::WS2812B(int brightness) {
     stripTop.begin();
     stripTop.setBrightness(brightness);
     stripTop.show();
+
+    stripFloor.begin();
+    stripFloor.setBrightness(30);
+    stripFloor.show();
 }
 
 void WS2812B::battery(int percent) {
@@ -214,6 +225,6 @@ void WS2812B::setLeftBrightness(int brightness) {
     stripL.setBrightness(brightness * maxBrightness / 255);
 }
 
-void WS2812B::setTopBrightness(int brightness){
+void WS2812B::setTopBrightness(int brightness) {
     stripTop.setBrightness(brightness * maxBrightness / 255);
 }

@@ -84,14 +84,53 @@ void DriveRight(App) {
 
 void propagateRight(App) {
     while (1) {
-        if (distanceSensor.val[0] >= 120 && distanceSensor.val[3] >= 100) {
-            servo.drive(0, 90);
-        } else {
-            servo.directDrive(0, -80);
-            servo.directDrive(1, -80);
-            servo.directDrive(2, 80);
-            servo.directDrive(3, 80);
+        static int angle = 0;
+        if (angle >= 360) {
+            angle = 0;
         }
+        if (angle <= -360) {
+            angle = 0;
+        }
+        if(distanceSensor.val[3] > 2000){
+            distanceSensor.val[3] = 2000;
+        }
+
+        if(distanceSensor.val[6] > 2000){
+            distanceSensor.val[6] = 2000;
+        }
+        // if (distanceSensor.val[0] >= 120 && distanceSensor.val[3] >= 100) {
+        //     angle += 90;
+        //     servo.drive(0, angle);
+        //     app.delay(2000);
+
+        // } else {
+        //     servo.directDrive(0, -80);
+        //     servo.directDrive(1, -80);
+        //     servo.directDrive(2, 80);
+        //     servo.directDrive(3, 80);
+        // }
+
+        if (distanceSensor.val[0] <= 120) {
+            if (distanceSensor.val[3] < distanceSensor.val[9]) {
+                angle -= 90;
+                
+        servo.drive(0, angle);
+                app.delay(600);
+            } else if (distanceSensor.val[3] > distanceSensor.val[9]) {
+                angle += 90;
+                servo.drive(0, angle);
+                
+        servo.drive(0, angle);
+                app.delay(600);
+            }
+        } else {
+            // servo.directDrive(0, -80);
+            // servo.directDrive(1, -80);
+            // servo.directDrive(2, 80);
+            // servo.directDrive(3, 80);
+        }
+
+        servo.drive(100, angle);
     }
 }  //[3]がでかくなる時→右　前方接近→[3]or[9]の値がでかい方向に曲がる
 

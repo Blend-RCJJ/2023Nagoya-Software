@@ -18,6 +18,8 @@ extern SWITCHUI ui;
 extern Adafruit_NeoPixel stripFloor;
 extern WS2812B led;
 
+int angle = 0;
+
 void inputMonitoringApp(App) {
     while (1) {
         distanceSensor.getDistance();
@@ -38,14 +40,14 @@ void inputMonitoringApp(App) {
         delay(3);
         floorSensor.blueVal = analogRead(PC0);
 
-        // uart1.print(floorSensor.redVal);
-        // uart1.print("\t");
-        // uart1.print(floorSensor.greenVal);
-        // uart1.print("\t");
-        // uart1.print(floorSensor.blueVal);
-        // uart1.println("\t");
+        uart1.print(floorSensor.redVal);
+        uart1.print("\t");
+        uart1.print(floorSensor.greenVal);
+        uart1.print("\t");
+        uart1.print(floorSensor.blueVal);
+        uart1.println("\t");
 
-        // app.delay(10);
+        app.delay(10);
     }
 }
 
@@ -104,7 +106,6 @@ void DriveRight(App) {
 
 void largeDrive(App) {
     while (1) {
-        static int angle = 0;
         if (angle >= 360) {
             angle = 0;
         }
@@ -147,7 +148,6 @@ void largeDrive(App) {
 
 void onlyRight(App) {
     while (1) {
-        static int angle = 0;
         if (angle >= 360) {
             angle = 0;
         }
@@ -187,7 +187,6 @@ void onlyRight(App) {
 
 void onlyLeft(App) {
     while (1) {
-        static int angle = 0;
         if (angle >= 360) {
             angle = 0;
         }
@@ -224,6 +223,15 @@ void onlyLeft(App) {
         }
 
         servo.drive(50, angle);
+    }
+}
+
+void oooon(App) {
+    while (1) {
+        servo.driveAngularVelocity(0, 100);
+        app.delay(100);
+        servo.driveAngularVelocity(0, -100);
+        app.delay(100);
     }
 }
 

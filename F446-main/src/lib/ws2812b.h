@@ -41,6 +41,7 @@ class WS2812B {
     void setLeftColor(unsigned long color);
     void setRightColor(unsigned long color);
     void setTopColor(unsigned long color);
+    void setFloorColor(unsigned long color);
 
     void setUIBrightness(int brightness);
     void setRightBrightness(int brightness);

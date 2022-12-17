@@ -38,14 +38,14 @@ void inputMonitoringApp(App) {
         delay(3);
         floorSensor.blueVal = analogRead(PC0);
 
-        uart1.print(floorSensor.redVal);
-        uart1.print("\t");
-        uart1.print(floorSensor.greenVal);
-        uart1.print("\t");
-        uart1.print(floorSensor.blueVal);
-        uart1.println("\t");
+        // uart1.print(floorSensor.redVal);
+        // uart1.print("\t");
+        // uart1.print(floorSensor.greenVal);
+        // uart1.print("\t");
+        // uart1.print(floorSensor.blueVal);
+        // uart1.println("\t");
 
-        app.delay(10);
+        // app.delay(10);
     }
 }
 

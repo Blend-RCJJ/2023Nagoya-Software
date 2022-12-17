@@ -11,15 +11,15 @@ HardwareSerial uart6(PC7, PC6);
 RTOS_Kit app;
 
 #include "./lib/bno055.h"
+#include "./lib/floorSensor.h"
 #include "./lib/mlt8530.h"
 #include "./lib/switchUI.h"
 #include "./lib/vl53l0x.h"
 #include "./lib/ws2812b.h"
-#include "./lib/floorSensor.h"
 
-Adafruit_NeoPixel stripL = Adafruit_NeoPixel(7, PA15, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel stripR = Adafruit_NeoPixel(7, PB13, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel stripUI = Adafruit_NeoPixel(24, PB14, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripL   = Adafruit_NeoPixel(7, PA15, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripR   = Adafruit_NeoPixel(7, PB13, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripUI  = Adafruit_NeoPixel(24, PB14, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripTop = Adafruit_NeoPixel(24, PC1, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripFloor = Adafruit_NeoPixel(3, PB15, NEO_GRB + NEO_KHZ800);
 
@@ -66,30 +66,80 @@ void topLED(App) {
         app.delay(100);
     }
 }
+int appMode = 0;
+
+void isOnBlack(App) {
+    while (1) {
+        if (((floorSensor.redVal >= 900) && (floorSensor.blueVal >= 900)) &&
+            (floorSensor.greenVal >= 900)) {
+            led.setTopColor(led.blue);
+            led.show();
+            app.stop(largeDrive);
+            app.stop(onlyRight);
+            app.stop(onlyLeft);
+            servo.driveAngularVelocity(0, 0);
+            app.delay(500);
+
+            angle += 180;
+            angle %= 360;
+            servo.driveAngularVelocity(-50, 0);
+            app.delay(1000);
+
+            unsigned long timer = millis();
+            while (millis() <= timer + 1300) {
+                servo.drive(0, angle);
+                app.delay(1);
+            }
+
+            switch (appMode) {
+                case 0:
+                    app.start(largeDrive);
+                    break;
+                case 1:
+
+                    app.start(onlyRight);
+                    break;
+                case 2:
+
+                    app.start(onlyLeft);
+                    break;
+            }
+        } else {
+            led.setTopColor(led.red);
+            led.show();
+            app.delay(10);
+        }
+    }
+}
 
 void mainApp(App) {
+    
     while (1) {
+        appMode = 0;
+        app.start(isOnBlack);
         app.start(largeDrive);
         app.delay(60000);
+
+        appMode = 1;
         app.stop(largeDrive);
         app.start(onlyRight);
         app.delay(30000);
+
+        appMode = 2;
         app.stop(onlyRight);
         app.start(onlyLeft);
         app.delay(30000);
         app.stop(onlyLeft);
+    }
 
-    app.delay(100);
-     }
-
-    while (1) {
+    // while (1) {
         // servo.driveAngularVelocity(0, 80);
         // servo.drive(0, 180);
         // app.start(topLED);
-        uart1.println(distanceSensor.val[0]);
-        uart1.println(gyro.deg);
-        app.delay(10);
-    }
+        // uart1.println(distanceSensor.val[0]);
+        // uart1.println(gyro.deg);
+    //     app.delay(10);
+    // }
 }
 
 void setup() {
@@ -133,7 +183,8 @@ void setup() {
     app.create(onlyRight);
     app.create(onlyLeft);
     app.create(topLED);
-
+    app.create(isOnBlack);
+    app.create(oooon);
 
     app.start(mainApp);
     app.start(inputMonitoringApp);

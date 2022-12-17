@@ -15,11 +15,13 @@ RTOS_Kit app;
 #include "./lib/switchUI.h"
 #include "./lib/vl53l0x.h"
 #include "./lib/ws2812b.h"
+#include "./lib/floorSensor.h"
 
-Adafruit_NeoPixel stripL   = Adafruit_NeoPixel(7, PA15, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel stripR   = Adafruit_NeoPixel(7, PB13, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel stripUI  = Adafruit_NeoPixel(24, PB14, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripL = Adafruit_NeoPixel(7, PA15, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripR = Adafruit_NeoPixel(7, PB13, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripUI = Adafruit_NeoPixel(24, PB14, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripTop = Adafruit_NeoPixel(24, PC1, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripFloor = Adafruit_NeoPixel(3, PB15, NEO_GRB + NEO_KHZ800);
 
 Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28, &Wire);
 
@@ -28,9 +30,9 @@ BNO055 gyro(&bno);
 WS2812B led(80);
 MLT8530 speaker;
 SWITCHUI ui;
+FLOOR_SENSOR floorSensor;
 
 #include "./lib/sts3032.h"
-
 STS3032 servo(&uart5);
 
 #include "./app/sensorApp.h"
@@ -110,14 +112,6 @@ void setup() {
     // uart6.setRx(PC7);
     // uart6.setTx(PC6);
     // uart6.begin(115200);
-
-    // while (1) {
-    //     if (uart6.available() > 0) {
-    //         char temp = uart6.read();
-    //         uart1.println(temp);
-
-    //     // uart1.println("100");
-    // }
 
     led.setLeftColor(led.blue);
     led.setRightColor(led.blue);

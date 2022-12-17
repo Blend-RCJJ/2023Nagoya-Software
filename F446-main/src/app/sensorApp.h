@@ -14,8 +14,9 @@ extern VL53L0X distanceSensor;
 extern BNO055 gyro;
 extern WS2812B led;
 extern MLT8530 speaker;
-// extern SMS_STS st;
 extern SWITCHUI ui;
+extern Adafruit_NeoPixel stripFloor;
+extern WS2812B led;
 
 void inputMonitoringApp(App) {
     while (1) {
@@ -25,7 +26,26 @@ void inputMonitoringApp(App) {
         gyro.read();
         ui.read();
 
-        app.delay(10);
+        led.setFloorColor(led.red);
+        delay(3);
+        floorSensor.redVal = analogRead(PC0);
+
+        led.setFloorColor(led.green);
+        delay(3);
+        floorSensor.greenVal = analogRead(PC0);
+
+        led.setFloorColor(led.blue);
+        delay(3);
+        floorSensor.blueVal = analogRead(PC0);
+
+        // uart1.print(floorSensor.redVal);
+        // uart1.print("\t");
+        // uart1.print(floorSensor.greenVal);
+        // uart1.print("\t");
+        // uart1.print(floorSensor.blueVal);
+        // uart1.println("\t");
+
+        // app.delay(10);
     }
 }
 

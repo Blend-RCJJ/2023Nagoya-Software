@@ -120,7 +120,7 @@ void largeDrive(App) {
             servo.drive(0, angle);
             app.delay(600);
         }
-        servo.drive(80, angle);
+        servo.drive(50, angle);
     }
 }
 //[3]がでかくなる時→右　前方接近→[3]or[9]の値がでかい方向に曲がる
@@ -161,7 +161,7 @@ void onlyRight(App) {
             }
         }
 
-        servo.drive(80, angle);
+        servo.drive(50, angle);
     }
 }
 
@@ -203,19 +203,13 @@ void onlyLeft(App) {
             }
         }
 
-        servo.drive(80, angle);
+        servo.drive(50, angle);
     }
 }
 
-void right(App) {
-    while (1) {
-        servo.drive(0, 90);
-        app.delay(600);
-        servo.directDrive(0, 80);
-        servo.directDrive(1, 80);
-        servo.directDrive(2, 80);
-        servo.directDrive(3, 80);
-    }
+
+void propageRight(App){
+     
 }
 
 #endif

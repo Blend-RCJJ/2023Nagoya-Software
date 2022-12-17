@@ -136,8 +136,8 @@ void setup() {
     app.create(largeDrive);
     app.create(onlyRight);
     app.create(onlyLeft);
-    app.create(right);
     app.create(topLED);
+    app.create(propageRight);
 
     app.start(mainApp);
     app.start(inputMonitoringApp);

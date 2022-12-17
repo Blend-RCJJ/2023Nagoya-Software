@@ -68,11 +68,8 @@ void topLED(App) {
 void mainApp(App) {
     while (1) {
         app.start(largeDrive);
-        app.delay(60000);
+        app.delay(10000);
         app.stop(largeDrive);
-        app.start(right);
-        app.delay(2000);
-        app.stop(right);
         app.start(onlyRight);
         app.delay(30000);
         app.stop(onlyRight);
@@ -137,6 +134,8 @@ void setup() {
     app.create(DriveLeft);
     app.create(DriveRight);
     app.create(largeDrive);
+    app.create(onlyRight);
+    app.create(onlyLeft);
     app.create(right);
     app.create(topLED);
 

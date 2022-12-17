@@ -118,8 +118,6 @@ void largeDrive(App) {
             distanceSensor.val[0] <= 120) {
             angle += 90;
             servo.drive(0, angle);
-
-            servo.drive(0, angle);
             app.delay(600);
         }
         servo.drive(80, angle);
@@ -140,8 +138,14 @@ void onlyRight(App) {
             distanceSensor.val[3] = 2000;
         }
 
-        if (distanceSensor.val[6] > 2000) {
-            distanceSensor.val[6] = 2000;
+        if (distanceSensor.val[9] > 2000) {
+            distanceSensor.val[9] = 2000;
+        }
+        if (distanceSensor.val[9] <= 90) {
+            servo.drive(20, angle + 30);
+        }
+        if (distanceSensor.val[3] <= 90) {
+            servo.drive(20, angle - 30);
         }
 
         if (distanceSensor.val[0] <= 120) {
@@ -152,8 +156,6 @@ void onlyRight(App) {
                 app.delay(600);
             } else if (distanceSensor.val[3] > distanceSensor.val[9]) {
                 angle += 90;
-                servo.drive(0, angle);
-
                 servo.drive(0, angle);
                 app.delay(600);
             }
@@ -176,8 +178,14 @@ void onlyLeft(App) {
             distanceSensor.val[3] = 2000;
         }
 
-        if (distanceSensor.val[6] > 2000) {
-            distanceSensor.val[6] = 2000;
+        if (distanceSensor.val[9] > 2000) {
+            distanceSensor.val[9] = 2000;
+        }
+        if (distanceSensor.val[9] <= 90) {
+            servo.drive(20, angle + 30);
+        }
+        if (distanceSensor.val[3] <= 90) {
+            servo.drive(20, angle - 30);
         }
 
         if (distanceSensor.val[0] <= 120) {
@@ -200,8 +208,14 @@ void onlyLeft(App) {
 }
 
 void right(App) {
-    servo.drive(0, 90);
-    servo.directDrive(80, 90);
+    while (1) {
+        servo.drive(0, 90);
+        app.delay(600);
+        servo.directDrive(0, 80);
+        servo.directDrive(1, 80);
+        servo.directDrive(2, 80);
+        servo.directDrive(3, 80);
+    }
 }
 
 #endif

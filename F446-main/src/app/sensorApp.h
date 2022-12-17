@@ -82,7 +82,7 @@ void DriveRight(App) {
     }
 }
 
-void propagateRight(App) {
+void largeDrive(App) {
     while (1) {
         static int angle = 0;
         if (angle >= 360) {
@@ -91,63 +91,167 @@ void propagateRight(App) {
         if (angle <= -360) {
             angle = 0;
         }
-        if(distanceSensor.val[3] > 2000){
+        if (distanceSensor.val[3] > 2000) {
             distanceSensor.val[3] = 2000;
         }
 
-        if(distanceSensor.val[6] > 2000){
-            distanceSensor.val[6] = 2000;
+        if (distanceSensor.val[9] > 2000) {
+            distanceSensor.val[9] = 2000;
         }
-        // if (distanceSensor.val[0] >= 120 && distanceSensor.val[3] >= 100) {
-        //     angle += 90;
-        //     servo.drive(0, angle);
-        //     app.delay(2000);
+        if (distanceSensor.val[9] <= 90) {
+            servo.drive(20, angle + 30);
+        }
+        if (distanceSensor.val[3] <= 90) {
+            servo.drive(20, angle - 30);
+        }
 
-        // } else {
-        //     servo.directDrive(0, -80);
-        //     servo.directDrive(1, -80);
-        //     servo.directDrive(2, 80);
-        //     servo.directDrive(3, 80);
-        // }
+        if (distanceSensor.val[0] <= 120) {
+            if ((distanceSensor.val[3] < distanceSensor.val[9]) &&
+                distanceSensor.val[0] <= 120) {
+                angle -= 90;
+
+                servo.drive(0, angle);
+                app.delay(600);
+            }
+        }
+        if ((distanceSensor.val[3] > distanceSensor.val[9]) &&
+            distanceSensor.val[0] <= 120) {
+            angle += 90;
+            servo.drive(0, angle);
+            app.delay(600);
+        }
+        servo.drive(50, angle);
+    }
+}
+//[3]がでかくなる時→右　前方接近→[3]or[9]の値がでかい方向に曲がる
+
+void onlyRight(App) {
+    while (1) {
+        static int angle = 0;
+        if (angle >= 360) {
+            angle = 0;
+        }
+        if (angle <= -360) {
+            angle = 0;
+        }
+        if (distanceSensor.val[3] > 2000) {
+            distanceSensor.val[3] = 2000;
+        }
+
+        if (distanceSensor.val[9] > 2000) {
+            distanceSensor.val[9] = 2000;
+        }
+        if (distanceSensor.val[9] <= 90) {
+            servo.drive(20, angle + 30);
+        }
+        if (distanceSensor.val[3] <= 90) {
+            servo.drive(20, angle - 30);
+        }
 
         if (distanceSensor.val[0] <= 120) {
             if (distanceSensor.val[3] < distanceSensor.val[9]) {
-                angle -= 90;
-                
-        servo.drive(0, angle);
+                angle += 90;
+
+                servo.drive(0, angle);
                 app.delay(600);
             } else if (distanceSensor.val[3] > distanceSensor.val[9]) {
                 angle += 90;
                 servo.drive(0, angle);
-                
-        servo.drive(0, angle);
                 app.delay(600);
             }
-        } else {
-            // servo.directDrive(0, -80);
-            // servo.directDrive(1, -80);
-            // servo.directDrive(2, 80);
-            // servo.directDrive(3, 80);
         }
 
-        servo.drive(100, angle);
+        servo.drive(50, angle);
     }
-}  //[3]がでかくなる時→右　前方接近→[3]or[9]の値がでかい方向に曲がる
+}
 
-// void TurnLeft(App) {
+void onlyLeft(App) {
+    while (1) {
+        static int angle = 0;
+        if (angle >= 360) {
+            angle = 0;
+        }
+        if (angle <= -360) {
+            angle = 0;
+        }
+        if (distanceSensor.val[3] > 2000) {
+            distanceSensor.val[3] = 2000;
+        }
+
+        if (distanceSensor.val[9] > 2000) {
+            distanceSensor.val[9] = 2000;
+        }
+        if (distanceSensor.val[9] <= 90) {
+            servo.drive(20, angle + 30);
+        }
+        if (distanceSensor.val[3] <= 90) {
+            servo.drive(20, angle - 30);
+        }
+
+        if (distanceSensor.val[0] <= 120) {
+            if (distanceSensor.val[3] < distanceSensor.val[9]) {
+                angle -= 90;
+
+                servo.drive(0, angle);
+                app.delay(600);
+            } else if (distanceSensor.val[3] > distanceSensor.val[9]) {
+                angle -= 90;
+                servo.drive(0, angle);
+
+                servo.drive(0, angle);
+                app.delay(600);
+            }
+        }
+
+        servo.drive(50, angle);
+    }
+}
+
+// void propageRight(App) {
 //     while (1) {
-//         distanceSensor.val[12];
-//         gyro.deg;
+//         static int angle = 0;
 
-//         if (distanceSensor.val[0] <= 90) {
-//             st.WriteSpe(1, -5000, 0);
-//             st.WriteSpe(4, 5000, 0);
-//             st.WriteSpe(2, -5000, 0);
-//             st.WriteSpe(3, 5000, 0);  // 時計回りに回転
-//             if (gyro.deg == 90) {
-//                 break;
+//         if (angle >= 360) {
+//             angle = 0;
+//         }
+//         if (angle <= -360) {
+//             angle = 0;
+//         }
+//         if (distanceSensor.val[3] > 2000) {
+//             distanceSensor.val[3] = 2000;
+//         }
+
+//         if (distanceSensor.val[3] >= 120) {
+//             for (int i = 0; i < 3; i++) {
+//                 servo.driveAngularVelocity(50, 0);
+//                 app.delay(500);
+//                 angle += 30;
+//             }
+//             servo.drive(0, angle);
+
+//             app.delay(600);
+//         }
+//         if (distanceSensor.val[3] <= 120) {
+//             servo.drive(50, angle);
+//             app.delay(100);
+//         }
+//         if (distanceSensor.val[0] <= 120) {
+//             if ((distanceSensor.val[3] < distanceSensor.val[9]) &&
+//                 distanceSensor.val[0] <= 120) {
+//                 angle -= 90;
+
+//                 servo.drive(0, angle);
+//                 app.delay(600);
+//             }
+
+//             if ((distanceSensor.val[3] > distanceSensor.val[9]) &&
+//                 distanceSensor.val[0] <= 120) {
+//                 angle += 90;
+//                 servo.drive(0, angle);
+//                 app.delay(600);
 //             }
 //         }
+//         // servo.drive(50,angle);
 //     }
 // }
 

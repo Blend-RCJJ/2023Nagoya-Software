@@ -58,28 +58,35 @@ void VictimDectationLED(App) {
 
 void topLED(App) {
     while (1) {
-        led.setTopBrightness(distanceSensor.val[0]/8);
+        led.setTopBrightness(distanceSensor.val[0] / 8);
         led.setTopColor(led.red);
         led.show();
         app.delay(100);
     }
 }
 
-
-
 void mainApp(App) {
-    uart1.println("turnLeftApp開始");
-    app.start(propagateRight);
-    app.delay(10);
+    while (1) {
+        app.start(largeDrive);
+        app.delay(60000);
+        app.stop(largeDrive);
+        app.start(onlyRight);
+        app.delay(30000);
+        app.stop(onlyRight);
+        app.start(onlyLeft);
+        app.delay(30000);
+        app.stop(onlyLeft);
+
+    app.delay(100);
+     }
 
     while (1) {
         // servo.driveAngularVelocity(0, 80);
         // servo.drive(0, 180);
-        app.start(topLED);
+        // app.start(topLED);
         uart1.println(distanceSensor.val[0]);
         uart1.println(gyro.deg);
         app.delay(10);
-
     }
 }
 
@@ -115,7 +122,7 @@ void setup() {
     led.setLeftColor(led.blue);
     led.setRightColor(led.blue);
     speaker.bootSound();
-    // led.bootIllumination();
+    led.bootIllumination();
 
     Wire.setSDA(PB9);
     Wire.setSCL(PB8);
@@ -128,8 +135,11 @@ void setup() {
     app.create(inputMonitoringApp, firstPriority);
     app.create(DriveLeft);
     app.create(DriveRight);
-    app.create(propagateRight);
+    app.create(largeDrive);
+    app.create(onlyRight);
+    app.create(onlyLeft);
     app.create(topLED);
+
 
     app.start(mainApp);
     app.start(inputMonitoringApp);

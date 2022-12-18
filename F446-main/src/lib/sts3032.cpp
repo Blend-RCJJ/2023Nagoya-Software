@@ -30,10 +30,11 @@ void STS3032::directDrive(int id, int percent, int acceleration) {
     sendData = percent * maximumSpeed / 100;
     sendData = constrain(sendData, -maximumSpeed, maximumSpeed);
 
-    if (digitalRead(PA5)) {
-        serialServo.WriteSpe(id + 1, sendData, acceleration);
-    } else {
+    if (!digitalRead(PA5) || cameraLeft.isVictimDetected ||
+        cameraRight.isVictimDetected) {
         serialServo.WriteSpe(id + 1, 0, acceleration);
+    } else {
+        serialServo.WriteSpe(id + 1, sendData, acceleration);
     }
 }
 

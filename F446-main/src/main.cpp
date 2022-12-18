@@ -20,9 +20,9 @@ RTOS_Kit app;
 #include "./lib/floorSensor.h"
 #include "./lib/unitV.h"
 
-Adafruit_NeoPixel stripL   = Adafruit_NeoPixel(7, PA15, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel stripR   = Adafruit_NeoPixel(7, PB13, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel stripUI  = Adafruit_NeoPixel(24, PB14, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripL = Adafruit_NeoPixel(7, PA15, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripR = Adafruit_NeoPixel(7, PB13, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripUI = Adafruit_NeoPixel(24, PB14, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripTop = Adafruit_NeoPixel(24, PC1, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripFloor = Adafruit_NeoPixel(3, PB15, NEO_GRB + NEO_KHZ800);
 
@@ -30,7 +30,7 @@ Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x28, &Wire);
 
 VL53L0X distanceSensor(&uart4);
 BNO055 gyro(&bno);
-WS2812B led(80);
+WS2812B led(50);
 MLT8530 speaker;
 SWITCHUI ui;
 FLOOR_SENSOR floorSensor;
@@ -47,18 +47,36 @@ STS3032 servo(&uart5);
 #define SPEED3 80
 #define SPEED4 80
 
-void VictimDectationLED(App) {
+void VictimDetectionLED(App) {
     while (1) {
-        // static int count = 0;
-        // led.setUIColor(led.green);
-        // led.setLeftColor(led.green);
-        // led.setRightColor(led.green);
-        // led.setUIBrightness(127 * sin(count / 50.0) + 127);
-        // led.setRightBrightness(127 * sin(count / 50.0) + 127);
-        // led.setLeftBrightness(127 * sin(count / 50.0) + 127);
-        // led.show();
-        // count++;
+        static int count = 0;
+        if (cameraLeft.isVictimDetected || cameraRight.isVictimDetected) {
+            led.setUIColor(led.red);
+            led.setLeftColor(led.red);
+            led.setRightColor(led.red);
+            led.setUIBrightness(127 * sin(millis() / 200.0) + 127);
+            led.setRightBrightness(127 * sin(millis() / 200.0) + 127);
+            led.setLeftBrightness(127 * sin(millis() / 200.0) + 127);
 
+            servo.driveAngularVelocity(0, 0);
+        } else {
+            led.setUIBrightness(255);
+            led.setRightBrightness(255);
+            led.setLeftBrightness(255);
+
+            led.setLeftColor(led.blue);
+            led.setRightColor(led.blue);
+            led.setUIColor(led.blank);
+        }
+
+        led.setTopBrightness(255);
+        for (int i = 0; i < 12; i++) {
+            int color =
+                constrain(map(distanceSensor.val[i], 0, 500, 255, 0), 0, 255);
+            stripTop.setPixelColor(i * 2, 0, 0, color);
+            stripTop.setPixelColor(i * 2 + 1, 0, 0, color);
+        }
+        led.show();
         app.delay(1);
     }
 }  // 被災者発見シグナルApp
@@ -159,34 +177,6 @@ void isOnBlue(App) {
     }
 }
 
-// void LEDtktk(App) {
-//     while (1) {
-//          if (cameraLeft.isVictimDetected || cameraRight.isVictimDetected) {
-//             led.setUIColor(led.yellow);
-//             led.setLeftColor(led.yellow);
-//             led.setRightColor(led.yellow);
-//             led.setTopColor(led.yellow);
-//             led.setUIBrightness(255 * (millis() / 100) % 2);
-//             led.setRightBrightness(255 * (millis() / 100) % 2);
-//             led.setLeftBrightness(255 * (millis() / 100) % 2);
-//             led.setTopBrightness(255 * (millis() / 100) % 2);
-//             led.show();
-//         } else {
-//             // app.stop(LEDtktk);
-
-//             led.setUIBrightness(255);
-//             led.setRightBrightness(255);
-//             led.setLeftBrightness(255);
-//             led.setTopBrightness(255);
-//             led.setUIColor(led.blue);
-//             led.setLeftColor(led.blue);
-//             led.setRightColor(led.blue);
-//             led.setTopColor(led.blue);
-//             led.show();
-//         }
-//     }
-// }
-
 void mainApp(App) {
     // app.start(LEDtktk);
     while (1) {
@@ -216,8 +206,6 @@ void mainApp(App) {
         app.start(left);
         app.delay(2000);
         app.stop(left);
-
-
     }
 
     while (1) {
@@ -272,20 +260,21 @@ void setup() {
     gyro.init();
 
     app.create(mainApp, firstPriority);
-    app.create(VictimDectationLED);
+    app.create(VictimDetectionLED);
     app.create(inputMonitoringApp, firstPriority);
     app.create(largeDrive);
     app.create(onlyRight);
     app.create(onlyLeft);
-    // app.create(topLED);
     app.create(isOnBlack);
     app.create(isOnBlue);
     app.create(oooon);
     app.create(right);
     app.create(random);
+    app.create(VictimDetectionLED);
 
     app.start(mainApp);
     app.start(inputMonitoringApp);
+    app.start(VictimDetectionLED);
     app.startRTOS();
 }
 

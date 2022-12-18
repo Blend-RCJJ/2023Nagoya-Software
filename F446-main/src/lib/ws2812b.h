@@ -30,12 +30,13 @@ class WS2812B {
     unsigned long colorRGB(int red, int green, int blue);
     unsigned long colorHSV(int hue, int saturation, int brightness);
 
-    unsigned long red = colorHSV(0,255,255);
-    unsigned long green = colorHSV(90,255,255);
-    unsigned long blue = colorHSV(180,255,255);
-    unsigned long pink = colorHSV(0,125,255);
-    unsigned long yellow = colorHSV(45,255,255);
-    unsigned long white = colorHSV(255,0,255);
+    unsigned long red = colorHSV(0, 255, 255);
+    unsigned long green = colorHSV(90, 255, 255);
+    unsigned long blue = colorHSV(180, 255, 255);
+    unsigned long pink = colorHSV(0, 125, 255);
+    unsigned long yellow = colorHSV(45, 255, 255);
+    unsigned long white = colorHSV(255, 0, 255);
+    unsigned long blank = colorHSV(0, 0, 0);
 
     void setUIColor(unsigned long color);
     void setLeftColor(unsigned long color);

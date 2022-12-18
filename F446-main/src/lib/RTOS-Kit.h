@@ -10,7 +10,7 @@
 #include <STM32FreeRTOS.h>
 
 #define App void *rtosKit
-#define maximumAppCount 10
+#define maximumAppCount 20
 
 #define firstPriority 4
 #define secondPriority 3

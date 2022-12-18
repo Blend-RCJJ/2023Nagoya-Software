@@ -18,6 +18,9 @@ extern SWITCHUI ui;
 extern Adafruit_NeoPixel stripFloor;
 extern WS2812B led;
 
+extern UNITV cameraLeft;
+extern UNITV cameraRight;
+
 void inputMonitoringApp(App) {
     while (1) {
         distanceSensor.getDistance();
@@ -37,6 +40,9 @@ void inputMonitoringApp(App) {
         led.setFloorColor(led.blue);
         delay(3);
         floorSensor.blueVal = analogRead(PC0);
+
+        cameraLeft.read();
+        cameraRight.read();
 
         // uart1.print(floorSensor.redVal);
         // uart1.print("\t");

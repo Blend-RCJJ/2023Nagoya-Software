@@ -95,10 +95,10 @@ void DriveRight(App) {
             servo.drive(0, 0);
             app.delay(550);
         } else {
-            servo.directDrive(0, -80);
-            servo.directDrive(1, -80);
-            servo.directDrive(2, 80);
-            servo.directDrive(3, 80);
+            servo.directDrive(0, -50);
+            servo.directDrive(1, -50);
+            servo.directDrive(2, 50);
+            servo.directDrive(3, 50);
             digitalWrite(PB12, HIGH);
         }
     }
@@ -229,9 +229,23 @@ void onlyLeft(App) {
 void oooon(App) {
     while (1) {
         servo.driveAngularVelocity(0, 100);
-        app.delay(100);
+        app.delay(200);
         servo.driveAngularVelocity(0, -100);
-        app.delay(100);
+        app.delay(200);
+    }
+}
+
+void right(App) {
+    while (1) {
+        angle += 90;
+        angle %= 360;
+        servo.driveAngularVelocity(0, angle);
+    }
+}
+
+void random(App) {
+    while (1) {
+        app.delay(1);
     }
 }
 

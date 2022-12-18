@@ -49,15 +49,15 @@ STS3032 servo(&uart5);
 
 void VictimDectationLED(App) {
     while (1) {
-        static int count = 0;
-        led.setUIColor(led.green);
-        led.setLeftColor(led.green);
-        led.setRightColor(led.green);
-        led.setUIBrightness(127 * sin(count / 50.0) + 127);
-        led.setRightBrightness(127 * sin(count / 50.0) + 127);
-        led.setLeftBrightness(127 * sin(count / 50.0) + 127);
-        led.show();
-        count++;
+        // static int count = 0;
+        // led.setUIColor(led.green);
+        // led.setLeftColor(led.green);
+        // led.setRightColor(led.green);
+        // led.setUIBrightness(127 * sin(count / 50.0) + 127);
+        // led.setRightBrightness(127 * sin(count / 50.0) + 127);
+        // led.setLeftBrightness(127 * sin(count / 50.0) + 127);
+        // led.show();
+        // count++;
 
         app.delay(1);
     }
@@ -65,9 +65,9 @@ void VictimDectationLED(App) {
 
 void topLED(App) {
     while (1) {
-        led.setTopBrightness(distanceSensor.val[0] / 8);
-        led.setTopColor(led.red);
-        led.show();
+        // led.setTopBrightness(distanceSensor.val[0] / 8);
+        // led.setTopColor(led.red);
+        // led.show();
         app.delay(100);
     }
 }
@@ -77,8 +77,8 @@ void isOnBlack(App) {
     while (1) {
         if (((floorSensor.redVal >= 900) && (floorSensor.blueVal >= 900)) &&
             (floorSensor.greenVal >= 900)) {
-            led.setTopColor(led.blue);
-            led.show();
+            // led.setTopColor(led.blue);
+            // led.show();
             app.stop(largeDrive);
             app.stop(onlyRight);
             app.stop(onlyLeft);
@@ -110,8 +110,8 @@ void isOnBlack(App) {
                     break;
             }
         } else {
-            led.setTopColor(led.red);
-            led.show();
+            // led.setTopColor(led.red);
+            // led.show();
             app.delay(10);
         }
     }
@@ -121,8 +121,8 @@ void isOnBlue(App) {
     while (1) {
         if ((floorSensor.blueVal <= floorSensor.greenVal - 100) &&
             (floorSensor.blueVal <= floorSensor.redVal - 100)) {
-            led.setTopColor(led.blue);
-            led.show();
+            // led.setTopColor(led.blue);
+            // led.show();
             app.stop(largeDrive);
             app.stop(onlyRight);
             app.stop(onlyLeft);
@@ -152,8 +152,8 @@ void isOnBlue(App) {
                     break;
             }
         } else {
-            led.setTopColor(led.red);
-            led.show();
+            // led.setTopColor(led.red);
+            // led.show();
             app.delay(10);
         }
     }
@@ -257,9 +257,9 @@ void setup() {
     uart6.setTx(PC6);
     uart6.begin(115200);
 
-    led.setLeftColor(led.blue);
-    led.setRightColor(led.blue);
-    led.setUIColor(led.blue);
+    led.setLeftColor(led.yellow);
+    led.setRightColor(led.yellow);
+    led.setUIColor(led.yellow);
     led.show();
 
     speaker.bootSound();

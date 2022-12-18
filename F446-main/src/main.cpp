@@ -160,33 +160,30 @@ void mainApp(App) {
 
         app.start(isOnBlack);
         app.start(isOnBlue);
-        app.start(random);
-        app.delay(10);
-        // app.start(largeDrive);
-        // app.delay(30000);
-        // app.start(right);
-        // app.delay(2000);
-        // app.stop(right);
-        // // app.start(DriveRight);
-        // // app.delay(5000);
-        // // app.stop(DriveRight);
-
-        // appMode = 1;
-        // app.stop(largeDrive);
-        // app.start(onlyRight);
-        // app.delay(10000);
-
-        // appMode = 2;
-        // app.stop(onlyRight);
-        // app.start(onlyLeft);
-        // app.delay(10000);
-        // app.stop(onlyLeft);
-        // app.start(right);
-        // app.delay(2000);
-        // app.stop(right);
+        app.start(largeDrive);
+        app.delay(30000);
+        app.start(right);
+        app.delay(2000);
+        app.stop(right);
         // app.start(DriveRight);
         // app.delay(5000);
         // app.stop(DriveRight);
+
+        appMode = 1;
+        app.stop(largeDrive);
+        app.start(onlyRight);
+        app.delay(10000);
+
+        appMode = 2;
+        app.stop(onlyRight);
+        app.start(onlyLeft);
+        app.delay(10000);
+        app.stop(onlyLeft);
+        app.start(left);
+        app.delay(2000);
+        app.stop(left);
+
+
     }
 
     while (1) {
@@ -236,8 +233,6 @@ void setup() {
     app.create(mainApp, firstPriority);
     app.create(VictimDectationLED);
     app.create(inputMonitoringApp, firstPriority);
-    app.create(DriveLeft);
-    app.create(DriveRight);
     app.create(largeDrive);
     app.create(onlyRight);
     app.create(onlyLeft);

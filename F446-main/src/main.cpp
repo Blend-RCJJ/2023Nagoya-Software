@@ -80,7 +80,7 @@ void isOnBlack(App) {
             servo.driveAngularVelocity(0, 0);
             app.delay(500);
 
-            angle += 180;
+            angle -= 90;
             angle %= 360;
             servo.driveAngularVelocity(-50, 0);
             app.delay(1000);
@@ -112,34 +112,93 @@ void isOnBlack(App) {
     }
 }
 
+void isOnBlue(App) {
+    while (1) {
+        if ((floorSensor.blueVal <= floorSensor.greenVal - 100) &&
+            (floorSensor.blueVal <= floorSensor.redVal - 100)) {
+            led.setTopColor(led.blue);
+            led.show();
+            app.stop(largeDrive);
+            app.stop(onlyRight);
+            app.stop(onlyLeft);
+            servo.driveAngularVelocity(0, 0);
+            app.delay(5000);
+
+            unsigned long timer = millis();
+            while (millis() <= timer + 1300) {
+                servo.drive(0, angle);
+                app.delay(1);
+            }
+
+            servo.driveAngularVelocity(50, 0);
+            app.delay(2000);
+
+            switch (appMode) {
+                case 0:
+                    app.start(largeDrive);
+                    break;
+                case 1:
+
+                    app.start(onlyRight);
+                    break;
+                case 2:
+
+                    app.start(onlyLeft);
+                    break;
+            }
+        } else {
+            led.setTopColor(led.red);
+            led.show();
+            app.delay(10);
+        }
+    }
+}
+
 void mainApp(App) {
-    
     while (1) {
         appMode = 0;
+
         app.start(isOnBlack);
-        app.start(largeDrive);
-        app.delay(60000);
+        app.start(isOnBlue);
+        app.start(random);
+        app.delay(10);
+        // app.start(largeDrive);
+        // app.delay(30000);
+        // app.start(right);
+        // app.delay(2000);
+        // app.stop(right);
+        // // app.start(DriveRight);
+        // // app.delay(5000);
+        // // app.stop(DriveRight);
 
-        appMode = 1;
-        app.stop(largeDrive);
-        app.start(onlyRight);
-        app.delay(30000);
+        // appMode = 1;
+        // app.stop(largeDrive);
+        // app.start(onlyRight);
+        // app.delay(10000);
 
-        appMode = 2;
-        app.stop(onlyRight);
-        app.start(onlyLeft);
-        app.delay(30000);
-        app.stop(onlyLeft);
+        // appMode = 2;
+        // app.stop(onlyRight);
+        // app.start(onlyLeft);
+        // app.delay(10000);
+        // app.stop(onlyLeft);
+        // app.start(right);
+        // app.delay(2000);
+        // app.stop(right);
+        // app.start(DriveRight);
+        // app.delay(5000);
+        // app.stop(DriveRight);
     }
 
-    // while (1) {
+    while (1) {
+        // app.start(oooon);
+        // app.delay(10);
         // servo.driveAngularVelocity(0, 80);
         // servo.drive(0, 180);
         // app.start(topLED);
         // uart1.println(distanceSensor.val[0]);
         // uart1.println(gyro.deg);
-    //     app.delay(10);
-    // }
+        //     app.delay(10);
+    }
 }
 
 void setup() {
@@ -184,7 +243,10 @@ void setup() {
     app.create(onlyLeft);
     app.create(topLED);
     app.create(isOnBlack);
+    app.create(isOnBlue);
     app.create(oooon);
+    app.create(right);
+    app.create(random);
 
     app.start(mainApp);
     app.start(inputMonitoringApp);

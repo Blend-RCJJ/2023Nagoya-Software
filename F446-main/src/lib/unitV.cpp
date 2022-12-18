@@ -8,25 +8,25 @@ UNITV::UNITV(HardwareSerial *ptr) {
 }
 
 void UNITV::read(void) {
-    if (millis() > firstReadTime + 5000) {
-        if (isVictimDetected) {
-            lastUpdatingTime = millis();
-        }
+    // if (millis() > firstReadTime + 5000) {
+    //     if (isVictimDetected) {
+    //         lastUpdatingTime = millis();
+    //     }
 
-        isVictimDetected = false;
-    }
+    //     isVictimDetected = false;
+    // }
 
-    if (serialPtr->available()) {
-        char data = serialPtr->read();
-        uart1.println(data);
+    // if (serialPtr->available()) {
+    //     char data = serialPtr->read();
+    //     uart1.println(data);
 
-        //生死判定用
-        if (data != 'N') {
-            if (!isVictimDetected && millis() > lastUpdatingTime + 5000) {
-                firstReadTime = millis();
-                isVictimDetected = true;
-            }
-        }
+    //     //生死判定用
+    //     if (data != 'N') {
+    //         if (!isVictimDetected && millis() > lastUpdatingTime + 5000) {
+    //             firstReadTime = millis();
+    //             isVictimDetected = true;
+    //         }
+    //     }
 
         return;
 
@@ -115,4 +115,4 @@ void UNITV::read(void) {
         //     }
         // }
     }
-}
+// }

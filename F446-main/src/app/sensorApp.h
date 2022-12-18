@@ -80,39 +80,34 @@ void DriveLeft(App) {
     }
 }
 
+//         digitalWrite(PB12, LOW);
+//     } else if (distanceSensor.val[0] <= 120 &&
+//                (((gyro.deg >= 80) && (gyro.deg <= 100))) &&
+//                distanceSensor.val[0] != 0) {
+//         servo.drive(0, 180);
+//         app.delay(550);
+//     } else if (distanceSensor.val[0] <= 120 &&
+//                (((gyro.deg >= 170) && (gyro.deg <= 190))) &&
+//                distanceSensor.val[0] != 0) {
+//         servo.drive(0, 270);
+//         app.delay(550);
+//     } else if (distanceSensor.val[0] <= 120 &&
+//                (((gyro.deg >= 260) && (gyro.deg <= 280))) &&
+//                distanceSensor.val[0] != 0) {
+//         servo.drive(0, 0);
+//         app.delay(550);
+//     } else {
+//         servo.directDrive(0, -50);
+//         servo.directDrive(1, -50);
+//         servo.directDrive(2, 50);
+//         servo.directDrive(3, 50);
+//         digitalWrite(PB12, HIGH);
+//     }
 
-
-
-    //         digitalWrite(PB12, LOW);
-    //     } else if (distanceSensor.val[0] <= 120 &&
-    //                (((gyro.deg >= 80) && (gyro.deg <= 100))) &&
-    //                distanceSensor.val[0] != 0) {
-    //         servo.drive(0, 180);
-    //         app.delay(550);
-    //     } else if (distanceSensor.val[0] <= 120 &&
-    //                (((gyro.deg >= 170) && (gyro.deg <= 190))) &&
-    //                distanceSensor.val[0] != 0) {
-    //         servo.drive(0, 270);
-    //         app.delay(550);
-    //     } else if (distanceSensor.val[0] <= 120 &&
-    //                (((gyro.deg >= 260) && (gyro.deg <= 280))) &&
-    //                distanceSensor.val[0] != 0) {
-    //         servo.drive(0, 0);
-    //         app.delay(550);
-    //     } else {
-    //         servo.directDrive(0, -50);
-    //         servo.directDrive(1, -50);
-    //         servo.directDrive(2, 50);
-    //         servo.directDrive(3, 50);
-    //         digitalWrite(PB12, HIGH);
-    //     }
-    
-    // }
-
+// }
 
 void largeDrive(App) {
     while (1) {
-
         if (angle >= 360) {
             angle = 0;
         }
@@ -126,10 +121,10 @@ void largeDrive(App) {
         if (distanceSensor.val[9] > 2000) {
             distanceSensor.val[9] = 2000;
         }
-        if (distanceSensor.val[9] <= 90) {
+        if (distanceSensor.val[9] <= 110) {
             servo.drive(20, angle + 30);
         }
-        if (distanceSensor.val[3] <= 90) {
+        if (distanceSensor.val[3] <= 110) {
             servo.drive(20, angle - 30);
         }
 
@@ -149,11 +144,9 @@ void largeDrive(App) {
             app.delay(600);
         }
 
-
         servo.drive(50, angle);
     }
 }
-
 
 //[3]がでかくなる時→右　前方接近→[3]or[9]の値がでかい方向に曲がる
 
@@ -172,10 +165,10 @@ void onlyRight(App) {
         if (distanceSensor.val[9] > 2000) {
             distanceSensor.val[9] = 2000;
         }
-        if (distanceSensor.val[9] <= 90) {
+        if (distanceSensor.val[9] <= 110) {
             servo.drive(20, angle + 30);
         }
-        if (distanceSensor.val[3] <= 90) {
+        if (distanceSensor.val[3] <= 110) {
             servo.drive(20, angle - 30);
         }
 
@@ -211,10 +204,10 @@ void onlyLeft(App) {
         if (distanceSensor.val[9] > 2000) {
             distanceSensor.val[9] = 2000;
         }
-        if (distanceSensor.val[9] <= 90) {
+        if (distanceSensor.val[9] <= 110) {
             servo.drive(20, angle + 30);
         }
-        if (distanceSensor.val[3] <= 90) {
+        if (distanceSensor.val[3] <= 110) {
             servo.drive(20, angle - 30);
         }
 
@@ -251,6 +244,7 @@ void right(App) {
         angle += 90;
         angle %= 360;
         servo.driveAngularVelocity(0, angle);
+        app.delay(2000);
     }
 }
 
@@ -259,6 +253,7 @@ void left(App) {
         angle -= 90;
         angle %= 360;
         servo.driveAngularVelocity(0, angle);
+        app.delay(2000);
     }
 }
 

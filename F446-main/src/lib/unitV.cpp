@@ -1,6 +1,8 @@
 #include "./unitV.h"
+#include "./VL53L0X.h"
 
 extern HardwareSerial uart1;
+extern VL53L0X distanceSensor;
 
 UNITV::UNITV(HardwareSerial *ptr) {
     serialPtr = ptr;
@@ -16,17 +18,17 @@ void UNITV::read(void) {
     //     isVictimDetected = false;
     // }
 
-    // if (serialPtr->available()) {
-    //     char data = serialPtr->read();
-    //     uart1.println(data);
+    if (serialPtr->available()) {
+        char data = serialPtr->read();
 
-    //     //生死判定用
-    //     if (data != 'N') {
-    //         if (!isVictimDetected && millis() > lastUpdatingTime + 5000) {
-    //             firstReadTime = millis();
-    //             isVictimDetected = true;
-    //         }
-    //     }
+        //生死判定用
+        if (data == 'H' || data == 'U' || data == 'S' || data == 'R' || data == 'G' || data == 'Y') {
+            uart1.println(data);
+            if (!isVictimDetected && millis() > lastUpdatingTime + 5000) {
+                firstReadTime = millis();
+                isVictimDetected = true;
+            }
+        }
 
         return;
 

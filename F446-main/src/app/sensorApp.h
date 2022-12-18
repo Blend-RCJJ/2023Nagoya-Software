@@ -42,8 +42,13 @@ void inputMonitoringApp(App) {
         delay(3);
         floorSensor.blueVal = analogRead(PC0);
 
-        cameraLeft.read();
-        cameraRight.read();
+        if (distanceSensor.val[9] <= 200) {
+            cameraLeft.read();
+        }
+
+        if (distanceSensor.val[3] <= 200) {
+            cameraRight.read();
+        }
 
         // uart1.print(floorSensor.redVal);
         // uart1.print("\t");
@@ -51,12 +56,12 @@ void inputMonitoringApp(App) {
         // uart1.print("\t");
         // uart1.print(floorSensor.blueVal);
         // uart1.println("\t");
-        uart1.print(floorSensor.redVal);
-        uart1.print("\t");
-        uart1.print(floorSensor.greenVal);
-        uart1.print("\t");
-        uart1.print(floorSensor.blueVal);
-        uart1.println("\t");
+        // uart1.print(floorSensor.redVal);
+        // uart1.print("\t");
+        // uart1.print(floorSensor.greenVal);
+        // uart1.print("\t");
+        // uart1.print(floorSensor.blueVal);
+        // uart1.println("\t");
 
         app.delay(10);
     }

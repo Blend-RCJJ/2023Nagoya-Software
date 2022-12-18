@@ -62,11 +62,11 @@ WS2812B::WS2812B(int brightness) {
     maxBrightness = brightness;
 
     stripR.begin();
-    stripR.setBrightness(brightness);
+    stripR.setBrightness(brightness * 1.5);
     stripR.show();
 
     stripL.begin();
-    stripL.setBrightness(brightness);
+    stripL.setBrightness(brightness * 1.5);
     stripL.show();
 
     stripUI.begin();

@@ -20,9 +20,9 @@ RTOS_Kit app;
 #include "./lib/floorSensor.h"
 #include "./lib/unitV.h"
 
-Adafruit_NeoPixel stripL = Adafruit_NeoPixel(7, PA15, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel stripR = Adafruit_NeoPixel(7, PB13, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel stripUI = Adafruit_NeoPixel(24, PB14, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripL   = Adafruit_NeoPixel(7, PA15, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripR   = Adafruit_NeoPixel(7, PB13, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripUI  = Adafruit_NeoPixel(24, PB14, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripTop = Adafruit_NeoPixel(24, PC1, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripFloor = Adafruit_NeoPixel(3, PB15, NEO_GRB + NEO_KHZ800);
 
@@ -204,6 +204,13 @@ void mainApp(App) {
         app.delay(10000);
         app.stop(onlyLeft);
         app.start(left);
+<<<<<<< HEAD
+=======
+        led.setTopColor(led.blue);
+        led.setRightColor(led.blue);
+        led.setLeftColor(led.blue);
+        led.show();
+>>>>>>> #23_rightSideFollowUp
         app.delay(2000);
         app.stop(left);
     }

@@ -26,10 +26,6 @@ class UNITV {
     void read(void);
 
    private:
-    int victimTypeList[10] = {0};
-    int victimCount = 0;
-    unsigned long lastUpdatingTime = 0;
-    unsigned long firstReadTime = 0;
 };
 
 #endif

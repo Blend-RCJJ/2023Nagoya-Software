@@ -42,13 +42,8 @@ void inputMonitoringApp(App) {
         delay(3);
         floorSensor.blueVal = analogRead(PC0);
 
-        if (distanceSensor.val[9] <= 200) {
-            cameraLeft.read();
-        }
-
-        if (distanceSensor.val[3] <= 200) {
-            cameraRight.read();
-        }
+        cameraLeft.read();
+        cameraRight.read();
 
         // uart1.print(floorSensor.redVal);
         // uart1.print("\t");
@@ -56,12 +51,12 @@ void inputMonitoringApp(App) {
         // uart1.print("\t");
         // uart1.print(floorSensor.blueVal);
         // uart1.println("\t");
-        // uart1.print(floorSensor.redVal);
-        // uart1.print("\t");
-        // uart1.print(floorSensor.greenVal);
-        // uart1.print("\t");
-        // uart1.print(floorSensor.blueVal);
-        // uart1.println("\t");
+        uart1.print(floorSensor.redVal);
+        uart1.print("\t");
+        uart1.print(floorSensor.greenVal);
+        uart1.print("\t");
+        uart1.print(floorSensor.blueVal);
+        uart1.println("\t");
 
         app.delay(10);
     }
@@ -209,10 +204,10 @@ void onlyLeft(App) {
         if (distanceSensor.val[9] > 2000) {
             distanceSensor.val[9] = 2000;
         }
-        if (distanceSensor.val[9] <= 110) {
+        if (distanceSensor.val[9] <= 100) {
             servo.drive(20, angle + 30);
         }
-        if (distanceSensor.val[3] <= 110) {
+        if (distanceSensor.val[3] <= 100) {
             servo.drive(20, angle - 30);
         }
 
@@ -235,15 +230,6 @@ void onlyLeft(App) {
     }
 }
 
-void oooon(App) {
-    while (1) {
-        servo.driveAngularVelocity(0, 100);
-        app.delay(200);
-        servo.driveAngularVelocity(0, -100);
-        app.delay(200);
-    }
-}
-
 void right(App) {
     while (1) {
         angle += 90;
@@ -262,58 +248,20 @@ void left(App) {
     }
 }
 
-void random(App) {
+void rightSideFollowUp(App) {
     while (1) {
-        app.delay(1);
+        if ((distanceSensor.val[1] < distanceSensor.val[2]) &&
+            (distanceSensor.val[2] >= 300)) {
+            angle += 45;
+            servo.drive(0, angle);
+            app.delay(600);
+            servo.driveAngularVelocity(50, 0);
+            app.delay(500);
+            angle += 45;
+            servo.drive(0, angle);
+            app.delay(600);
+        }
     }
 }
-
-// void propageRight(App) {
-//     while (1) {
-//         static int angle = 0;
-
-//         if (angle >= 360) {
-//             angle = 0;
-//         }
-//         if (angle <= -360) {
-//             angle = 0;
-//         }
-//         if (distanceSensor.val[3] > 2000) {
-//             distanceSensor.val[3] = 2000;
-//         }
-
-//         if (distanceSensor.val[3] >= 120) {
-//             for (int i = 0; i < 3; i++) {
-//                 servo.driveAngularVelocity(50, 0);
-//                 app.delay(500);
-//                 angle += 30;
-//             }
-//             servo.drive(0, angle);
-
-//             app.delay(600);
-//         }
-//         if (distanceSensor.val[3] <= 120) {
-//             servo.drive(50, angle);
-//             app.delay(100);
-//         }
-//         if (distanceSensor.val[0] <= 120) {
-//             if ((distanceSensor.val[3] < distanceSensor.val[9]) &&
-//                 distanceSensor.val[0] <= 120) {
-//                 angle -= 90;
-
-//                 servo.drive(0, angle);
-//                 app.delay(600);
-//             }
-
-//             if ((distanceSensor.val[3] > distanceSensor.val[9]) &&
-//                 distanceSensor.val[0] <= 120) {
-//                 angle += 90;
-//                 servo.drive(0, angle);
-//                 app.delay(600);
-//             }
-//         }
-//         // servo.drive(50,angle);
-//     }
-// }
 
 #endif

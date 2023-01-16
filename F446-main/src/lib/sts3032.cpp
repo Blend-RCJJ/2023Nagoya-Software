@@ -1,15 +1,8 @@
 #include "sts3032.h"
 
-#include "./ws2812b.h"
-#include "./unitV.h"
-
 SMS_STS serialServo;
 
 extern HardwareSerial uart1;
-
-extern WS2812B led;
-extern UNITV cameraLeft;
-extern UNITV cameraRight;
 
 STS3032::STS3032(HardwareSerial *ptr) {
     serialPtr = ptr;
@@ -30,12 +23,7 @@ void STS3032::directDrive(int id, int percent, int acceleration) {
     sendData = percent * maximumSpeed / 100;
     sendData = constrain(sendData, -maximumSpeed, maximumSpeed);
 
-    if (!digitalRead(PA5) || cameraLeft.isVictimDetected ||
-        cameraRight.isVictimDetected) {
-        serialServo.WriteSpe(id + 1, 0, acceleration);
-    } else {
-        serialServo.WriteSpe(id + 1, sendData, acceleration);
-    }
+    serialServo.WriteSpe(id + 1, sendData, acceleration);
 }
 
 void STS3032::driveAngularVelocity(int velocity, int angularVelocity) {

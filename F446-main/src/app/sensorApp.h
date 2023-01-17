@@ -48,4 +48,27 @@ void inputMonitoringApp(App) {
     }
 }
 
+void servoApp(App) {
+    while (1) {
+        servo.drive(servo.velocity, servo.angle);
+        app.delay(2);
+    }
+}
+
+void adjustmentApp(App) {
+    while (1) {
+        servo.velocity = 0;
+        servo.angle    = 90;
+        app.delay(100);
+        if (distanceSensor.val[6] >= 150) {
+            servo.velocity = -50;
+            servo.drive(servo.velocity, servo.angle);
+        }
+        if (distanceSensor.val[0] >= 150) {
+            servo.velocity = 50;
+            servo.drive(servo.velocity, servo.angle);
+        }
+    }
+}
+
 #endif

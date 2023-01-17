@@ -75,6 +75,8 @@ void setup() {
 
     app.create(mainApp, firstPriority);
     app.create(inputMonitoringApp, firstPriority);
+    app.create(servoApp);
+    app.create(adjustmentApp);
 
     app.start(mainApp);
     app.start(inputMonitoringApp);
@@ -84,6 +86,8 @@ void setup() {
 // Main app.
 void mainApp(App) {
     while (1) {
+        app.start(adjustmentApp);
+        app.delay(10);
     }
 }
 

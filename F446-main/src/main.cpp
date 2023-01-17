@@ -15,14 +15,13 @@ RTOS_Kit app;
 #include "./lib/floorSensor.h"
 #include "./lib/mlt8530.h"
 #include "./lib/switchUI.h"
+#include "./lib/unitV.h"
 #include "./lib/vl53l0x.h"
 #include "./lib/ws2812b.h"
-#include "./lib/floorSensor.h"
-#include "./lib/unitV.h"
 
-Adafruit_NeoPixel stripL = Adafruit_NeoPixel(7, PA15, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel stripR = Adafruit_NeoPixel(7, PB13, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel stripUI = Adafruit_NeoPixel(24, PB14, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripL   = Adafruit_NeoPixel(7, PA15, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripR   = Adafruit_NeoPixel(7, PB13, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripUI  = Adafruit_NeoPixel(24, PB14, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripTop = Adafruit_NeoPixel(24, PC1, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripFloor = Adafruit_NeoPixel(3, PB15, NEO_GRB + NEO_KHZ800);
 
@@ -76,17 +75,20 @@ void setup() {
     app.create(mainApp, firstPriority);
     app.create(inputMonitoringApp, firstPriority);
     app.create(servoApp);
-    app.create(adjustmentApp);
+    app.create(gridControlApp);
 
     app.start(mainApp);
     app.start(inputMonitoringApp);
     app.startRTOS();
+
+    app.delay(100);
 }
 
 // Main app.
 void mainApp(App) {
     while (1) {
-        app.start(adjustmentApp);
+        app.start(servoApp);
+        app.start(gridControlApp);
         app.delay(10);
     }
 }

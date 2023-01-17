@@ -55,18 +55,33 @@ void servoApp(App) {
     }
 }
 
-void adjustmentApp(App) {
+void gridControlApp(App) {
     while (1) {
-        servo.velocity = 0;
-        servo.angle    = 90;
+        servo.velocity = 50;
         app.delay(100);
-        if (distanceSensor.val[6] >= 150) {
-            servo.velocity = -50;
-            servo.drive(servo.velocity, servo.angle);
-        }
-        if (distanceSensor.val[0] >= 150) {
-            servo.velocity = 50;
-            servo.drive(servo.velocity, servo.angle);
+        static int val        = 0;
+        static int oldVal     = distanceSensor.val[0];
+
+        val = distanceSensor.val[0];
+
+        if (val <= oldVal - 300) {
+            servo.velocity = 0;
+            app.delay(1000);
+            if ((distanceSensor.val[0] > distanceSensor.val[3]) &&
+                (distanceSensor.val[0] > distanceSensor.val[9])) {
+                app.delay(10);
+                oldVal = val;
+            } else if (distanceSensor.val[3] > distanceSensor.val[9]) {
+                app.delay(10);
+                servo.angle += 90;
+                oldVal = val;
+            } else {
+                app.delay(10);
+                servo.angle -= 90;
+                oldVal = val;
+            }
+        } else {
+            app.delay(10);
         }
     }
 }

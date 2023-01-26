@@ -9,6 +9,13 @@
 
 extern HardwareSerial uart1;
 extern RTOS_Kit app;
+extern SLAM_Kit slam;
+
+extern Adafruit_NeoPixel stripL;
+extern Adafruit_NeoPixel stripR;
+extern Adafruit_NeoPixel stripUI;
+extern Adafruit_NeoPixel stripTop;
+extern Adafruit_NeoPixel stripFloor;
 
 extern VL53L0X distanceSensor;
 extern BNO055 gyro;
@@ -44,7 +51,46 @@ void inputMonitoringApp(App) {
         cameraLeft.read();
         cameraRight.read();
 
-        app.delay(10);
+        // app.delay(10);
+    }
+}
+
+void slamApp(App) {
+    while (1) {
+        slam.updatePosition(distanceSensor.val, gyro.deg);
+        // app.delay(10);
+
+        // uart1.print("dx:");
+        // uart1.print(slam.dx);
+        // uart1.print("\tdy:");
+        // uart1.print(slam.dy);
+
+        // uart1.print("\tx:");
+        // uart1.print(slam.x);
+        // uart1.print("\ty:");
+        // uart1.print(slam.y);
+
+        uart1.write('F');
+        uart1.write('l');
+        for (int i = 0; i < 12; i++) {
+            uart1.write(highByte(distanceSensor.val[i]));
+            uart1.write(lowByte(distanceSensor.val[i]));
+        }
+        app.delay(5);
+
+        for (int i = 0; i < 6; i++) {
+            if (slam.reliableness[i]) {
+                stripTop.setPixelColor(i * 2, led.green);
+                stripTop.setPixelColor(i * 2 + 12, led.green);
+            } else {
+                stripTop.setPixelColor(i * 2, led.blank);
+                stripTop.setPixelColor(i * 2 + 12, led.blank);
+            }
+        }
+
+        led.show();
+
+        // uart1.println("");
     }
 }
 

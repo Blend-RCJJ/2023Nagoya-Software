@@ -7,7 +7,7 @@
 #include "WProgram.h"
 #endif
 
-#include "IO-Kit.h"
+#include "../kit/IO-Kit.h"
 
 class MLT8530 {
    public:

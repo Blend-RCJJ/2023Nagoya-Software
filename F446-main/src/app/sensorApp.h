@@ -59,12 +59,24 @@ void gridControlApp(App) {
     while (1) {
         servo.velocity = 50;
         app.delay(100);
-        static int val        = 0;
-        static int oldVal     = distanceSensor.val[0];
+        static int val    = 0;
+        static int oldVal = distanceSensor.val[0];
+
+        if (distanceSensor.val[0] > 2000) {
+            distanceSensor.val[0] = 2000;
+        }
+
+        if (distanceSensor.val[3] > 2000) {
+            distanceSensor.val[3] = 2000;
+        }
+
+        if (distanceSensor.val[9] > 2000) {
+            distanceSensor.val[9] = 2000;
+        }
 
         val = distanceSensor.val[0];
 
-        if (val <= oldVal - 300) {
+        if (val + 300 <= oldVal) {
             servo.velocity = 0;
             app.delay(1000);
             if ((distanceSensor.val[0] > distanceSensor.val[3]) &&
@@ -72,12 +84,12 @@ void gridControlApp(App) {
                 app.delay(10);
                 oldVal = val;
             } else if (distanceSensor.val[3] > distanceSensor.val[9]) {
-                app.delay(10);
                 servo.angle += 90;
+                app.delay(500);
                 oldVal = val;
             } else {
-                app.delay(10);
                 servo.angle -= 90;
+                app.delay(500);
                 oldVal = val;
             }
         } else {

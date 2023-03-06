@@ -1,15 +1,18 @@
 #include <Arduino.h>
 
-#include "./lib/IO-Kit.h"
-#include "./lib/RTOS-Kit.h"
+#include "./kit/IO-Kit.h"
+#include "./kit/RTOS-Kit.h"
+#include "./kit/SLAM-Kit.h"
 
 HardwareSerial uart1(PA10, PA9);
 HardwareSerial uart2(PA3, PA2);
+HardwareSerial uart3(PC5, PB10);
 HardwareSerial uart4(PA1, PA0);
 HardwareSerial uart5(PD2, PC12);
 HardwareSerial uart6(PC7, PC6);
 
 RTOS_Kit app;
+SLAM_Kit slam;
 
 #include "./lib/bno055.h"
 #include "./lib/floorSensor.h"
@@ -45,8 +48,34 @@ STS3032 servo(&uart5);
 int appMode = 0;
 
 void mainApp(App);
+void slamApp(App);
+void uartInit(void);
 
 void setup() {
+    uartInit();
+    speaker.bootSound();
+
+    Wire.setSDA(PB9);
+    Wire.setSCL(PB8);
+    Wire.begin();
+
+    gyro.init();
+
+    app.create(mainApp, firstPriority);
+    app.create(inputMonitoringApp, firstPriority);
+    app.create(slamApp, firstPriority);
+
+    app.start(mainApp);
+    app.start(inputMonitoringApp);
+    app.start(slamApp);
+    app.startRTOS();
+}
+
+// Main app.
+void mainApp(App) {
+}
+
+void uartInit(void) {
     uart1.setRx(PA10);
     uart1.setTx(PA9);
     uart1.begin(115200);
@@ -59,32 +88,9 @@ void setup() {
     uart6.setTx(PC6);
     uart6.begin(115200);
 
-    led.setLeftColor(led.yellow);
-    led.setRightColor(led.yellow);
-    led.setUIColor(led.yellow);
-    led.show();
-
-    speaker.bootSound();
-    led.bootIllumination();
-
-    Wire.setSDA(PB9);
-    Wire.setSCL(PB8);
-    Wire.begin();
-
-    gyro.init();
-
-    app.create(mainApp, firstPriority);
-    app.create(inputMonitoringApp, firstPriority);
-
-    app.start(mainApp);
-    app.start(inputMonitoringApp);
-    app.startRTOS();
-}
-
-// Main app.
-void mainApp(App) {
-    while (1) {
-    }
+    uart3.setRx(PC5);
+    uart3.setTx(PB10);
+    uart3.begin(115200);
 }
 
 void loop() {

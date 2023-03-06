@@ -9,6 +9,13 @@
 
 extern HardwareSerial uart1;
 extern RTOS_Kit app;
+extern SLAM_Kit slam;
+
+extern Adafruit_NeoPixel stripL;
+extern Adafruit_NeoPixel stripR;
+extern Adafruit_NeoPixel stripUI;
+extern Adafruit_NeoPixel stripTop;
+extern Adafruit_NeoPixel stripFloor;
 
 extern VL53L0X distanceSensor;
 extern BNO055 gyro;
@@ -43,8 +50,17 @@ void inputMonitoringApp(App) {
 
         cameraLeft.read();
         cameraRight.read();
+    }
+}
+
+void slamApp(App) {
+    while (1) {
+        slam.updateObservationData(distanceSensor.vecY);
+        slam.updateCoordinate(gyro.deg);
 
         app.delay(10);
+
+        // uart3.println(slam.coordinateY);
     }
 }
 

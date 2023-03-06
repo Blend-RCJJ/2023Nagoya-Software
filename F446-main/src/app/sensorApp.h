@@ -8,6 +8,7 @@
 #endif
 
 extern HardwareSerial uart1;
+extern HardwareSerial uart3;
 extern RTOS_Kit app;
 extern SLAM_Kit slam;
 
@@ -37,15 +38,15 @@ void inputMonitoringApp(App) {
         ui.read();
 
         led.setFloorColor(led.red);
-        delay(3);
+        app.delay(3);
         floorSensor.redVal = analogRead(PC0);
 
         led.setFloorColor(led.green);
-        delay(3);
+        app.delay(3);
         floorSensor.greenVal = analogRead(PC0);
 
         led.setFloorColor(led.blue);
-        delay(3);
+        app.delay(3);
         floorSensor.blueVal = analogRead(PC0);
 
         cameraLeft.read();
@@ -59,8 +60,6 @@ void slamApp(App) {
         slam.updateCoordinate(gyro.deg);
 
         app.delay(10);
-
-        // uart3.println(slam.coordinateY);
     }
 }
 

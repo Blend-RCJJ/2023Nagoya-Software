@@ -73,6 +73,9 @@ void setup() {
 
 // Main app.
 void mainApp(App) {
+    while (1) {
+        app.delay(10);
+    }
 }
 
 void uartInit(void) {

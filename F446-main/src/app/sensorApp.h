@@ -50,47 +50,17 @@ void inputMonitoringApp(App) {
 
         cameraLeft.read();
         cameraRight.read();
-
-        // app.delay(10);
     }
 }
 
 void slamApp(App) {
     while (1) {
-        slam.updatePosition(distanceSensor.val, gyro.deg);
-        // app.delay(10);
+        slam.updateObservationData(distanceSensor.vecY);
+        slam.updateCoordinate(gyro.deg);
 
-        // uart1.print("dx:");
-        // uart1.print(slam.dx);
-        // uart1.print("\tdy:");
-        // uart1.print(slam.dy);
+        app.delay(10);
 
-        // uart1.print("\tx:");
-        // uart1.print(slam.x);
-        // uart1.print("\ty:");
-        // uart1.print(slam.y);
-
-        uart1.write('F');
-        uart1.write('l');
-        for (int i = 0; i < 12; i++) {
-            uart1.write(highByte(distanceSensor.val[i]));
-            uart1.write(lowByte(distanceSensor.val[i]));
-        }
-        app.delay(5);
-
-        for (int i = 0; i < 6; i++) {
-            if (slam.reliableness[i]) {
-                stripTop.setPixelColor(i * 2, led.green);
-                stripTop.setPixelColor(i * 2 + 12, led.green);
-            } else {
-                stripTop.setPixelColor(i * 2, led.blank);
-                stripTop.setPixelColor(i * 2 + 12, led.blank);
-            }
-        }
-
-        led.show();
-
-        // uart1.println("");
+        // uart3.println(slam.coordinateY);
     }
 }
 

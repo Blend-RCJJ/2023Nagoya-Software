@@ -7,39 +7,29 @@
 #include "WProgram.h"
 #endif
 
-class mapData {
+class distanceData {
    public:
-    bool isDiscoverd = false;
-    bool wall[4] = {false, false, false, false};  // 前右後左
+    int landmark = 0;  // 時刻t時の予測された絶対座標（ワールド座標系）
+    int distance = 0;  // 時刻t時の距離（ワールド座標系）
+    int diffDistance = 0;  // 時刻t時の距離からの差分（ワールド座標系）
+    int oldDistance = 0;  // 直近の距離（ワールド座標系）
+
+    // NOTE:基本的に線形変換済みの値を用いる！！
 };
 
 class SLAM_Kit {
    public:
-    mapData map[40][40];
-
     SLAM_Kit();
 
-    void updatePosition(int *dataPtr, int gyro);
-    void reliablenessEvaluation(void);
-    void integration(void);
+    long coordinateX = 0;  // 時刻t時の予測された絶対座標（ワールド座標系）
+    long coordinateY = 0;  // 時刻t時の予測された絶対座標（ワールド座標系）
 
-    int x = 0;
-    int y = 0;
-    int dx = 0;
-    int dy = 0;
-    int dxRaw = 0;
-    int dyRaw = 0;
-    bool reliableness[6];  // 向かい合う組をペアとして計算する
+    int rightWheelSpeed = 0;
+    int leftWheelSpeed = 0;
 
-    int route[200][2] = {0};
-    int routeIndex = 0;
-
-   private:
-    int distance[12];
-    int difference[12];
-    int angle;
-
-    const int allowanceValue = 30;  // 許容値
+    distanceData obsData[12];
+    void updateObservationData(int *vecY);
+    void updateCoordinate(int angle);
 };
 
 #endif

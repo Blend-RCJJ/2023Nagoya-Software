@@ -6,6 +6,7 @@
 
 HardwareSerial uart1(PA10, PA9);
 HardwareSerial uart2(PA3, PA2);
+HardwareSerial uart3(PC5, PB10);
 HardwareSerial uart4(PA1, PA0);
 HardwareSerial uart5(PD2, PC12);
 HardwareSerial uart6(PC7, PC6);
@@ -52,14 +53,7 @@ void uartInit(void);
 
 void setup() {
     uartInit();
-
-    // led.setLeftColor(led.yellow);
-    // led.setRightColor(led.yellow);
-    // led.setUIColor(led.yellow);
-    // led.show();
-
     speaker.bootSound();
-    // led.bootIllumination();
 
     Wire.setSDA(PB9);
     Wire.setSCL(PB8);
@@ -79,8 +73,6 @@ void setup() {
 
 // Main app.
 void mainApp(App) {
-    while (1) {
-    }
 }
 
 void uartInit(void) {
@@ -95,6 +87,10 @@ void uartInit(void) {
     uart6.setRx(PC7);
     uart6.setTx(PC6);
     uart6.begin(115200);
+
+    uart3.setRx(PC5);
+    uart3.setTx(PB10);
+    uart3.begin(115200);
 }
 
 void loop() {

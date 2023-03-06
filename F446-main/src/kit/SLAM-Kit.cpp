@@ -1,66 +1,54 @@
 #include "./SLAM-Kit.h"
 
+extern HardwareSerial uart1;
+
 SLAM_Kit::SLAM_Kit(/* args */) {
 }
 
-void SLAM_Kit::updatePosition(int *dataPtr, int gyro) {
-    // データの更新と差分の計算
+void SLAM_Kit::updateObservationData(int *vecY) {
     for (int i = 0; i < 12; i++) {
-        difference[i] = dataPtr[i] - distance[i];
-        distance[i] = dataPtr[i];
-    }
-    this->angle = gyro;
-
-    reliablenessEvaluation();
-    integration();
-}
-
-void SLAM_Kit::reliablenessEvaluation(void) {
-    // 信頼性評価
-    for (int i = 0; i < 6; i++) {
-        if (abs(difference[i] + difference[i + 6]) < allowanceValue &&
-            difference[i] * difference[i + 6] < 0) {  // 誤差判定と符号判定
-            reliableness[i] = true;
-        } else {
-            reliableness[i] = false;
+        if (abs(obsData[i].oldDistance - vecY[i]) > 40) {  // 非連続点判定
+            obsData[i].landmark = coordinateY;
+            obsData[i].distance = vecY[i];
         }
+
+        // ランドマークからの差分
+        obsData[i].diffDistance = vecY[i] - obsData[i].distance;
+        obsData[i].oldDistance = vecY[i];
     }
 }
 
-void SLAM_Kit::integration(void) {
-    // dがつくものは差分を表す
-    dxRaw = 0;
-    dyRaw = 0;
-
-    for (int i = 0; i < 6; i++) {
-        if (reliableness[i]) {
-            int dAverage_i = (difference[i] - difference[i + 6]) / 2;
-            int dx_i = round(sin(radians(30 * i)) * dAverage_i);
-            int dy_i = round(cos(radians(30 * i)) * dAverage_i);
-
-            dxRaw = abs(dxRaw) < abs(dx_i) ? dx_i : dxRaw;
-            dyRaw = abs(dyRaw) < abs(dy_i) ? dy_i : dyRaw;
-        }
+void SLAM_Kit::updateCoordinate(int angle) {
+    int obsCoordinate[12];
+    for (int i = 0; i < 12; i++) {
+        obsCoordinate[i] = obsData[i].landmark + obsData[i].diffDistance;
     }
 
-    if (abs(dxRaw) < 10 || abs(dxRaw) > 200) {
-        dxRaw = 0;
+    int sum = 0;
+
+    // uart1.print("weight: ");
+    for (int i = 0; i < 12; i++) {
+        int weight = min(abs(180 - (angle + i * 30) % 360),
+                         min(abs(0 - (angle + i * 30) % 360),
+                             abs(360 - (angle + i * 30) % 360)));
+        weight = 90 - weight;
+        weight /= 10;
+
+        sum += weight;
+        obsCoordinate[i] *= weight;
+
+        // uart1.print(weight);
+        // uart1.print("\t");
     }
 
-    if (abs(dyRaw) < 10 || abs(dyRaw) > 200) {
-        dyRaw = 0;
+    long newCoordinate = 0;
+
+    for (int i = 0; i < 12; i++) {
+        newCoordinate += obsCoordinate[i];
     }
+    newCoordinate /= sum;
 
-    double gain = 0.2;
+    coordinateY = newCoordinate;
 
-    dx = gain * dx + (1.0 - gain) * dxRaw;
-    dy = gain * dy + (1.0 - gain) * dyRaw;
 
-    if (abs(dx) > 2) {
-        x += dx;
-    }
-
-    if (abs(dy) > 2) {
-        y += dy;
-    }
 }

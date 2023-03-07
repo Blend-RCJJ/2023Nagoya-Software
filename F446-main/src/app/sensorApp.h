@@ -37,16 +37,16 @@ void inputMonitoringApp(App) {
 
         gyro.read();
         ui.read();
-        
-        led.setFloorColor(led.red);
+
+        led.setFloorColor(led.white);
         app.delay(3);
         floorSensor.redVal = analogRead(PC0);
 
-        led.setFloorColor(led.green);
+        led.setFloorColor(led.blue);
         app.delay(3);
         floorSensor.greenVal = analogRead(PC0);
 
-        led.setFloorColor(led.blue);
+        led.setFloorColor(led.green);
         app.delay(3);
         floorSensor.blueVal = analogRead(PC0);
 
@@ -76,7 +76,7 @@ void gridSpecification(App) {
         if ((distanceSensor.val[0] > distanceSensor.val[3]) &&
             (distanceSensor.val[0] > distanceSensor.val[9])) {
             servo.velocity = 50;
-            app.delay(2800);
+            app.delay(4200);
             servo.velocity = 0;
             app.delay(1000);
         } else if (distanceSensor.val[3] > distanceSensor.val[9]) {
@@ -84,7 +84,7 @@ void gridSpecification(App) {
             servo.angle += 90;
             app.delay(1000);
             servo.velocity = 50;
-            app.delay(2800);
+            app.delay(4200);
             servo.velocity = 0;
             app.delay(1000);
         } else if (distanceSensor.val[3] < distanceSensor.val[9]) {
@@ -92,7 +92,7 @@ void gridSpecification(App) {
             servo.angle -= 90;
             app.delay(1000);
             servo.velocity = 50;
-            app.delay(2800);
+            app.delay(4200);
             servo.velocity = 0;
             app.delay(1000);
         } else {
@@ -106,7 +106,7 @@ void gridSpecification(App) {
                     servo.angle += 180;
                     app.delay(1000);
                     servo.velocity = 50;
-                    app.delay(2800);
+                    app.delay(4200);
                     servo.velocity = 0;
                     app.delay(1000);
                 }
@@ -202,11 +202,11 @@ void leftWall(App) {
 
 void monitor(App) {
     while (1) {
-        uart1.print(floorSensor.redVal);
-        uart1.print(" ");
-        uart1.print(floorSensor.blueVal);
-        uart1.print(" ");
-        uart1.println(floorSensor.greenVal);
+        uart3.print(floorSensor.redVal);
+        uart3.print(" ");
+        uart3.print(floorSensor.blueVal);
+        uart3.print(" ");
+        uart3.println(distanceSensor.val[0]);
         app.delay(100);
     }
 }

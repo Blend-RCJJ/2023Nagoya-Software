@@ -80,9 +80,9 @@ void setup() {
 // Main app.
 void mainApp(App) {
     while (1) {
-        // app.start(servoApp);
-        // app.start(adjustment);
-        // app.start(leftWall);
+        app.start(servoApp);
+        app.start(adjustment);
+        app.start(rightWall);
         app.start(monitor);
   
         app.delay(10);

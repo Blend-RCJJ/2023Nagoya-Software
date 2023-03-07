@@ -90,10 +90,9 @@ void setup() {
 // Main app.
 void mainApp(App) {
     while (1) {
-        app.start(servoApp);
-        // // // app.start(gridSpecification);
-        app.start(adjustment);
-        app.start(leftWall);
+        // app.start(servoApp);
+        // app.start(adjustment);
+        // app.start(leftWall);
         app.start(monitor);
   
         app.delay(10);

@@ -30,17 +30,22 @@ void inputMonitoringApp(App) {
         gyro.read();
         ui.read();
 
-        led.setFloorColor(led.red);
+        stripFloor.setBrightness(255);
+        led.setFloorColor(led.blue);
+        stripFloor.show();
         delay(3);
         floorSensor.redVal = analogRead(PC0);
 
-        led.setFloorColor(led.green);
+        // led.setFloorColor(led.blank);
+
+        stripFloor.setBrightness(55);
+        stripFloor.show();
         delay(3);
         floorSensor.greenVal = analogRead(PC0);
 
-        led.setFloorColor(led.blue);
-        delay(3);
-        floorSensor.blueVal = analogRead(PC0);
+        // led.setFloorColor(led.blue);
+        // delay(3);
+        // floorSensor.blueVal = analogRead(PC0);
 
         cameraLeft.read();
         cameraRight.read();
@@ -126,7 +131,7 @@ void rightWall(App) {
                 servo.velocity = 0;
                 servo.angle += 90;
                 app.delay(1000);
-                servo.velocity= 30;
+                servo.velocity = 30;
                 app.delay(4200);
                 // static int val0 = distanceSensor.val[0];
                 // servo.velocity  = 30;
@@ -161,7 +166,7 @@ void leftWall(App) {
                 servo.velocity = 0;
                 servo.angle -= 90;
                 app.delay(1000);
-                servo.velocity= 30;
+                servo.velocity = 30;
                 app.delay(4200);
                 // static int val0 = distanceSensor.val[0];
                 // servo.velocity  = 30;
@@ -187,9 +192,16 @@ void leftWall(App) {
 
 void monitor(App) {
     while (1) {
-        uart1.println(distanceSensor.val[5]);
+        uart1.print(floorSensor.redVal);
+        uart1.print(" ");
+        uart1.print(floorSensor.blueVal);
+        uart1.print(" ");
+        uart1.println(floorSensor.greenVal);
         app.delay(100);
     }
+}
+
+void floor(App) {
 }
 
 #endif

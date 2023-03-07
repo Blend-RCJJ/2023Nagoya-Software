@@ -45,7 +45,7 @@ void STS3032::driveAngularVelocity(int velocity, int angularVelocity) {
 }
 
 void STS3032::drive(int velocity, int angle) {
-    const double Kp = -4;
+    const double Kp = -1;
 
     // 0-360変換
     while (angle < 0) {
@@ -63,7 +63,11 @@ void STS3032::drive(int velocity, int angle) {
         angularVelocity -= 360;
     }
 
-    angularVelocity *= Kp;
-
-    driveAngularVelocity(velocity, angularVelocity);
+    if (abs(angularVelocity) > 40) {
+        angularVelocity *= Kp;
+        driveAngularVelocity(0, angularVelocity);
+    } else {
+        angularVelocity *= Kp;
+        driveAngularVelocity(velocity, angularVelocity);
+    }
 }

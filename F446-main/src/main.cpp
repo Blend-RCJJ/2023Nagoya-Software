@@ -75,6 +75,12 @@ void setup() {
 
     app.create(mainApp, firstPriority);
     app.create(inputMonitoringApp, firstPriority);
+    app.create(servoApp);
+    app.create(rightWall);
+    app.create(gridSpecification);
+    app.create(adjustment);
+    app.create(leftWall);
+    app.create(monitor);
 
     app.start(mainApp);
     app.start(inputMonitoringApp);
@@ -84,6 +90,13 @@ void setup() {
 // Main app.
 void mainApp(App) {
     while (1) {
+        app.start(servoApp);
+        // // // app.start(gridSpecification);
+        app.start(adjustment);
+        app.start(leftWall);
+        app.start(monitor);
+  
+        app.delay(10);
     }
 }
 

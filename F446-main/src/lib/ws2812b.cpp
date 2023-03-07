@@ -78,7 +78,7 @@ WS2812B::WS2812B(int brightness) {
     stripTop.show();
 
     stripFloor.begin();
-    stripFloor.setBrightness(30);
+    stripFloor.setBrightness(255);
     stripFloor.show();
 }
 

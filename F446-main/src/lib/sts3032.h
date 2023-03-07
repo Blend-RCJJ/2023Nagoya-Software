@@ -23,6 +23,9 @@ class STS3032 {
     void drive(int velocity, int angle);
     void driveAngularVelocity(int velocity, int angularVelocity);
 
+    int velocity = 0;
+    int angle = 0;
+
    private:
 };
 

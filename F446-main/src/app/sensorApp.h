@@ -9,7 +9,15 @@
 #endif
 
 extern HardwareSerial uart1;
+extern HardwareSerial uart3;
 extern RTOS_Kit app;
+extern SLAM_Kit slam;
+
+extern Adafruit_NeoPixel stripL;
+extern Adafruit_NeoPixel stripR;
+extern Adafruit_NeoPixel stripUI;
+extern Adafruit_NeoPixel stripTop;
+extern Adafruit_NeoPixel stripFloor;
 
 extern VL53L0X distanceSensor;
 extern BNO055 gyro;
@@ -29,26 +37,28 @@ void inputMonitoringApp(App) {
 
         gyro.read();
         ui.read();
-
-        stripFloor.setBrightness(255);
-        led.setFloorColor(led.blue);
-        stripFloor.show();
-        delay(3);
+        
+        led.setFloorColor(led.red);
+        app.delay(3);
         floorSensor.redVal = analogRead(PC0);
 
-        // led.setFloorColor(led.blank);
-
-        stripFloor.setBrightness(55);
-        stripFloor.show();
-        delay(3);
+        led.setFloorColor(led.green);
+        app.delay(3);
         floorSensor.greenVal = analogRead(PC0);
 
-        // led.setFloorColor(led.blue);
-        // delay(3);
-        // floorSensor.blueVal = analogRead(PC0);
+        led.setFloorColor(led.blue);
+        app.delay(3);
+        floorSensor.blueVal = analogRead(PC0);
 
         cameraLeft.read();
         cameraRight.read();
+    }
+}
+
+void slamApp(App) {
+    while (1) {
+        slam.updateObservationData(distanceSensor.vecY);
+        slam.updateCoordinate(gyro.deg);
 
         app.delay(10);
     }

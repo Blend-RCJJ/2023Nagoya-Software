@@ -30,6 +30,8 @@ extern WS2812B led;
 extern UNITV cameraLeft;
 extern UNITV cameraRight;
 
+int count = 0;
+int val6  = 0;
 void inputMonitoringApp(App) {
     while (1) {
         distanceSensor.getDistance();
@@ -122,27 +124,38 @@ void adjustment(App) {
             servo.velocity = -30;
         }
         if (distanceSensor.val[9] <= 120) {
-            servo.driveAngularVelocity(servo.velocity, 45);
+            servo.driveAngularVelocity(50, 45);
         }
         if (distanceSensor.val[3] <= 120) {
-            servo.driveAngularVelocity(servo.velocity, -45);
+            servo.driveAngularVelocity(50, -45);
         }
     }
 }
 
 void rightWall(App) {
+    app.delay(500);
     while (1) {
         servo.velocity = 30;
-        app.delay(1000);
+        app.delay(10);
+        while (count == 1) {
+            app.delay(1000);
+            count = 2;
+        }
+
+        while (count == 0) {
+            val6  = distanceSensor.val[6];
+            count = 2;
+            app.delay(10);
+        }
 
         if (distanceSensor.val[3] > 200) {
-            static int val6 = distanceSensor.val[6];
-            if ((val6 + 70) < distanceSensor.val[6]) {
+            count = 2;
+            if ((val6 + 120) < distanceSensor.val[6]) {
                 servo.velocity = 0;
                 servo.angle += 90;
                 app.delay(1000);
                 servo.velocity = 30;
-                app.delay(4200);
+                app.delay(3500);
                 // static int val0 = distanceSensor.val[0];
                 // servo.velocity  = 30;
                 // if ((val0 - 150) > distanceSensor.val[0]) {
@@ -154,13 +167,15 @@ void rightWall(App) {
             }
 
         } else if ((distanceSensor.val[0] < 180) &&
-                   (distanceSensor.val[3] < 180)) {
-            app.stop(adjustment);
+                   (distanceSensor.val[3] < 230)) {
             servo.velocity = 0;
             app.delay(500);
             servo.angle -= 90;
+            count = 1;
             app.delay(500);
-            app.start(adjustment);
+        } else {
+            count = 0;
+            app.delay(10);
         }
     }
 }
@@ -189,7 +204,7 @@ void leftWall(App) {
             }
 
         } else if ((distanceSensor.val[0] < 180) &&
-                   (distanceSensor.val[9] < 180)) {
+                   (distanceSensor.val[9] < 230)) {
             app.stop(adjustment);
             servo.velocity = 0;
             app.delay(500);
@@ -204,14 +219,27 @@ void monitor(App) {
     while (1) {
         uart3.print(floorSensor.redVal);
         uart3.print(" ");
-        uart3.print(floorSensor.blueVal);
+        uart3.print(val6);
         uart3.print(" ");
-        uart3.println(distanceSensor.val[0]);
-        app.delay(100);
+        uart3.println(count);
+        app.delay(10);
     }
 }
 
-void floor(App) {
+void black(App) {
+    while (1) {
+        if (floorSensor.redVal > 150) {
+            count          = 1;
+            servo.velocity = -100;
+            app.delay(10);
+            if (servo.velocity == -100) {
+                servo.angle += 180;
+                app.delay(10);
+            }
+        } else {
+            app.delay(1);
+        }
+    }
 }
 
 #endif

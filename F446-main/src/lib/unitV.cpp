@@ -10,4 +10,11 @@ UNITV::UNITV(HardwareSerial *ptr) {
 }
 
 void UNITV::read(void) {
+    if(serialPtr->available() > 0){
+        this->data = serialPtr->read();
+
+        while(serialPtr->available() > 0){
+            serialPtr->read();
+        }
+    }
 }

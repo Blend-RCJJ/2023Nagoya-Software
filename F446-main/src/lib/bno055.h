@@ -16,7 +16,12 @@ class BNO055 {
    public:
     BNO055(Adafruit_BNO055 *p);
     Adafruit_BNO055 *sensorPtr;
+    
     int deg = 0;
+    int magnetic = 0;
+    int offset = 0;
+
+    bool isGyroDisabled = true;
 
     void init(void);
     int read(void);

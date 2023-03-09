@@ -22,6 +22,7 @@ class UNITV {
 
     bool isVictimDetected = false;
     int victimType = 0;
+    int data = 0;
 
     void read(void);
 

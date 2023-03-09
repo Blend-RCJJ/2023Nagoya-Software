@@ -70,6 +70,7 @@ void setup() {
     app.create(leftWall);
     app.create(monitor);
     app.create(slamApp, firstPriority);
+    app.create(black);
 
     app.start(mainApp);
     app.start(inputMonitoringApp);
@@ -84,8 +85,12 @@ void mainApp(App) {
         app.start(adjustment);
         app.start(rightWall);
         app.start(monitor);
-  
+        app.start(black);
         app.delay(10);
+        // app.delay(30000);
+        // app.stop(rightWall);
+        // app.start(leftWall);
+        // app.delay(30000);
     }
 }
 

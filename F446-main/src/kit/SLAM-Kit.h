@@ -30,6 +30,8 @@ class SLAM_Kit {
     distanceData obsData[12];
     void updateObservationData(int *vecY);
     void updateCoordinate(int angle);
+
+    void updateOdometory(int rightWheelSpeed, int leftWheelSpeed, int angle);
 };
 
 #endif

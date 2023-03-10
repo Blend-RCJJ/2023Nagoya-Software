@@ -5,9 +5,18 @@ extern HardwareSerial uart1;
 SLAM_Kit::SLAM_Kit(/* args */) {
 }
 
+void SLAM_Kit::updateOdometory(int rightWheelSpeed, int leftWheelSpeed, int angle) {
+    float vec = (rightWheelSpeed + leftWheelSpeed) / 2.0;
+    float vecX = vec * sin(radians(angle));
+    float vecY = vec * cos(radians(angle));
+
+    coordinateX += vecX * 10;
+    coordinateY += vecY * 10;
+}
+
 void SLAM_Kit::updateObservationData(int *vecY) {
     for (int i = 0; i < 12; i++) {
-        if (abs(obsData[i].oldDistance - vecY[i]) > 40) {  // 非連続点判定
+        if (abs(obsData[i].oldDistance - vecY[i]) > 40 || vecY[i] > 1000) {  // 非連続点判定
             obsData[i].landmark = coordinateY;
             obsData[i].distance = vecY[i];
         }
@@ -36,9 +45,6 @@ void SLAM_Kit::updateCoordinate(int angle) {
 
         sum += weight;
         obsCoordinate[i] *= weight;
-
-        // uart1.print(weight);
-        // uart1.print("\t");
     }
 
     long newCoordinate = 0;
@@ -49,6 +55,4 @@ void SLAM_Kit::updateCoordinate(int angle) {
     newCoordinate /= sum;
 
     coordinateY = newCoordinate;
-
-
 }

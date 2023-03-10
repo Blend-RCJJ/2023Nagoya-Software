@@ -31,7 +31,7 @@ extern UNITV cameraLeft;
 extern UNITV cameraRight;
 
 int count = 0;
-int val6  = 0;
+int val6 = 0;
 void inputMonitoringApp(App) {
     while (1) {
         distanceSensor.getDistance();
@@ -59,10 +59,18 @@ void inputMonitoringApp(App) {
 
 void slamApp(App) {
     while (1) {
-        slam.updateObservationData(distanceSensor.vecY);
-        slam.updateCoordinate(gyro.deg);
+        // slam.updateObservationData(distanceSensor.vecY);
+        // slam.updateCoordinate(gyro.deg);
+        slam.updateOdometory(servo.rightWheelSpeed, servo.leftWheelSpeed,
+                             gyro.deg);
 
         app.delay(10);
+
+        uart3.print("x: ");
+        uart3.print(slam.coordinateX);
+        uart3.print(" y: ");
+        uart3.println(slam.coordinateY);
+
     }
 }
 
@@ -143,7 +151,7 @@ void rightWall(App) {
         }
 
         while (count == 0) {
-            val6  = distanceSensor.val[6];
+            val6 = distanceSensor.val[6];
             count = 2;
             app.delay(10);
         }
@@ -217,11 +225,12 @@ void leftWall(App) {
 
 void monitor(App) {
     while (1) {
-        uart3.print(floorSensor.redVal);
-        uart3.print(" ");
-        uart3.print(val6);
-        uart3.print(" ");
-        uart3.println(count);
+        // uart3.print(floorSensor.redVal);
+        // uart3.print(" ");
+        // uart3.print(val6);
+        // uart3.print(" ");
+        // uart3.println(count);
+        // uart3.println(slam.coordinateY);
         app.delay(10);
     }
 }
@@ -229,7 +238,7 @@ void monitor(App) {
 void black(App) {
     while (1) {
         if (floorSensor.redVal > 150) {
-            count          = 1;
+            count = 1;
             servo.velocity = -100;
             app.delay(10);
             if (servo.velocity == -100) {

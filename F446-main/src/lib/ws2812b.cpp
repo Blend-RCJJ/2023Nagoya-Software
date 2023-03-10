@@ -46,7 +46,7 @@ void WS2812B::setFloorColor(unsigned long color) {
 }
 
 void WS2812B::bootIllumination(void) {
-    for (int i = 0; i < 24; i++) {  //上面
+    for (int i = 0; i < 24; i++) {  // 上面
         stripTop.setPixelColor(i, colorHSV(map(i, 0, 24, 0, 255), 255, 255));
         stripTop.show();
         delay(20);

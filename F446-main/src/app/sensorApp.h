@@ -55,6 +55,7 @@ void inputMonitoringApp(App) {
 
         cameraLeft.read();
         cameraRight.read();
+        app.delay(3);
     }
 }
 
@@ -70,7 +71,7 @@ void slamApp(App) {
 void servoApp(App) {
     while (1) {
         servo.drive(servo.velocity, servo.angle);
-        app.delay(2);
+        app.delay(1);
     }
 }
 
@@ -145,7 +146,7 @@ void rightWall(App) {
 
         while (count == 0) {
             val6  = distanceSensor.val[6];
-            val0 = distanceSensor.val[0];
+            val0  = distanceSensor.val[0];
             count = 2;
             app.delay(10);
         }
@@ -168,14 +169,6 @@ void rightWall(App) {
                 app.delay(1000);
                 servo.velocity = 30;
                 app.delay(3000);
-                // static int val0 = distanceSensor.val[0];
-                // servo.velocity  = 30;
-                // if ((val0 - 150) > distanceSensor.val[0]) {
-                //     servo.velocity = 0;
-                //     servo.angle += 90;
-                //     app.delay(1000);
-                //     servo.velocity   = 30;
-                // }
             }
         } else if ((distanceSensor.val[0] < 120) &&
                    (distanceSensor.val[3] < 230)) {
@@ -225,14 +218,6 @@ void leftWall(App) {
                 app.delay(1000);
                 servo.velocity = 30;
                 app.delay(3500);
-                // static int val0 = distanceSensor.val[0];
-                // servo.velocity  = 30;
-                // if ((val0 - 150) > distanceSensor.val[0]) {
-                //     servo.velocity = 0;
-                //     servo.angle += 90;
-                //     app.delay(1000);
-                //     servo.velocity   = 30;
-                // }
             }
 
         } else if ((distanceSensor.val[0] < 120) &&
@@ -253,9 +238,8 @@ void leftWall(App) {
 
 void monitor(App) {
     while (1) {
-        uart3.print(val6);
-        uart3.print(" ");
-        uart3.println(val0);
+        uart3.write(cameraRight.data);
+        uart3.println(" ");
         app.delay(10);
     }
 }
@@ -294,25 +278,27 @@ void visualization(App) {
 
         led.show();
         app.delay(1);
-
-        //     stripTop.setPixelColor(0, 0, 0, (50000 /
-        //     distanceSensor.val[0])); stripTop.setPixelColor(
-        //         1, 0, 0,
-        //         (50000 / ((distanceSensor.val[0] + distanceSensor.val[1])
-        //         / 2)));
-        //     stripTop.setPixelColor(2, 0, 0, (50000 /
-        //     distanceSensor.val[1])); stripTop.setPixelColor(
-        //         3, 0, 0,
-        //         (50000 / ((distanceSensor.val[2] + distanceSensor.val[1])
-        //         / 2)));
-        //     stripTop.setPixelColor(4, 0, 0, (50000 /
-        //     distanceSensor.val[2])); stripTop.setPixelColor(
-        //         5, 0, 0,
-        //         (50000 / ((distanceSensor.val[2] + distanceSensor.val[3])
-        //         / 2)));
-        //     led.show();
-        //     app.delay(3);
     }
 }
+
+void camera(App) {
+    while (1) {
+        while (cameraRight.data == 'T') {
+            servo.velocity = 0;
+            app.stop(rightWall);
+            servo.velocity = 0;
+            app.delay(1);
+        }
+
+        while(cameraRight.data == 'H') {
+            led.bootIllumination();
+            led.show();
+            app.delay(10);
+        }
+    
+    app.delay(1);
+    }
+}
+
 
 #endif

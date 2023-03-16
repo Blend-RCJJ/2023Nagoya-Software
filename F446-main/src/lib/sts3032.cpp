@@ -71,3 +71,7 @@ void STS3032::drive(int velocity, int angle) {
         driveAngularVelocity(velocity, angularVelocity);
     }
 }
+
+void STS3032::stop(void){
+    driveAngularVelocity(0,0);
+}

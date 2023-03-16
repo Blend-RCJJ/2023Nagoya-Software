@@ -23,10 +23,18 @@ int BNO055::read(void) {
     sensorPtr->getEvent(&event);
     if (isGyroDisabled) {
         magnetic = event.magnetic.x;
-        deg = (int)(magnetic - offset + 360) % 360;
+        deg      = (int)(magnetic - offset + 360) % 360;
     } else {
         deg = event.orientation.x;
     }
+
+    // if (abs(oldDeg - deg) > 30) {
+    //     error = oldDeg - deg;
+    // }
+
+    // deg = (int)(deg + error + 360) % 360;
+
+    // oldDeg = deg;
 
     return deg;
 }

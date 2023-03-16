@@ -2,6 +2,7 @@
 #include "./VL53L0X.h"
 
 extern HardwareSerial uart1;
+extern HardwareSerial uart3;
 extern VL53L0X distanceSensor;
 
 UNITV::UNITV(HardwareSerial *ptr) {

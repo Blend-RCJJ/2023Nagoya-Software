@@ -21,7 +21,10 @@ class BNO055 {
     int magnetic = 0;
     int offset = 0;
 
-    bool isGyroDisabled = true;
+    int error = 0;
+    int oldDeg = 0;
+
+    bool isGyroDisabled = false;
 
     void init(void);
     int read(void);

@@ -23,6 +23,10 @@ class STS3032 {
     void drive(int velocity, int angle);
     void driveAngularVelocity(int velocity, int angularVelocity);
 
+    void readVoltage(void);
+
+    int voltage = 0;
+
     int velocity = 0;
     int angle = 0;
 

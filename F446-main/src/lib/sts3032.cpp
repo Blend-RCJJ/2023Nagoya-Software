@@ -74,3 +74,7 @@ void STS3032::drive(int velocity, int angle) {
         driveAngularVelocity(velocity, angularVelocity);
     }
 }
+
+void STS3032::readVoltage(void) {
+    voltage = serialServo.ReadVoltage(1);
+}

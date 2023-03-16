@@ -66,10 +66,14 @@ void slamApp(App) {
 
         app.delay(10);
 
-        uart3.print("x: ");
-        uart3.print(slam.coordinateX);
-        uart3.print(" y: ");
-        uart3.println(slam.coordinateY);
+        // uart3.print("x: ");
+        // uart3.print(slam.coordinateX);
+        // uart3.print(" y: ");
+        // uart3.println(slam.coordinateY);
+
+
+        servo.readVoltage();
+        uart3.println(servo.voltage);
 
     }
 }
@@ -78,6 +82,7 @@ void servoApp(App) {
     while (1) {
         servo.drive(servo.velocity, servo.angle);
         app.delay(2);
+
     }
 }
 

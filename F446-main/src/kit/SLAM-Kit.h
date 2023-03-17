@@ -7,29 +7,34 @@
 #include "WProgram.h"
 #endif
 
-class distanceData {
-   public:
-    int landmark = 0;  // 時刻t時の予測された絶対座標（ワールド座標系）
-    int distance = 0;  // 時刻t時の距離（ワールド座標系）
-    int diffDistance = 0;  // 時刻t時の距離からの差分（ワールド座標系）
-    int oldDistance = 0;  // 直近の距離（ワールド座標系）
-
-    // NOTE:基本的に線形変換済みの値を用いる！！
-};
-
 class SLAM_Kit {
    public:
     SLAM_Kit();
 
-    long coordinateX = 0;  // 時刻t時の予測された絶対座標（ワールド座標系）
-    long coordinateY = 0;  // 時刻t時の予測された絶対座標（ワールド座標系）
+    // double velocityConstant = 0.00192;
+    double velocityConstant = 0.00192;
+
+    double coordinateX = 0;  // 時刻t時の予測された絶対座標（ワールド座標系）
+    double coordinateY = 0;  // 時刻t時の予測された絶対座標（ワールド座標系）
+
+    int period = 10;
+    int minIndex = 0;
 
     int rightWheelSpeed = 0;
     int leftWheelSpeed = 0;
 
-    distanceData obsData[12];
-    void updateObservationData(int *vecY);
-    void updateCoordinate(int angle);
+    int offset[4] = { 105, 165, 130, 130 };
+    int widthY = 0;
+    int widthX = 0;
+
+    int x = 0;
+    int y = 0;
+
+    bool trustX = false;
+    bool trustY = false;
+
+    void updateOdometory(int rightWheelSpeed, int leftWheelSpeed, int angle);
+    void updateObservationData(int *vecX, int *vecY, int angle);
 };
 
 #endif

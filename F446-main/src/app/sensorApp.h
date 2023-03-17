@@ -61,10 +61,36 @@ void inputMonitoringApp(App) {
 
 void slamApp(App) {
     while (1) {
-        slam.updateObservationData(distanceSensor.vecY);
-        slam.updateCoordinate(gyro.deg);
+        for (int i = 0; i < 100; i++) {
+            slam.updateOdometory(servo.rightWheelSpeed, servo.leftWheelSpeed,
+                                 gyro.deg);
 
-        app.delay(10);
+            app.delay(slam.period);
+        }
+
+        slam.updateObservationData(distanceSensor.vecX, distanceSensor.vecY,
+                                   gyro.deg);
+
+        // if (slam.trustX && slam.trustY) {
+        //     led.setTopColor(led.yellow);
+        // } else if (slam.trustX) {
+        //     led.setTopColor(led.green);
+        // } else if (slam.trustY) {
+        //     led.setTopColor(led.blue);
+        // } else {
+        //     led.setTopColor(led.red);
+        // }
+        // led.show();
+
+        // uart3.print("マス:(");
+        // uart3.print(slam.x);
+        // uart3.print(", ");
+        // uart3.print(slam.y);
+        // uart3.print(") 座標:(");
+        // uart3.print(slam.coordinateX);
+        // uart3.print(", ");
+        // uart3.print(slam.coordinateY);
+        // uart3.println(")");
     }
 }
 
@@ -319,7 +345,7 @@ void monitor(App) {
 void black(App) {
     while (1) {
         if (floorSensor.redVal > 150) {
-            count          = 1;
+            count = 1;
             servo.velocity = -100;
             led.setTopColor(led.red);
             led.show();

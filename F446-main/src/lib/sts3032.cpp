@@ -31,6 +31,9 @@ void STS3032::driveAngularVelocity(int velocity, int angularVelocity) {
     data[0] = angularVelocity - velocity;
     data[1] = angularVelocity + velocity;
 
+    rightWheelSpeed = -data[0];
+    leftWheelSpeed = data[1];
+
     for (int i = 0; i < 2; i++) {
         data[i] = constrain(data[i], -100, 100);
     }

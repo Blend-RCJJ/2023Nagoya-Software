@@ -28,6 +28,9 @@ class STS3032 {
     int velocity = 0;
     int angle = 0;
 
+    int rightWheelSpeed = 0;
+    int leftWheelSpeed = 0;
+
    private:
 };
 

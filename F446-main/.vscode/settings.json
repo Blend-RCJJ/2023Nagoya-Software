@@ -19,7 +19,9 @@
         "complex": "cpp",
         "cmath": "cpp",
         "chrono": "cpp",
-        "iterator": "cpp"
+        "iterator": "cpp",
+        "limits": "cpp",
+        "algorithm": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

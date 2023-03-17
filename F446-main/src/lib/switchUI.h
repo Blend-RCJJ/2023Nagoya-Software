@@ -11,8 +11,8 @@
 
 class SWITCHUI {
    public:
-    Input buttonPin[2] = {PA4, PA5};
-    Input togglePin = PA6;
+    Input buttonPin[2] = {PA6, PB14};
+    Input togglePin = PA4;
 
     bool button[2] = {false, false};
     bool toggle = false;
@@ -21,7 +21,7 @@ class SWITCHUI {
         for (int i = 0; i < 2; i++) {
             button[i] = !buttonPin[i];
         }
-        toggle = !togglePin;
+        toggle = togglePin;
     }
 
    private:

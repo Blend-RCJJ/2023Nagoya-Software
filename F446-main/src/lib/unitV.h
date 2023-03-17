@@ -20,7 +20,7 @@ class UNITV {
     HardwareSerial *serialPtr;
     UNITV(HardwareSerial *ptr);
 
-    bool isVictimDetected = false;
+    bool isVictimDetected = true;
     int victimType = 0;
     int data = 0;
 

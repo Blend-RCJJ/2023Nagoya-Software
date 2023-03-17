@@ -51,6 +51,8 @@ void mainApp(App);
 void slamApp(App);
 void uartInit(void);
 
+void distanceCalibration(void);
+
 void setup() {
     uartInit();
     speaker.bootSound();
@@ -60,6 +62,10 @@ void setup() {
     Wire.begin();
 
     gyro.init();
+
+    delay(3000);
+
+    // distanceCalibration();
 
     app.create(mainApp, firstPriority);
     app.create(inputMonitoringApp, firstPriority);
@@ -84,8 +90,8 @@ void mainApp(App) {
         app.start(servoApp);
         app.start(adjustment);
         app.start(rightWall);
-        app.start(monitor);
-        app.start(black);
+        // app.start(monitor);
+        // app.start(black);
         app.delay(10);
         // app.delay(30000);
         // app.stop(rightWall);
@@ -114,4 +120,46 @@ void uartInit(void) {
 
 void loop() {
     // Nothing to do.
+}
+
+void distanceCalibration(void) {
+    distanceSensor.getDistance();
+
+    uart3.println("Distance Sensor Calibration");
+
+    delay(3000);
+
+    for (int i = 0; i < 3; i++) {
+        uart3.println(3 - i);
+        delay(1000);
+    }
+
+    uart3.println("Start");
+
+    int distance[4][10] = {0};
+    for (int i = 0; i < 10; i++) {
+        distanceSensor.getDistance();
+        for (int j = 0; j < 4; j++) {
+            distance[j][i] = distanceSensor.val[j * 3];
+            delay(100);
+        }
+    }
+
+    int offset[4] = {0};
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 10; j++) {
+            offset[i] += distance[i][j];
+        }
+        offset[i] /= 10;
+    }
+
+    // orint offset[]
+    for (int i = 0; i < 4; i++) {
+        uart3.print(i);
+        uart3.print(" : ");
+        uart3.println(offset[i]);
+        delay(100);
+    }
+    while (1) {
+    }
 }

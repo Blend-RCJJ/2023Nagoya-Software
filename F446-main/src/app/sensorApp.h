@@ -31,7 +31,7 @@ extern UNITV cameraLeft;
 extern UNITV cameraRight;
 
 int count = 0;
-int val6  = 0;
+int val6 = 0;
 void inputMonitoringApp(App) {
     while (1) {
         distanceSensor.getDistance();
@@ -59,10 +59,36 @@ void inputMonitoringApp(App) {
 
 void slamApp(App) {
     while (1) {
-        slam.updateObservationData(distanceSensor.vecY);
-        slam.updateCoordinate(gyro.deg);
+        for (int i = 0; i < 100; i++) {
+            slam.updateOdometory(servo.rightWheelSpeed, servo.leftWheelSpeed,
+                                 gyro.deg);
 
-        app.delay(10);
+            app.delay(slam.period);
+        }
+
+        slam.updateObservationData(distanceSensor.vecX, distanceSensor.vecY,
+                                   gyro.deg);
+
+        // if (slam.trustX && slam.trustY) {
+        //     led.setTopColor(led.yellow);
+        // } else if (slam.trustX) {
+        //     led.setTopColor(led.green);
+        // } else if (slam.trustY) {
+        //     led.setTopColor(led.blue);
+        // } else {
+        //     led.setTopColor(led.red);
+        // }
+        // led.show();
+
+        // uart3.print("マス:(");
+        // uart3.print(slam.x);
+        // uart3.print(", ");
+        // uart3.print(slam.y);
+        // uart3.print(") 座標:(");
+        // uart3.print(slam.coordinateX);
+        // uart3.print(", ");
+        // uart3.print(slam.coordinateY);
+        // uart3.println(")");
     }
 }
 
@@ -143,7 +169,7 @@ void rightWall(App) {
         }
 
         while (count == 0) {
-            val6  = distanceSensor.val[6];
+            val6 = distanceSensor.val[6];
             count = 2;
             app.delay(10);
         }
@@ -217,11 +243,12 @@ void leftWall(App) {
 
 void monitor(App) {
     while (1) {
-        uart3.print(floorSensor.redVal);
-        uart3.print(" ");
-        uart3.print(val6);
-        uart3.print(" ");
-        uart3.println(count);
+        // uart3.print(floorSensor.redVal);
+        // uart3.print(" ");
+        // uart3.print(val6);
+        // uart3.print(" ");
+        // uart3.println(count);
+        // uart3.println(slam.coordinateY);
         app.delay(10);
     }
 }
@@ -229,7 +256,7 @@ void monitor(App) {
 void black(App) {
     while (1) {
         if (floorSensor.redVal > 150) {
-            count          = 1;
+            count = 1;
             servo.velocity = -100;
             app.delay(10);
             if (servo.velocity == -100) {

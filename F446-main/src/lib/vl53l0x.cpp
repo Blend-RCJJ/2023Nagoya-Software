@@ -1,6 +1,9 @@
 #include "VL53L0X.h"
 
+#include "./bno055.h"
+
 extern HardwareSerial uart1;
+extern BNO055 gyro;
 
 VL53L0X::VL53L0X(HardwareSerial *p) {
     serialPtr = p;
@@ -42,9 +45,9 @@ int VL53L0X::getDistance(void) {
     }
 }
 
-void VL53L0X::calcVector(void){
-    for(int n = 0; n < 12; n++){
-        vecX[n] = val[n]*sin(radians(n*30));
-        vecY[n] = val[n]*cos(radians(n*30));
+void VL53L0X::calcVector(void) {
+    for (int n = 0; n < 12; n++) {
+        vecX[n] = val[n] * sin(radians(n * 30 + gyro.deg));
+        vecY[n] = val[n] * cos(radians(n * 30 + gyro.deg));
     }
 }

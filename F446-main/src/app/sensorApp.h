@@ -354,24 +354,58 @@ void visualization(App) {
 }
 
 void camera(App) {
+    static bool oldstatus = false;
     while (1) {
-        while(cameraRight.data == 'H' || cameraRight.data == 'S' ||
-            cameraRight.data == 'U') {
+        while (cameraRight.data == 'H') {
             led.setUIColor(led.red);
+            servo.velocity = 0;
+            app.stop(servoApp);
+            servo.stop();
+            app.stop(adjustment);
+            app.stop(rightGrid);
+            led.setUIBrightness(127 * sin(millis() / 50) + 127);
+            led.show();
+            oldstatus = false;
+        }
+
+        while (cameraRight.data == 'S') {
+            led.setUIColor(led.yellow);
             servo.velocity = 0;
             servo.stop();
             app.stop(adjustment);
             app.stop(rightGrid);
             led.setUIBrightness(127 * sin(millis() / 50) + 127);
             led.show();
+            oldstatus = false;
         }
+
+        while (cameraRight.data == 'U') {
+            led.setUIColor(led.green);
+            servo.velocity = 0;
+            servo.stop();
+            app.stop(adjustment);
+            app.stop(rightGrid);
+            led.setUIBrightness(127 * sin(millis() / 100) + 127);
+            led.show();
+            oldstatus = false;
+        }
+
+        if(!oldstatus){
+            app.start(rightGrid);
+            app.start(adjustment);
+
+            oldstatus = true;
+        }
+
         led.setUIColor(led.blank);
         led.show();
         app.delay(1);
     }
 }
 
+
 void lever(App) {
+    static bool oldStatus = false;
     while (1) {
         if (ui.toggle == false) {
             led.setTopColor(led.green);
@@ -382,12 +416,18 @@ void lever(App) {
             app.stop(adjustment);
             app.stop(visualization);
             servo.stop();
+            oldStatus = false;
         } else {
-            app.start(servoApp);
-            app.start(rightGrid);
-            app.start(adjustment);
-            app.start(visualization);
+            if (!oldStatus) {
+                app.start(servoApp);
+                app.start(rightGrid);
+                app.start(adjustment);
+                app.start(visualization);
+
+                oldStatus = true;
+            }
         }
+        app.delay(10);
     }
 }
 #endif

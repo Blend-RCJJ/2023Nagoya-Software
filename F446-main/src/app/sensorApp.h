@@ -59,22 +59,36 @@ void inputMonitoringApp(App) {
 
 void slamApp(App) {
     while (1) {
-        // slam.updateObservationData(distanceSensor.vecY);
-        // slam.updateCoordinate(gyro.deg);
-        slam.updateOdometory(servo.rightWheelSpeed, servo.leftWheelSpeed,
-                             gyro.deg);
+        for (int i = 0; i < 100; i++) {
+            slam.updateOdometory(servo.rightWheelSpeed, servo.leftWheelSpeed,
+                                 gyro.deg);
 
-        app.delay(10);
+            app.delay(slam.period);
+        }
 
-        // uart3.print("x: ");
+        slam.updateObservationData(distanceSensor.vecX, distanceSensor.vecY,
+                                   gyro.deg);
+
+        // if (slam.trustX && slam.trustY) {
+        //     led.setTopColor(led.yellow);
+        // } else if (slam.trustX) {
+        //     led.setTopColor(led.green);
+        // } else if (slam.trustY) {
+        //     led.setTopColor(led.blue);
+        // } else {
+        //     led.setTopColor(led.red);
+        // }
+        // led.show();
+
+        // uart3.print("マス:(");
+        // uart3.print(slam.x);
+        // uart3.print(", ");
+        // uart3.print(slam.y);
+        // uart3.print(") 座標:(");
         // uart3.print(slam.coordinateX);
-        // uart3.print(" y: ");
-        // uart3.println(slam.coordinateY);
-
-
-        servo.readVoltage();
-        uart3.println(servo.voltage);
-
+        // uart3.print(", ");
+        // uart3.print(slam.coordinateY);
+        // uart3.println(")");
     }
 }
 
@@ -82,7 +96,6 @@ void servoApp(App) {
     while (1) {
         servo.drive(servo.velocity, servo.angle);
         app.delay(2);
-
     }
 }
 

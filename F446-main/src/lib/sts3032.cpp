@@ -76,5 +76,5 @@ void STS3032::drive(int velocity, int angle) {
 }
 
 void STS3032::readVoltage(void) {
-    voltage = serialServo.ReadVoltage(1);
+    // voltage = serialServo.readPos(-1);
 }

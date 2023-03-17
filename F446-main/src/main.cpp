@@ -88,7 +88,7 @@ void mainApp(App) {
     app.start(rightGrid);
     app.start(monitor);
     // app.start(black);
-    // app.start(camera);
+    app.start(camera);
     app.start(visualization);
     app.start(lever);
     while (1) {

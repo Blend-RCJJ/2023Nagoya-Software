@@ -24,7 +24,7 @@ class BNO055 {
     int error = 0;
     int oldDeg = 0;
 
-    bool isGyroDisabled = false;
+    bool isGyroDisabled = true;
 
     void init(void);
     int read(void);

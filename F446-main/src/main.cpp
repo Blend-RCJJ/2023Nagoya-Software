@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <EEPROM.h>
 
 #include "./kit/IO-Kit.h"
 #include "./kit/RTOS-Kit.h"

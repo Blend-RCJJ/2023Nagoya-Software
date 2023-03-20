@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <EEPROM.h>
 
 #include "./kit/IO-Kit.h"
 #include "./kit/RTOS-Kit.h"
@@ -23,9 +24,9 @@ MAP_Kit mapData[100];
 #include "./lib/vl53l0x.h"
 #include "./lib/ws2812b.h"
 
-Adafruit_NeoPixel stripL   = Adafruit_NeoPixel(7, PA15, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel stripR   = Adafruit_NeoPixel(7, PB13, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel stripUI  = Adafruit_NeoPixel(24, PA5, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripL = Adafruit_NeoPixel(7, PA15, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripR = Adafruit_NeoPixel(7, PB13, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripUI = Adafruit_NeoPixel(24, PA5, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripTop = Adafruit_NeoPixel(24, PC1, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripFloor = Adafruit_NeoPixel(3, PB15, NEO_GRB + NEO_KHZ800);
 
@@ -47,6 +48,9 @@ STS3032 servo(&uart5);
 
 int appMode = 0;
 
+
+void ABARENBO_SHOGUN_MATSUKEN_LOVE(void);
+
 void mainApp(App);
 void slamApp(App);
 void uartInit(void);
@@ -64,6 +68,9 @@ void setup() {
     gyro.init();
 
     delay(3000);
+
+    // ドッキリ！！！！！！！
+    ABARENBO_SHOGUN_MATSUKEN_LOVE();
 
     // distanceCalibration();
 
@@ -165,4 +172,16 @@ void distanceCalibration(void) {
     }
     while (1) {
     }
+}
+
+void ABARENBO_SHOGUN_MATSUKEN_LOVE(void) {
+    led.setTopColor(led.yellow);
+    led.setRightColor(led.yellow);
+    led.setLeftColor(led.yellow);
+    led.setUIColor(led.yellow);
+    led.show();
+    delay(2000);
+    speaker.matsukenShogun();
+    while (1)
+        ;
 }

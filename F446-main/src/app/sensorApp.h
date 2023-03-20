@@ -13,7 +13,7 @@
 extern HardwareSerial uart1;
 extern HardwareSerial uart3;
 extern RTOS_Kit app;
-extern SLAM_Kit slam;
+extern Location_Kit location;
 
 extern Adafruit_NeoPixel stripL;
 extern Adafruit_NeoPixel stripR;
@@ -68,23 +68,23 @@ void inputMonitoringApp(App) {
     }
 }
 
-void slamApp(App) {
+void locationApp(App) {
     while (1) {
         for (int i = 0; i < 100; i++) {
-            slam.updateOdometory(servo.rightWheelSpeed, servo.leftWheelSpeed,
+            location.updateOdometory(servo.rightWheelSpeed, servo.leftWheelSpeed,
                                  gyro.deg);
 
-            app.delay(slam.period);
+            app.delay(location.period);
         }
 
-        slam.updateObservationData(distanceSensor.vecX, distanceSensor.vecY,
+        location.updateObservationData(distanceSensor.vecX, distanceSensor.vecY,
                                    gyro.deg);
 
-        // if (slam.trustX && slam.trustY) {
+        // if (location.trustX && location.trustY) {
         //     led.setTopColor(led.yellow);
-        // } else if (slam.trustX) {
+        // } else if (location.trustX) {
         //     led.setTopColor(led.green);
-        // } else if (slam.trustY) {
+        // } else if (location.trustY) {
         //     led.setTopColor(led.blue);
         // } else {
         //     led.setTopColor(led.red);
@@ -92,13 +92,13 @@ void slamApp(App) {
         // led.show();
 
         // uart3.print("マス:(");
-        // uart3.print(slam.x);
+        // uart3.print(location.x);
         // uart3.print(", ");
-        // uart3.print(slam.y);
+        // uart3.print(location.y);
         // uart3.print(") 座標:(");
-        // uart3.print(slam.coordinateX);
+        // uart3.print(location.coordinateX);
         // uart3.print(", ");
-        // uart3.print(slam.coordinateY);
+        // uart3.print(location.coordinateY);
         // uart3.println(")");
     }
 }
@@ -237,7 +237,7 @@ void rightGrid(App) {
             app.delay(2000);
         }
 
-        if (slam.x == 0 && slam.y == 0 && distanceSensor.val[0] < 150) {
+        if (location.x == 0 && location.y == 0 && distanceSensor.val[0] < 150) {
             if (millis() > 30000) {
                 servo.velocity = 0;
                 app.stop(servoApp);
@@ -266,7 +266,7 @@ void rightWall(App) {
         // servo.velocity = 0;
         // app.delay(1000);
 
-        if (slam.x == 0 && slam.y == 0 && distanceSensor.val[0] < 180) {
+        if (location.x == 0 && location.y == 0 && distanceSensor.val[0] < 180) {
             if (millis() > 10000) {
                 servo.velocity = 0;
                 app.stop(servoApp);

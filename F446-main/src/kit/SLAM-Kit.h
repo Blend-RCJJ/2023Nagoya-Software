@@ -1,5 +1,5 @@
-#ifndef _SLAM_KIT_H
-#define _SLAM_KIT_H
+#ifndef _Location_KIT_H
+#define _Location_KIT_H
 
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "Arduino.h"
@@ -21,9 +21,9 @@ class MAP_Kit {
     int floorColor = 0;  // 床の色
 };
 
-class SLAM_Kit {
+class Location_Kit {
    public:
-    SLAM_Kit();
+    Location_Kit();
 
     // double velocityConstant = 0.00192;
     double velocityConstant = 0.00192;

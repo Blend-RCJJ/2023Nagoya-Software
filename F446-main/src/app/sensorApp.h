@@ -34,9 +34,9 @@ extern UNITV cameraRight;
 
 extern MAP_Kit mapData[100];
 
-int count      = 0;
-int val0       = 0;
-int val6       = 0;
+int count = 0;
+int val0 = 0;
+int val6 = 0;
 int correction = 0;
 
 void camera(App);
@@ -70,15 +70,15 @@ void inputMonitoringApp(App) {
 
 void locationApp(App) {
     while (1) {
-        for (int i = 0; i < 100; i++) {
-            location.updateOdometory(servo.rightWheelSpeed, servo.leftWheelSpeed,
-                                 gyro.deg);
+        for (int i = 0; i < 10; i++) {
+            location.updateOdometory(servo.rightWheelSpeed,
+                                     servo.leftWheelSpeed, gyro.deg,
+                                     gyro.slope);
 
             app.delay(location.period);
         }
-
         location.updateObservationData(distanceSensor.vecX, distanceSensor.vecY,
-                                   gyro.deg);
+                                       gyro.deg);
 
         // if (location.trustX && location.trustY) {
         //     led.setTopColor(led.yellow);
@@ -106,7 +106,7 @@ void locationApp(App) {
 void servoApp(App) {
     while (1) {
         servo.drive(servo.velocity, servo.angle + correction);
-        app.delay(1);
+        app.delay(10);
     }
 }
 
@@ -214,13 +214,13 @@ void rightGrid(App) {
         if ((distanceSensor.val[0] < 200) && (distanceSensor.val[3] < 250)) {
             app.delay(1000);
             servo.velocity = 0;
-            count          = 1;
+            count = 1;
             servo.stop();
             servo.angle -= 90;
             app.delay(1800);
         } else if (distanceSensor.val[3] > 300) {
             servo.velocity = 0;
-            count          = 1;
+            count = 1;
             servo.stop();
             servo.angle += 90;
             app.delay(1000);
@@ -290,8 +290,8 @@ void rightWall(App) {
         }
 
         while (count == 0) {
-            val6  = distanceSensor.val[6];
-            val0  = distanceSensor.val[0];
+            val6 = distanceSensor.val[6];
+            val0 = distanceSensor.val[0];
             count = 2;
             app.delay(10);
         }
@@ -355,7 +355,7 @@ void leftWall(App) {
         }
 
         while (count == 0) {
-            val6  = distanceSensor.val[6];
+            val6 = distanceSensor.val[6];
             count = 2;
             app.delay(10);
         }
@@ -397,8 +397,19 @@ void leftWall(App) {
 
 void monitor(App) {
     while (1) {
-        uart3.write(cameraRight.data);
-        uart3.println(" ");
+        // uart3.write(cameraRight.data);
+        // uart3.println(" ");
+
+        uart3.print(location.x);
+        uart3.print(" ");
+        uart3.print(location.y);
+        uart3.print(" ");
+        uart3.print((int)location.coordinateX);
+        uart3.print(" ");
+        uart3.print((int)location.coordinateY);
+        uart3.print(" ");
+        uart3.print((int)servo.rightWheelSpeed);
+        uart3.println("");
         app.delay(10);
     }
 }
@@ -406,7 +417,7 @@ void monitor(App) {
 void black(App) {
     while (1) {
         if (floorSensor.redVal > 150) {
-            count          = 1;
+            count = 1;
             servo.velocity = -100;
             led.setTopColor(led.red);
             led.show();
@@ -433,6 +444,19 @@ void visualization(App) {
                 2 * j - 1, 0, 0,
                 30000 /
                     ((distanceSensor.val[j - 1] + distanceSensor.val[j]) / 2));
+        }
+
+        if (millis() - location.lastCorrection <= 1000) {
+            if ((millis() / 100 % 2)) {
+                led.setLeftColor(led.white);
+                led.setRightColor(led.white);
+            } else {
+                led.setLeftColor(led.blank);
+                led.setRightColor(led.blank);
+            }
+        } else {
+            led.setLeftColor(led.blank);
+            led.setRightColor(led.blank);
         }
 
         led.show();

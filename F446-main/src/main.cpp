@@ -69,8 +69,15 @@ void setup() {
 
     delay(3000);
 
+    gyro.setOffset();
+
+    // while(1){
+    //     gyro.read();
+    //     uart1.println(gyro.slope);
+    // }
+
     // ドッキリ！！！！！！！
-    ABARENBO_SHOGUN_MATSUKEN_LOVE();
+    // ABARENBO_SHOGUN_MATSUKEN_LOVE();
 
     // distanceCalibration();
 

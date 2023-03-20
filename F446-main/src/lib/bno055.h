@@ -25,6 +25,9 @@ class BNO055 {
     int error = 0;
     int oldDeg = 0;
 
+    int slope = 0;
+    int slopeOffset = 0;
+
     bool isGyroDisabled = true;
 
     void init(void);

@@ -14,7 +14,6 @@ HardwareSerial uart6(PC7, PC6);
 
 RTOS_Kit app;
 Location_Kit location;
-MAP_Kit mapData[100];
 
 #include "./lib/bno055.h"
 #include "./lib/floorSensor.h"
@@ -44,15 +43,14 @@ UNITV cameraRight(&uart2);
 #include "./lib/sts3032.h"
 STS3032 servo(&uart5);
 
+#include "./app/locationApp.h"
 #include "./app/sensorApp.h"
 
 int appMode = 0;
 
-
 void ABARENBO_SHOGUN_MATSUKEN_LOVE(void);
 
 void mainApp(App);
-void locationApp(App);
 void uartInit(void);
 
 void distanceCalibration(void);
@@ -89,16 +87,19 @@ void setup() {
     app.create(adjustment);
     // app.create(leftWall);
     app.create(monitor);
-    app.create(locationApp, firstPriority);
     app.create(black);
     app.create(camera);
     app.create(visualization);
     app.create(rightGrid);
     app.create(lever);
 
+
+    app.create(locationApp, firstPriority);
+    app.create(sideLEDApp);
+    app.create(mapApp);
+
     app.start(mainApp);
     app.start(inputMonitoringApp);
-    app.start(locationApp);
     app.startRTOS();
 }
 

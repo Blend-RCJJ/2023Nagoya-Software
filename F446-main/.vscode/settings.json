@@ -21,7 +21,8 @@
         "chrono": "cpp",
         "iterator": "cpp",
         "limits": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "locationapp": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

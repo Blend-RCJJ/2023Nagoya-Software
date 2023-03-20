@@ -7,17 +7,18 @@
 #include "WProgram.h"
 #endif
 
+#define MAP_ORIGIN 20
+
 class MAP_Kit {
    public:
-    int x = 1000;
-    int y = 1000;
+    bool isPassed = false;
+    bool isDetected = false;
 
-    bool north = false;  // 起動時の方角を北とする。
-    bool south = false;
-    bool east = false;
-    bool west = false;
+    bool northWall = false;  // 起動時の方角を北とする。
+    bool southWall = false;
+    bool eastWall = false;
+    bool westWall = false;
 
-    int counter = 0;     // 通った回数
     int floorColor = 0;  // 床の色
 };
 
@@ -25,6 +26,7 @@ class Location_Kit {
    public:
     Location_Kit();
 
+    MAP_Kit mapData[MAP_ORIGIN * 2][MAP_ORIGIN * 2];
     // double velocityConstant = 0.00192;
     double velocityConstant = 0.0018;
 

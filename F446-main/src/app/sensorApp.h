@@ -34,6 +34,10 @@ extern UNITV cameraRight;
 
 extern MAP_Kit mapData[100];
 
+extern void mapApp(App);
+extern void sideLEDApp(App);
+extern void locationApp(App);
+
 int count = 0;
 int val0 = 0;
 int val6 = 0;
@@ -65,41 +69,6 @@ void inputMonitoringApp(App) {
         cameraLeft.read();
         cameraRight.read();
         app.delay(3);
-    }
-}
-
-void locationApp(App) {
-    while (1) {
-        for (int i = 0; i < 10; i++) {
-            location.updateOdometory(servo.rightWheelSpeed,
-                                     servo.leftWheelSpeed, gyro.deg,
-                                     gyro.slope);
-
-            app.delay(location.period);
-        }
-        location.updateObservationData(distanceSensor.vecX, distanceSensor.vecY,
-                                       gyro.deg);
-
-        // if (location.trustX && location.trustY) {
-        //     led.setTopColor(led.yellow);
-        // } else if (location.trustX) {
-        //     led.setTopColor(led.green);
-        // } else if (location.trustY) {
-        //     led.setTopColor(led.blue);
-        // } else {
-        //     led.setTopColor(led.red);
-        // }
-        // led.show();
-
-        // uart3.print("マス:(");
-        // uart3.print(location.x);
-        // uart3.print(", ");
-        // uart3.print(location.y);
-        // uart3.print(") 座標:(");
-        // uart3.print(location.coordinateX);
-        // uart3.print(", ");
-        // uart3.print(location.coordinateY);
-        // uart3.println(")");
     }
 }
 
@@ -267,7 +236,7 @@ void rightWall(App) {
         // app.delay(1000);
 
         if (location.x == 0 && location.y == 0 && distanceSensor.val[0] < 180) {
-            if (millis() > 10000) {
+            if (millis() > 30000) {
                 servo.velocity = 0;
                 app.stop(servoApp);
                 app.stop(adjustment);
@@ -279,6 +248,9 @@ void rightWall(App) {
                 led.setRightColor(led.white);
                 led.setUIColor(led.white);
                 led.show();
+                app.delay(10000);
+
+                // speaker.matsukenShogun();
             } else {
                 app.delay(10);
             }
@@ -446,19 +418,6 @@ void visualization(App) {
                     ((distanceSensor.val[j - 1] + distanceSensor.val[j]) / 2));
         }
 
-        if (millis() - location.lastCorrection <= 1000) {
-            if ((millis() / 100 % 2)) {
-                led.setLeftColor(led.white);
-                led.setRightColor(led.white);
-            } else {
-                led.setLeftColor(led.blank);
-                led.setRightColor(led.blank);
-            }
-        } else {
-            led.setLeftColor(led.blank);
-            led.setRightColor(led.blank);
-        }
-
         led.show();
         app.delay(10);
     }
@@ -578,6 +537,10 @@ void lever(App) {
             app.stop(adjustment);
             app.stop(visualization);
             app.stop(camera);
+
+            app.stop(locationApp);
+            app.stop(mapApp);
+            app.stop(sideLEDApp);
             servo.stop();
             oldStatus = false;
         } else {
@@ -587,6 +550,10 @@ void lever(App) {
                 app.start(adjustment);
                 app.start(visualization);
                 app.start(camera);
+
+                app.start(locationApp);
+                app.start(mapApp);
+                app.start(sideLEDApp);
                 gyro.setOffset();
 
                 oldStatus = true;

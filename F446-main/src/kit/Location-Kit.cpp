@@ -47,12 +47,18 @@ void Location_Kit::updateObservationData(int *vecX, int *vecY, int angle) {
     if (560 < widthX && widthX < 630) {
         trustX = true;
 
+        int temp;
+
         if (abs(vecX[(minIndex + 3) % 12]) < abs(vecX[(minIndex + 9) % 12])) {
-            coordinateX = round(coordinateX / 300.0) * 300.0 + 
+            temp = round(coordinateX / 300.0) * 300.0 +
                           (300 - abs(vecX[(minIndex + 3) % 12]) - 40) - 130;
         } else {
-            coordinateX = round(coordinateX / 300.0) * 300.0 +
-                        abs(vecX[(minIndex + 9) % 12]) - 130;
+            temp = round(coordinateX / 300.0) * 300.0 +
+                          abs(vecX[(minIndex + 9) % 12]) - 130;
+        }
+
+        if (abs(coordinateX - temp) < 150) {
+            coordinateX = temp;
         }
 
         lastCorrection = millis();
@@ -68,12 +74,18 @@ void Location_Kit::updateObservationData(int *vecX, int *vecY, int angle) {
     if (560 < widthY && widthY < 630) {
         trustY = true;
 
+        int temp;
+
         if (abs(vecY[minIndex]) < abs(vecY[(minIndex + 6) % 12])) {
-            coordinateY = round(coordinateY / 300.0) * 300.0 + 
-                          (300 - abs(vecY[minIndex]) - 40) - 130;
+            temp = round(coordinateY / 300.0) * 300.0 +
+                   (300 - abs(vecY[minIndex]) - 40) - 130;
         } else {
-            coordinateY = round(coordinateY / 300.0) * 300.0 +
-                        abs(vecY[(minIndex + 6) % 12]) - 130;
+            temp = round(coordinateY / 300.0) * 300.0 +
+                   abs(vecY[(minIndex + 6) % 12]) - 130;
+        }
+
+        if (abs(coordinateY - temp) < 150) {
+            coordinateY = temp;
         }
 
         lastCorrection = millis();

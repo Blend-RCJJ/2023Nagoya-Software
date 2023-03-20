@@ -57,3 +57,5 @@ void SLAM_Kit::updateObservationData(int *vecX, int *vecY, int angle) {
     x = round(coordinateX / 300.0);
     y = round(coordinateY / 300.0);
 }
+
+// void MAP::

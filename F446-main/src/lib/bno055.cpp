@@ -38,3 +38,10 @@ int BNO055::read(void) {
 
     return deg;
 }
+
+void BNO055::setOffset(void) {
+    
+    sensors_event_t event;
+    sensorPtr->getEvent(&event);
+    offset =  event.magnetic.x;
+}

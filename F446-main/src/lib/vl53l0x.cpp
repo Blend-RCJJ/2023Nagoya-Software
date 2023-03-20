@@ -30,7 +30,9 @@ int VL53L0X::getDistance(void) {
 
         if (checkDegit % 256 == serialPtr->read()) {
             for (int i = 0; i < 12; i++) {
-                val[i] = _valTemp[i];
+                if (_valTemp[i] > 10) {
+                    val[i] = constrain(_valTemp[i], 10, 1200);
+                }
             }
         }
 

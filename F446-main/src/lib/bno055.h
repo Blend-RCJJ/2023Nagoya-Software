@@ -27,6 +27,7 @@ class BNO055 {
     bool isGyroDisabled = true;
 
     void init(void);
+    void setOffset(void);
     int read(void);
 
    private:

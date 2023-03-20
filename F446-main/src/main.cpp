@@ -13,6 +13,7 @@ HardwareSerial uart6(PC7, PC6);
 
 RTOS_Kit app;
 SLAM_Kit slam;
+MAP_Kit mapData[100];
 
 #include "./lib/bno055.h"
 #include "./lib/floorSensor.h"
@@ -91,7 +92,7 @@ void setup() {
 void mainApp(App) {
     app.start(servoApp);
     app.start(adjustment);
-    app.start(rightGrid);
+    app.start(rightWall);
     app.start(monitor);
     // app.start(black);
     app.start(camera);

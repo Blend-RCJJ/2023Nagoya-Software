@@ -2,6 +2,8 @@
 #define _SENSOR_APP_H
 #define FLOOR_NUMBER 2
 
+#define SPEED 50
+
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "Arduino.h"
 #else
@@ -30,9 +32,16 @@ extern WS2812B led;
 extern UNITV cameraLeft;
 extern UNITV cameraRight;
 
-int count = 0;
-int val0  = 0;
-int val6  = 0;
+extern MAP_Kit mapData[100];
+
+int count      = 0;
+int val0       = 0;
+int val6       = 0;
+int correction = 0;
+
+void camera(App);
+void visualization(App);
+
 void inputMonitoringApp(App) {
     while (1) {
         distanceSensor.getDistance();
@@ -96,7 +105,7 @@ void slamApp(App) {
 
 void servoApp(App) {
     while (1) {
-        servo.drive(servo.velocity, servo.angle);
+        servo.drive(servo.velocity, servo.angle + correction);
         app.delay(1);
     }
 }
@@ -105,7 +114,7 @@ void gridSpecification(App) {
     while (1) {
         if ((distanceSensor.val[0] > distanceSensor.val[3]) &&
             (distanceSensor.val[0] > distanceSensor.val[9])) {
-            servo.velocity = 50;
+            servo.velocity = SPEED;
             app.delay(4200);
             servo.velocity = 0;
             app.delay(1000);
@@ -113,7 +122,7 @@ void gridSpecification(App) {
             servo.velocity = 0;
             servo.angle += 90;
             app.delay(1000);
-            servo.velocity = 50;
+            servo.velocity = SPEED;
             app.delay(4200);
             servo.velocity = 0;
             app.delay(1000);
@@ -121,7 +130,7 @@ void gridSpecification(App) {
             servo.velocity = 0;
             servo.angle -= 90;
             app.delay(1000);
-            servo.velocity = 50;
+            servo.velocity = SPEED;
             app.delay(4200);
             servo.velocity = 0;
             app.delay(1000);
@@ -135,7 +144,7 @@ void gridSpecification(App) {
                     servo.velocity = 0;
                     servo.angle += 180;
                     app.delay(1000);
-                    servo.velocity = 50;
+                    servo.velocity = SPEED;
                     app.delay(4200);
                     servo.velocity = 0;
                     app.delay(1000);
@@ -149,51 +158,51 @@ void adjustment(App) {
     while (1) {
         app.delay(1);
 
-        while (count == 1) {
+        if (count == 1) {
             app.delay(1200);
             count = 0;
         }
 
         while (count == 0) {
+            if (distanceSensor.val[0] < 110) {
+                servo.velocity = 0;
+            }
             if (distanceSensor.val[3] + distanceSensor.val[9] < 300) {
                 if (distanceSensor.val[3] > distanceSensor.val[9] + 20) {
-                    servo.driveAngularVelocity(servo.velocity, 10);
+                    correction = 5;
                 } else if (distanceSensor.val[9] > distanceSensor.val[3] + 20) {
-                    servo.driveAngularVelocity(servo.velocity, -10);
-                } else {
-                    app.delay(1);
+                    correction = -5;
                 }
             } else {
-                if (distanceSensor.val[9] < 120) {
-                    servo.driveAngularVelocity(servo.velocity, 10);
+                if (distanceSensor.val[9] < 100) {
+                    correction = 5;
                 }
-                if (distanceSensor.val[3] < 120) {
-                    servo.driveAngularVelocity(servo.velocity, -10);
+                if (distanceSensor.val[3] < 100) {
+                    correction = -5;
                 }
-                app.delay(1);
             }
 
             if (distanceSensor.val[3] > 300 && distanceSensor.val[9] < 300) {
                 if (distanceSensor.val[9] > 120) {
-                    servo.driveAngularVelocity(servo.velocity, -20);
+                    correction = -5;
                 }
-                app.delay(1);
+
             } else if (distanceSensor.val[9] > 300 &&
                        distanceSensor.val[3] < 200) {
                 if (distanceSensor.val[3] > 120) {
-                    servo.driveAngularVelocity(servo.velocity, 20);
+                    correction = 5;
                 }
-                app.delay(1);
+            } else {
+                correction = 0;
             }
 
             if ((distanceSensor.val[0] > 200) &&
                 (distanceSensor.val[0] < 250)) {
-                servo.velocity = 60;
+                servo.velocity = SPEED;
+
+                correction = 0;
             }
-            if (distanceSensor.val[0] < 110) {
-                servo.velocity = 0;
-            }
-            app.delay(1);
+            app.delay(20);
         }
     }
 }
@@ -215,17 +224,35 @@ void rightGrid(App) {
             servo.stop();
             servo.angle += 90;
             app.delay(1000);
-            servo.velocity = 60;
+            servo.velocity = SPEED;
             app.delay(2604);
             servo.velocity = 0;
             app.delay(2000);
         } else {
             app.delay(1000);
-            servo.velocity = 60;
+            servo.velocity = SPEED;
             app.start(adjustment);
             app.delay(2604);
             servo.velocity = 0;
             app.delay(2000);
+        }
+
+        if (slam.x == 0 && slam.y == 0 && distanceSensor.val[0] < 150) {
+            if (millis() > 30000) {
+                servo.velocity = 0;
+                app.stop(servoApp);
+                app.stop(adjustment);
+                servo.stop();
+                app.stop(camera);
+                app.stop(visualization);
+                led.setTopColor(led.white);
+                led.setLeftColor(led.white);
+                led.setRightColor(led.white);
+                led.setUIColor(led.white);
+                led.show();
+            } else {
+                app.delay(1);
+            }
         }
     }
 }
@@ -233,13 +260,33 @@ void rightGrid(App) {
 void rightWall(App) {
     app.delay(500);
     while (1) {
-        servo.velocity = 60;
-        app.delay(2700);
-        servo.velocity = 0;
-        app.delay(1000);
+        servo.velocity = SPEED;
+        app.delay(10);
+        // app.delay(2700);
+        // servo.velocity = 0;
+        // app.delay(1000);
+
+        if (slam.x == 0 && slam.y == 0 && distanceSensor.val[0] < 180) {
+            if (millis() > 10000) {
+                servo.velocity = 0;
+                app.stop(servoApp);
+                app.stop(adjustment);
+                servo.stop();
+                app.stop(camera);
+                app.stop(visualization);
+                led.setTopColor(led.white);
+                led.setLeftColor(led.white);
+                led.setRightColor(led.white);
+                led.setUIColor(led.white);
+                led.show();
+            } else {
+                app.delay(10);
+            }
+        }
+
         while (count == 1) {
-            app.delay(1200);
-            count = 2;
+            app.delay(900);
+            count = 0;
         }
 
         while (count == 0) {
@@ -252,32 +299,46 @@ void rightWall(App) {
         if (distanceSensor.val[3] > 200) {
             count = 2;
             if (val6 > 600) {
-                if ((val0 - 120) > distanceSensor.val[0]) {
+                if ((val0 - 140) > distanceSensor.val[0]) {
                     servo.velocity = 0;
+                    servo.stop();
+                    app.delay(500);
                     servo.angle += 90;
                     count = 0;
-                    app.delay(1000);
-                    servo.velocity = 60;
-                    app.delay(1300);
+                    app.delay(500);
+                    servo.velocity = SPEED;
+                    app.delay(2000);
                 }
-            } else if ((val6 + 120) < distanceSensor.val[6]) {
+            } else if ((val6 + 140) < distanceSensor.val[6]) {
                 servo.velocity = 0;
+                servo.stop();
+                app.delay(500);
                 servo.angle += 90;
                 count = 0;
-                app.delay(1000);
-                servo.velocity = 60;
-                app.delay(1300);
+                app.delay(500);
+                servo.velocity = SPEED;
+                app.delay(2000);
             }
-        } else if ((distanceSensor.val[0] < 120) &&
-                   (distanceSensor.val[3] < 230)) {
+
+        } else {
+            count = 0;
+            app.delay(10);
+        }
+
+        if (distanceSensor.val[0] < 170) {
             servo.velocity = 0;
+            servo.stop();
             app.delay(500);
             servo.angle -= 90;
             count = 1;
             app.delay(500);
-        } else {
-            count = 0;
-            app.delay(10);
+        }
+    }
+}
+
+void extendedRight(App) {
+    while (1) {
+        if (gyro.deg > 355 || gyro.deg < 5) {
         }
     }
 }
@@ -285,11 +346,11 @@ void rightWall(App) {
 void leftWall(App) {
     app.delay(500);
     while (1) {
-        servo.velocity = 60;
+        servo.velocity = SPEED;
         app.delay(10);
 
         while (count == 1) {
-            app.delay(1000);
+            app.delay(800);
             count = 2;
         }
 
@@ -345,7 +406,7 @@ void monitor(App) {
 void black(App) {
     while (1) {
         if (floorSensor.redVal > 150) {
-            count = 1;
+            count          = 1;
             servo.velocity = -100;
             led.setTopColor(led.red);
             led.show();
@@ -375,60 +436,111 @@ void visualization(App) {
         }
 
         led.show();
-        app.delay(1);
+        app.delay(10);
     }
 }
 
 void camera(App) {
-    static bool oldstatus = false;
+    bool oldstatus = true;
     while (1) {
         while (cameraRight.data == 'H') {
-            led.setUIColor(led.red);
+            led.setUIColor(led.pink);
             servo.velocity = 0;
             app.stop(servoApp);
             servo.stop();
             app.stop(adjustment);
-            app.stop(rightGrid);
-            led.setUIBrightness(127 * sin(millis() / 50) + 127);
+            app.stop(rightWall);
+            led.setUIBrightness(127 * sin(millis() / 200.0) + 127);
             led.show();
             oldstatus = false;
+
+            app.delay(5);
         }
 
         while (cameraRight.data == 'S') {
-            led.setUIColor(led.yellow);
+            led.setUIColor(led.blue);
             servo.velocity = 0;
             servo.stop();
+            app.stop(servoApp);
             app.stop(adjustment);
-            app.stop(rightGrid);
-            led.setUIBrightness(127 * sin(millis() / 50) + 127);
+            app.stop(rightWall);
+            led.setUIBrightness(127 * sin(millis() / 200.0) + 127);
             led.show();
             oldstatus = false;
+
+            app.delay(5);
         }
 
         while (cameraRight.data == 'U') {
+            led.setUIColor(led.white);
+            servo.velocity = 0;
+            servo.stop();
+            app.stop(servoApp);
+            app.stop(adjustment);
+            app.stop(rightWall);
+            led.setUIBrightness(127 * sin(millis() / 200.0) + 127);
+            led.show();
+            oldstatus = false;
+
+            app.delay(5);
+        }
+
+        while (cameraRight.data == 'R') {
+            led.setUIColor(led.red);
+            servo.velocity = 0;
+            servo.stop();
+            app.stop(servoApp);
+            app.stop(adjustment);
+            app.stop(rightWall);
+            led.setUIBrightness(127 * sin(millis() / 200.0) + 127);
+            led.show();
+            oldstatus = false;
+
+            app.delay(5);
+        }
+
+        while (cameraRight.data == 'G') {
             led.setUIColor(led.green);
             servo.velocity = 0;
             servo.stop();
+            app.stop(servoApp);
             app.stop(adjustment);
-            app.stop(rightGrid);
-            led.setUIBrightness(127 * sin(millis() / 100) + 127);
+            app.stop(rightWall);
+            led.setUIBrightness(127 * sin(millis() / 200.0) + 127);
             led.show();
             oldstatus = false;
+
+            app.delay(5);
         }
 
-        if(!oldstatus){
-            app.start(rightGrid);
+        while (cameraRight.data == 'Y') {
+            led.setUIColor(led.yellow);
+            servo.velocity = 0;
+            servo.stop();
+            app.stop(servoApp);
+            app.stop(adjustment);
+            app.stop(rightWall);
+            led.setUIBrightness(127 * sin(millis() / 200.0) + 127);
+            led.show();
+            oldstatus = false;
+
+            app.delay(5);
+        }
+
+        if (!oldstatus) {
+            app.start(servoApp);
+            app.start(rightWall);
             app.start(adjustment);
+            app.delay(5);
 
             oldstatus = true;
         }
 
         led.setUIColor(led.blank);
         led.show();
-        app.delay(1);
+        app.delay(100);
     }
 }
-
 
 void lever(App) {
     static bool oldStatus = false;
@@ -438,17 +550,20 @@ void lever(App) {
             led.show();
             servo.velocity = 0;
             app.stop(servoApp);
-            app.stop(rightGrid);
+            app.stop(rightWall);
             app.stop(adjustment);
             app.stop(visualization);
+            app.stop(camera);
             servo.stop();
             oldStatus = false;
         } else {
             if (!oldStatus) {
                 app.start(servoApp);
-                app.start(rightGrid);
+                app.start(rightWall);
                 app.start(adjustment);
                 app.start(visualization);
+                app.start(camera);
+                gyro.setOffset();
 
                 oldStatus = true;
             }

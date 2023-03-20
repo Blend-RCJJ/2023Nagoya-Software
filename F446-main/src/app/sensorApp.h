@@ -40,6 +40,7 @@ int val6       = 0;
 int correction = 0;
 
 void camera(App);
+void rightwall(App);
 void visualization(App);
 
 void inputMonitoringApp(App) {
@@ -307,7 +308,7 @@ void rightWall(App) {
                     count = 0;
                     app.delay(500);
                     servo.velocity = SPEED;
-                    app.delay(2000);
+                    app.delay(1700);
                 }
             } else if ((val6 + 140) < distanceSensor.val[6]) {
                 servo.velocity = 0;
@@ -317,7 +318,7 @@ void rightWall(App) {
                 count = 0;
                 app.delay(500);
                 servo.velocity = SPEED;
-                app.delay(2000);
+                app.delay(1700);
             }
 
         } else {
@@ -325,7 +326,7 @@ void rightWall(App) {
             app.delay(10);
         }
 
-        if (distanceSensor.val[0] < 170) {
+        if (distanceSensor.val[0] < 130) {
             servo.velocity = 0;
             servo.stop();
             app.delay(500);
@@ -336,12 +337,41 @@ void rightWall(App) {
     }
 }
 
-void extendedRight(App) {
+void hitAvoid(App) {
+     static bool oldStatus = false;
     while (1) {
-        if (gyro.deg > 355 || gyro.deg < 5) {
-        }
+        if (distanceSensor.val[0] > 300 && distanceSensor.val[1] < 100 &&
+            distanceSensor.val[2] < 100){
+                app.stop(servoApp);
+                app.stop(rightWall);
+                app.stop(adjustment);
+                servo.driveAngularVelocity(-30,45);
+                app.delay(2000);
+
+                oldStatus = false;
+            }else if(distanceSensor.val[0] > 300 && distanceSensor.val[11] < 100 &&
+            distanceSensor.val[10] < 100){
+                 app.stop(servoApp);
+                app.stop(rightWall);
+                app.stop(adjustment);
+                servo.driveAngularVelocity(-30,-45);
+                app.delay(2000);
+
+                oldStatus = false;
+            }else{
+                if(!oldStatus){
+                app.start(servoApp);
+                app.start(rightWall);
+                app.start(adjustment);
+
+                oldStatus = true;
+                }
+
+                app.delay(20);
+            }
     }
 }
+
 
 void leftWall(App) {
     app.delay(500);
@@ -397,7 +427,11 @@ void leftWall(App) {
 
 void monitor(App) {
     while (1) {
-        uart3.write(cameraRight.data);
+        uart3.print(distanceSensor.val[0]);
+        uart3.print(" ");
+        uart3.print(distanceSensor.val[1]);
+        uart3.print(" ");
+        uart3.print(distanceSensor.val[2]);
         uart3.println(" ");
         app.delay(10);
     }

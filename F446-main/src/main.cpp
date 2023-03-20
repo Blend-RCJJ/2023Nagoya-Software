@@ -70,7 +70,7 @@ void setup() {
     delay(3000);
 
     // ドッキリ！！！！！！！
-    ABARENBO_SHOGUN_MATSUKEN_LOVE();
+    // ABARENBO_SHOGUN_MATSUKEN_LOVE();
 
     // distanceCalibration();
 
@@ -88,6 +88,7 @@ void setup() {
     app.create(visualization);
     app.create(rightGrid);
     app.create(lever);
+    app.create(hitAvoid);
 
     app.start(mainApp);
     app.start(inputMonitoringApp);
@@ -105,6 +106,7 @@ void mainApp(App) {
     app.start(camera);
     app.start(visualization);
     app.start(lever);
+    app.start(hitAvoid);
     while (1) {
         app.delay(1);
     }

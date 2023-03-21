@@ -20,6 +20,8 @@ class MAP_Kit {
     bool westWall = false;
 
     int floorColor = 0;  // 床の色
+
+    unsigned long firstPassedTime = 0;
 };
 
 class Location_Kit {
@@ -48,6 +50,9 @@ class Location_Kit {
 
     bool trustX = false;
     bool trustY = false;
+
+    unsigned long lastTrustX = 0;
+    unsigned long lastTrustY = 0;
 
     unsigned long lastCorrection = 0;
 

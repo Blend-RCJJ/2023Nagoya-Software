@@ -248,7 +248,7 @@ void rightWall(App) {
                 led.setRightColor(led.white);
                 led.setUIColor(led.white);
                 led.show();
-                app.delay(10000);
+                app.delay(1000);
 
                 // speaker.matsukenShogun();
             } else {
@@ -372,17 +372,32 @@ void monitor(App) {
         // uart3.write(cameraRight.data);
         // uart3.println(" ");
 
-        uart3.print(location.x);
-        uart3.print(" ");
-        uart3.print(location.y);
-        uart3.print(" ");
-        uart3.print((int)location.coordinateX);
-        uart3.print(" ");
-        uart3.print((int)location.coordinateY);
-        uart3.print(" ");
-        uart3.print((int)servo.rightWheelSpeed);
-        uart3.println("");
-        app.delay(10);
+        // uart3.print(location.x);
+        // uart3.print(" ");
+        // uart3.print(location.y);
+        // uart3.print(" ");
+        // uart3.print((int)location.coordinateX);
+        // uart3.print(" ");
+        // uart3.print((int)location.coordinateY);
+        // uart3.print(" ");
+        // uart3.print((int)servo.rightWheelSpeed);
+        // uart3.println("");
+
+        for (int i = 13; i < 27; i++) {      // たて
+            for (int j = 13; j < 27; j++) {  // 横
+                if (location.mapData[j][39 - i].isPassed == true) {
+                    uart1.print("■");
+                } else if (location.mapData[j][39 - i].isDetected == true) {
+                    uart1.print("□");
+                } else {
+                    uart1.print(" ");
+                }
+            }
+
+            uart1.println("");
+        }
+
+        app.delay(1000);
     }
 }
 

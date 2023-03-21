@@ -3,7 +3,7 @@
 
 #include "./kit/IO-Kit.h"
 #include "./kit/RTOS-Kit.h"
-#include "./kit/SLAM-Kit.h"
+#include "./kit/Location-Kit.h"
 
 HardwareSerial uart1(PA10, PA9);
 HardwareSerial uart2(PA3, PA2);
@@ -13,8 +13,7 @@ HardwareSerial uart5(PD2, PC12);
 HardwareSerial uart6(PC7, PC6);
 
 RTOS_Kit app;
-SLAM_Kit slam;
-MAP_Kit mapData[100];
+Location_Kit location;
 
 #include "./lib/bno055.h"
 #include "./lib/floorSensor.h"
@@ -44,15 +43,14 @@ UNITV cameraRight(&uart2);
 #include "./lib/sts3032.h"
 STS3032 servo(&uart5);
 
+#include "./app/locationApp.h"
 #include "./app/sensorApp.h"
 
 int appMode = 0;
 
-
 void ABARENBO_SHOGUN_MATSUKEN_LOVE(void);
 
 void mainApp(App);
-void slamApp(App);
 void uartInit(void);
 
 void distanceCalibration(void);
@@ -69,8 +67,15 @@ void setup() {
 
     delay(3000);
 
+    gyro.setOffset();
+
+    // while(1){
+    //     gyro.read();
+    //     uart1.println(gyro.slope);
+    // }
+
     // ドッキリ！！！！！！！
-    ABARENBO_SHOGUN_MATSUKEN_LOVE();
+    // ABARENBO_SHOGUN_MATSUKEN_LOVE();
 
     // distanceCalibration();
 
@@ -82,16 +87,19 @@ void setup() {
     app.create(adjustment);
     // app.create(leftWall);
     app.create(monitor);
-    app.create(slamApp, firstPriority);
     app.create(black);
     app.create(camera);
     app.create(visualization);
     app.create(rightGrid);
     app.create(lever);
 
+
+    app.create(locationApp, firstPriority);
+    app.create(sideLEDApp);
+    app.create(mapApp);
+
     app.start(mainApp);
     app.start(inputMonitoringApp);
-    app.start(slamApp);
     app.startRTOS();
 }
 

@@ -13,7 +13,7 @@
 extern HardwareSerial uart1;
 extern HardwareSerial uart3;
 extern RTOS_Kit app;
-extern SLAM_Kit slam;
+extern Location_Kit location;
 
 extern Adafruit_NeoPixel stripL;
 extern Adafruit_NeoPixel stripR;
@@ -34,9 +34,13 @@ extern UNITV cameraRight;
 
 extern MAP_Kit mapData[100];
 
-int count      = 0;
-int val0       = 0;
-int val6       = 0;
+extern void mapApp(App);
+extern void sideLEDApp(App);
+extern void locationApp(App);
+
+int count = 0;
+int val0 = 0;
+int val6 = 0;
 int correction = 0;
 
 void camera(App);
@@ -68,45 +72,10 @@ void inputMonitoringApp(App) {
     }
 }
 
-void slamApp(App) {
-    while (1) {
-        for (int i = 0; i < 100; i++) {
-            slam.updateOdometory(servo.rightWheelSpeed, servo.leftWheelSpeed,
-                                 gyro.deg);
-
-            app.delay(slam.period);
-        }
-
-        slam.updateObservationData(distanceSensor.vecX, distanceSensor.vecY,
-                                   gyro.deg);
-
-        // if (slam.trustX && slam.trustY) {
-        //     led.setTopColor(led.yellow);
-        // } else if (slam.trustX) {
-        //     led.setTopColor(led.green);
-        // } else if (slam.trustY) {
-        //     led.setTopColor(led.blue);
-        // } else {
-        //     led.setTopColor(led.red);
-        // }
-        // led.show();
-
-        // uart3.print("マス:(");
-        // uart3.print(slam.x);
-        // uart3.print(", ");
-        // uart3.print(slam.y);
-        // uart3.print(") 座標:(");
-        // uart3.print(slam.coordinateX);
-        // uart3.print(", ");
-        // uart3.print(slam.coordinateY);
-        // uart3.println(")");
-    }
-}
-
 void servoApp(App) {
     while (1) {
         servo.drive(servo.velocity, servo.angle + correction);
-        app.delay(1);
+        app.delay(10);
     }
 }
 
@@ -214,13 +183,13 @@ void rightGrid(App) {
         if ((distanceSensor.val[0] < 200) && (distanceSensor.val[3] < 250)) {
             app.delay(1000);
             servo.velocity = 0;
-            count          = 1;
+            count = 1;
             servo.stop();
             servo.angle -= 90;
             app.delay(1800);
         } else if (distanceSensor.val[3] > 300) {
             servo.velocity = 0;
-            count          = 1;
+            count = 1;
             servo.stop();
             servo.angle += 90;
             app.delay(1000);
@@ -237,7 +206,7 @@ void rightGrid(App) {
             app.delay(2000);
         }
 
-        if (slam.x == 0 && slam.y == 0 && distanceSensor.val[0] < 150) {
+        if (location.x == 0 && location.y == 0 && distanceSensor.val[0] < 150) {
             if (millis() > 30000) {
                 servo.velocity = 0;
                 app.stop(servoApp);
@@ -266,8 +235,8 @@ void rightWall(App) {
         // servo.velocity = 0;
         // app.delay(1000);
 
-        if (slam.x == 0 && slam.y == 0 && distanceSensor.val[0] < 180) {
-            if (millis() > 10000) {
+        if (location.x == 0 && location.y == 0 && distanceSensor.val[0] < 180) {
+            if (millis() > 30000) {
                 servo.velocity = 0;
                 app.stop(servoApp);
                 app.stop(adjustment);
@@ -279,6 +248,9 @@ void rightWall(App) {
                 led.setRightColor(led.white);
                 led.setUIColor(led.white);
                 led.show();
+                app.delay(1000);
+
+                // speaker.matsukenShogun();
             } else {
                 app.delay(10);
             }
@@ -290,8 +262,8 @@ void rightWall(App) {
         }
 
         while (count == 0) {
-            val6  = distanceSensor.val[6];
-            val0  = distanceSensor.val[0];
+            val6 = distanceSensor.val[6];
+            val0 = distanceSensor.val[0];
             count = 2;
             app.delay(10);
         }
@@ -355,7 +327,7 @@ void leftWall(App) {
         }
 
         while (count == 0) {
-            val6  = distanceSensor.val[6];
+            val6 = distanceSensor.val[6];
             count = 2;
             app.delay(10);
         }
@@ -397,16 +369,42 @@ void leftWall(App) {
 
 void monitor(App) {
     while (1) {
-        uart3.write(cameraRight.data);
-        uart3.println(" ");
-        app.delay(10);
+        // uart3.write(cameraRight.data);
+        // uart3.println(" ");
+
+        // uart3.print(location.x);
+        // uart3.print(" ");
+        // uart3.print(location.y);
+        // uart3.print(" ");
+        // uart3.print((int)location.coordinateX);
+        // uart3.print(" ");
+        // uart3.print((int)location.coordinateY);
+        // uart3.print(" ");
+        // uart3.print((int)servo.rightWheelSpeed);
+        // uart3.println("");
+
+        for (int i = 13; i < 27; i++) {      // たて
+            for (int j = 13; j < 27; j++) {  // 横
+                if (location.mapData[j][39 - i].isPassed == true) {
+                    uart1.print("■");
+                } else if (location.mapData[j][39 - i].isDetected == true) {
+                    uart1.print("□");
+                } else {
+                    uart1.print(" ");
+                }
+            }
+
+            uart1.println("");
+        }
+
+        app.delay(1000);
     }
 }
 
 void black(App) {
     while (1) {
         if (floorSensor.redVal > 150) {
-            count          = 1;
+            count = 1;
             servo.velocity = -100;
             led.setTopColor(led.red);
             led.show();
@@ -554,6 +552,10 @@ void lever(App) {
             app.stop(adjustment);
             app.stop(visualization);
             app.stop(camera);
+
+            app.stop(locationApp);
+            app.stop(mapApp);
+            app.stop(sideLEDApp);
             servo.stop();
             oldStatus = false;
         } else {
@@ -563,6 +565,10 @@ void lever(App) {
                 app.start(adjustment);
                 app.start(visualization);
                 app.start(camera);
+
+                app.start(locationApp);
+                app.start(mapApp);
+                app.start(sideLEDApp);
                 gyro.setOffset();
 
                 oldStatus = true;

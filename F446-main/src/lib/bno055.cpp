@@ -60,12 +60,23 @@ int BNO055::read(void) {
 
     // oldDeg = deg;
 
+    slope = (int)(event.orientation.z - slopeOffset + 360) % 360;
+
+    if (slope >= 180) {
+        slope -= 360;
+    }
+    slope *= -1;
+
+    if(abs(slope) <= 8) {
+        slope = 0;
+    }
+
     return deg;
 }
 
 void BNO055::setOffset(void) {
-    
     sensors_event_t event;
     sensorPtr->getEvent(&event);
-    offset =  event.magnetic.x;
+    offset = event.magnetic.x;
+    slopeOffset = event.orientation.z;
 }

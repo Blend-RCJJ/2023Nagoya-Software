@@ -25,7 +25,7 @@ Location_Kit location;
 
 Adafruit_NeoPixel stripL = Adafruit_NeoPixel(7, PA15, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripR = Adafruit_NeoPixel(7, PB13, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel stripUI = Adafruit_NeoPixel(24, PA5, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripUI = Adafruit_NeoPixel(24, PB14, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripTop = Adafruit_NeoPixel(24, PC1, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripFloor = Adafruit_NeoPixel(3, PB15, NEO_GRB + NEO_KHZ800);
 
@@ -65,7 +65,11 @@ void setup() {
 
     gyro.init();
 
-    delay(3000);
+    
+    speaker.bootSound();
+
+
+    delay(500);
 
     gyro.setOffset();
 
@@ -83,7 +87,7 @@ void setup() {
     app.create(inputMonitoringApp, firstPriority);
     app.create(servoApp);
     app.create(rightWall);
-    app.create(gridSpecification);
+    // app.create(gridSpecification);
     app.create(adjustment);
     // app.create(leftWall);
     app.create(monitor);

@@ -331,6 +331,7 @@ void rightWall(App) {
                  .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN - 1]
                  .isPassed)) {
             if (distanceSensor.val[3] < 200) {
+                app.delay(800);
                 servo.velocity = 0;
                 servo.stop();
                 app.delay(500);

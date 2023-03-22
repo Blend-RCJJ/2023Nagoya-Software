@@ -39,7 +39,7 @@ void WS2812B::setTopColor(unsigned long color) {
 }
 
 void WS2812B::setFloorColor(unsigned long color) {
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 4; i++) {
         stripFloor.setPixelColor(i, color);
     }
     stripFloor.show();

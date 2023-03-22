@@ -45,6 +45,7 @@ void STS3032::driveAngularVelocity(int velocity, int angularVelocity) {
     for (int i = 2; i < 4; i++) {
         directDrive(i, data[1]);
     }
+     directDrive(4, 10);
 }
 
 void STS3032::drive(int velocity, int angle) {

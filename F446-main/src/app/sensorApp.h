@@ -32,7 +32,8 @@ extern WS2812B led;
 extern UNITV cameraLeft;
 extern UNITV cameraRight;
 
-extern MAP_Kit mapData[100];
+extern LOADCELL loadcell;
+extern HEATSENSOR heatSensor;
 
 extern void mapApp(App);
 extern void sideLEDApp(App);
@@ -54,6 +55,8 @@ void inputMonitoringApp(App) {
 
         gyro.read();
         ui.read();
+        loadcell.read();
+        heatSensor.read();
 
         led.setFloorColor(led.white);
         app.delay(3);

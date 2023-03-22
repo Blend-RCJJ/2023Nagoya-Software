@@ -22,6 +22,8 @@ Location_Kit location;
 #include "./lib/unitV.h"
 #include "./lib/vl53l0x.h"
 #include "./lib/ws2812b.h"
+#include "./lib/loadcell.h"
+#include "./lib/heatSensor.h"
 
 Adafruit_NeoPixel stripL = Adafruit_NeoPixel(7, PA15, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripR = Adafruit_NeoPixel(7, PB13, NEO_GRB + NEO_KHZ800);
@@ -39,6 +41,8 @@ SWITCHUI ui;
 FLOOR_SENSOR floorSensor;
 UNITV cameraLeft(&uart6);
 UNITV cameraRight(&uart2);
+LOADCELL loadcell;
+HEATSENSOR heatSensor;
 
 #include "./lib/sts3032.h"
 STS3032 servo(&uart5);
@@ -63,6 +67,8 @@ void setup() {
     Wire.setSCL(PB8);
     Wire.begin();
 
+    loadcell.init();
+    heatSensor.init();
     gyro.init();
 
     delay(3000);
@@ -93,7 +99,6 @@ void setup() {
     app.create(rightGrid);
     app.create(lever);
     app.create(hitAvoid);
-
 
     app.create(locationApp, firstPriority);
     app.create(sideLEDApp);

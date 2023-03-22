@@ -56,16 +56,16 @@ void inputMonitoringApp(App) {
         ui.read();
 
         led.setFloorColor(led.white);
-        app.delay(3);
-        floorSensor.redVal = analogRead(PC0);
+        app.delay(5);
+        floorSensor.blueVal = analogRead(PC0);
 
-        led.setFloorColor(led.blue);
-        app.delay(3);
+        led.setFloorColor(led.blank);
+        app.delay(5);
         floorSensor.greenVal = analogRead(PC0);
 
-        led.setFloorColor(led.green);
-        app.delay(3);
-        floorSensor.blueVal = analogRead(PC0);
+        // led.setFloorColor(led.green);
+        // app.delay(3);
+        // floorSensor.greenVal = analogRead(PC0);
 
         cameraLeft.read();
         cameraRight.read();
@@ -126,10 +126,10 @@ void gridSpecification(App) {
 
 void adjustment(App) {
     while (1) {
-        app.delay(1);
+        app.delay(10);
 
         if (count == 1) {
-            app.delay(1200);
+            app.delay(900);
             count = 0;
         }
 
@@ -139,30 +139,30 @@ void adjustment(App) {
             }
             if (distanceSensor.val[3] + distanceSensor.val[9] < 300) {
                 if (distanceSensor.val[3] > distanceSensor.val[9]) {
-                    correction = 5;
+                    correction = 7;
                 }
                 if (distanceSensor.val[9] > distanceSensor.val[3]) {
-                    correction = -5;
+                    correction = -7;
                 }
                 app.delay(50);
             } else {
-                if (distanceSensor.val[9] < 100) {
-                    correction = 5;
+                if (distanceSensor.val[9] < 120) {
+                    correction = 7;
                 }
-                if (distanceSensor.val[3] < 100) {
-                    correction = -5;
+                if (distanceSensor.val[3] < 120) {
+                    correction = -7;
                 }
             }
 
             if (distanceSensor.val[3] > 300 && distanceSensor.val[9] < 300) {
-                if (distanceSensor.val[9] > 120) {
-                    correction = -5;
+                if (distanceSensor.val[9] > 140) {
+                    correction = -7;
                 }
 
             } else if (distanceSensor.val[9] > 300 &&
                        distanceSensor.val[3] < 200) {
-                if (distanceSensor.val[3] > 120) {
-                    correction = 5;
+                if (distanceSensor.val[3] > 140) {
+                    correction = 7;
                 }
             } else {
                 correction = 0;
@@ -271,7 +271,7 @@ void rightWall(App) {
             app.delay(10);
         }
 
-        if (distanceSensor.val[3] > 200) {
+        if (distanceSensor.val[3] > 200 && gyro.slope == 0) {
             count = 2;
             if (val6 > 600) {
                 if ((val0 - 150) > distanceSensor.val[0]) {
@@ -309,39 +309,123 @@ void rightWall(App) {
             app.delay(500);
         }
 
-        if ((!location
-                  .mapData[location.x + MAP_ORIGIN + 1][location.y + MAP_ORIGIN]
-                  .isPassed) &&
-            (!location
-                  .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN + 1]
-                  .isPassed)) {
-            app.delay(50);  // １つ先のx も　y も未探索なら放置
-        }
+        // if ((!location
+        //           .mapData[location.x + MAP_ORIGIN + 1][location.y +
+        //           MAP_ORIGIN] .isPassed) &&
+        //     (!location
+        //           .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN +
+        //           1] .isPassed)) {
+        //     app.delay(50);  // １つ先のx も　y も未探索なら放置
+        // }
 
-        if ((!location
-                  .mapData[location.x + MAP_ORIGIN + 1][location.y + MAP_ORIGIN]
-                  .isPassed) &&
-            (location
-                 .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN + 1]
-                 .isPassed) &&
-            (location
-                 .mapData[location.x + MAP_ORIGIN - 1][location.y + MAP_ORIGIN]
-                 .isPassed) &&
-            (location
-                 .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN - 1]
-                 .isPassed)) {
-            if (distanceSensor.val[3] < 200) {
-                app.delay(800);
-                servo.velocity = 0;
-                servo.stop();
-                app.delay(500);
-                servo.angle -= 90;
-                count = 1;
-                app.delay(500);
-                servo.velocity = SPEED;
-                app.delay(1700);
-            }
-        }
+        // if ((!location
+        //           .mapData[location.x + MAP_ORIGIN + 1][location.y + MAP_ORIGIN]
+        //           .isPassed) &&
+        //     (location
+        //          .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN + 1]
+        //          .isPassed) &&
+        //     (location
+        //          .mapData[location.x + MAP_ORIGIN - 1][location.y + MAP_ORIGIN]
+        //          .isPassed ||
+        //      distanceSensor.val[3] < 200) &&
+        //     (location
+        //          .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN - 1]
+        //          .isPassed)) {
+        //     if (distanceSensor.val[3] < 200) {
+        //         app.delay(1000);
+        //         servo.velocity = 0;
+        //         servo.stop();
+        //         app.delay(500);
+        //         servo.angle -= 90;
+        //         count = 1;
+        //         app.delay(500);
+        //         servo.velocity = SPEED;
+        //         app.delay(1700);
+        //     }
+        //     app.delay(50);
+        // }
+
+        // if ((!location
+        //           .mapData[location.x + MAP_ORIGIN - 1][location.y + MAP_ORIGIN]
+        //           .isPassed) &&
+        //     (location
+        //          .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN + 1]
+        //          .isPassed) &&
+        //     (location
+        //          .mapData[location.x + MAP_ORIGIN + 1][location.y + MAP_ORIGIN]
+        //          .isPassed ||
+        //      distanceSensor.val[3] < 200) &&
+        //     (location
+        //          .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN - 1]
+        //          .isPassed)) {
+        //     if (distanceSensor.val[3] < 200) {
+        //         app.delay(1000);
+        //         servo.velocity = 0;
+        //         servo.stop();
+        //         app.delay(500);
+        //         servo.angle -= 90;
+        //         count = 1;
+        //         app.delay(500);
+        //         servo.velocity = SPEED;
+        //         app.delay(1700);
+        //     }
+        //     app.delay(50);
+        // }
+
+        // if ((!location
+        //           .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN + 1]
+        //           .isPassed) &&
+        //     (location
+        //          .mapData[location.x - 1 + MAP_ORIGIN][location.y + MAP_ORIGIN]
+        //          .isPassed) &&
+        //     (location
+        //          .mapData[location.x + MAP_ORIGIN + 1][location.y + MAP_ORIGIN]
+        //          .isPassed ||
+        //      distanceSensor.val[3] < 200) &&
+        //     (location
+        //          .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN - 1]
+        //          .isPassed ||
+        //      distanceSensor.val[3] < 200)) {
+        //     if (distanceSensor.val[3] < 200) {
+        //         app.delay(1000);
+        //         servo.velocity = 0;
+        //         servo.stop();
+        //         app.delay(500);
+        //         servo.angle -= 90;
+        //         count = 1;
+        //         app.delay(500);
+        //         servo.velocity = SPEED;
+        //         app.delay(1700);
+        //     }
+        //     app.delay(50);
+        // }
+
+        // if ((!location
+        //           .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN - 1]
+        //           .isPassed) &&
+        //     (location
+        //          .mapData[location.x - 1 + MAP_ORIGIN][location.y + MAP_ORIGIN]
+        //          .isPassed) &&
+        //     (location
+        //          .mapData[location.x + MAP_ORIGIN + 1][location.y + MAP_ORIGIN]
+        //          .isPassed) &&
+        //     (location
+        //          .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN + 1]
+        //          .isPassed ||
+        //      distanceSensor.val[3] < 200)) {
+        //     if (distanceSensor.val[3] < 200) {
+        //         app.delay(1000);
+        //         servo.velocity = 0;
+        //         servo.stop();
+        //         app.delay(500);
+        //         servo.angle -= 90;
+        //         count = 1;
+        //         app.delay(500);
+        //         servo.velocity = SPEED;
+        //         app.delay(1700);
+        //     }
+        //     app.delay(50);
+        // }
     }
 }
 
@@ -355,6 +439,8 @@ void hitAvoid(App) {
             app.stop(adjustment);
             servo.driveAngularVelocity(-30, 45);
             app.delay(1000);
+            servo.driveAngularVelocity(0, -45);
+            app.delay(200);
 
             oldStatus = false;
         }
@@ -365,6 +451,7 @@ void hitAvoid(App) {
             app.stop(adjustment);
             servo.driveAngularVelocity(-30, -45);
             app.delay(1000);
+            servo.driveAngularVelocity(0, 45);
 
             oldStatus = false;
         }
@@ -381,73 +468,73 @@ void hitAvoid(App) {
     app.delay(10);
 }
 
-void leftWall(App) {
-    app.delay(500);
-    while (1) {
-        servo.velocity = SPEED;
-        app.delay(10);
+// void leftWall(App) {
+//     app.delay(500);
+//     while (1) {
+//         servo.velocity = SPEED;
+//         app.delay(10);
 
-        while (count == 1) {
-            app.delay(800);
-            count = 2;
-        }
+//         while (count == 1) {
+//             app.delay(800);
+//             count = 2;
+//         }
 
-        while (count == 0) {
-            val6  = distanceSensor.val[6];
-            count = 2;
-            app.delay(10);
-        }
+//         while (count == 0) {
+//             val6  = distanceSensor.val[6];
+//             count = 2;
+//             app.delay(10);
+//         }
 
-        if (distanceSensor.val[9] > 200) {
-            count = 2;
-            if (val6 > 600) {
-                val6 = distanceSensor.val[0];
-                if ((val6 - 140) > distanceSensor.val[0]) {
-                    servo.velocity = 0;
-                    servo.angle -= 90;
-                    app.delay(1000);
-                    servo.velocity = 30;
-                    app.delay(1000);
-                }
-            } else if ((val6 + 140) < distanceSensor.val[6]) {
-                servo.velocity = 0;
-                servo.angle -= 90;
-                app.delay(1000);
-                servo.velocity = 30;
-                app.delay(3500);
-            }
+//         if (distanceSensor.val[9] > 200) {
+//             count = 2;
+//             if (val6 > 600) {
+//                 val6 = distanceSensor.val[0];
+//                 if ((val6 - 140) > distanceSensor.val[0]) {
+//                     servo.velocity = 0;
+//                     servo.angle -= 90;
+//                     app.delay(1000);
+//                     servo.velocity = 30;
+//                     app.delay(1000);
+//                 }
+//             } else if ((val6 + 140) < distanceSensor.val[6]) {
+//                 servo.velocity = 0;
+//                 servo.angle -= 90;
+//                 app.delay(1000);
+//                 servo.velocity = 30;
+//                 app.delay(3500);
+//             }
 
-        } else if ((distanceSensor.val[0] < 120) &&
-                   (distanceSensor.val[9] < 230)) {
-            app.stop(adjustment);
-            servo.velocity = 0;
-            app.delay(500);
-            servo.angle += 90;
-            count = 1;
-            app.delay(500);
-            app.start(adjustment);
-        } else {
-            count = 0;
-            app.delay(10);
-        }
-    }
-}
+//         } else if ((distanceSensor.val[0] < 120) &&
+//                    (distanceSensor.val[9] < 230)) {
+//             app.stop(adjustment);
+//             servo.velocity = 0;
+//             app.delay(500);
+//             servo.angle += 90;
+//             count = 1;
+//             app.delay(500);
+//             app.start(adjustment);
+//         } else {
+//             count = 0;
+//             app.delay(10);
+//         }
+//     }
+// }
 
 void monitor(App) {
     while (1) {
         // uart3.write(cameraRight.data);
         // uart3.println(" ");
 
-        uart3.print(location.x);
-        uart3.print(" ");
-        uart3.print(location.y);
-        uart3.print(" ");
-        uart3.print((int)location.coordinateX);
-        uart3.print(" ");
-        uart3.print((int)location.coordinateY);
-        uart3.print(" ");
-        uart3.print((int)servo.rightWheelSpeed);
-        uart3.println("");
+        // uart3.print(location.x);
+        // uart3.print(" ");
+        // uart3.print(location.y);
+        // uart3.print(" ");
+        // uart3.print((int)location.coordinateX);
+        // uart3.print(" ");
+        // uart3.print((int)location.coordinateY);
+        // uart3.print(" ");
+        // uart3.print((int)servo.rightWheelSpeed);
+        // uart3.println("");
 
         // for (int i = 13; i < 27; i++) {      // たて
         //     for (int j = 13; j < 27; j++) {  // 横
@@ -461,9 +548,15 @@ void monitor(App) {
         //     }
 
         //     uart1.println("");
-        // }
+        // // }
+        uart3.print(floorSensor.redVal);
+        uart3.print(" ");
+        uart3.print(floorSensor.greenVal);
+        uart3.print(" ");
+        uart3.print(floorSensor.blueVal);
+        uart3.println(" ");
 
-        app.delay(1000);
+        app.delay(100);
 
         // uart3.print(distanceSensor.val[0]);
         // uart3.print(" ");
@@ -476,18 +569,25 @@ void monitor(App) {
 
 void black(App) {
     while (1) {
-        if (floorSensor.redVal > 150) {
+        if (floorSensor.blueVal > 500) {
             count          = 1;
-            servo.velocity = -100;
+            app.stop(servoApp);
+            servo.driveAngularVelocity(-SPEED,0);
             led.setTopColor(led.red);
             led.show();
-            app.delay(10);
-            if (servo.velocity == -100) {
-                servo.angle += 180;
-                app.delay(10);
-            }
+            app.delay(1500);
+            app.start(servoApp);
+            servo.velocity = 0;
+            servo.stop();
+            app.delay(500);
+            servo.angle -= 180;
+            count = 0;
+            app.delay(900);
+            servo.velocity = SPEED;
+            app.delay(1000);
+
         } else {
-            app.delay(1);
+            app.delay(50);
         }
     }
 }
@@ -629,6 +729,7 @@ void lever(App) {
             app.stop(rightWall);
             app.stop(adjustment);
             app.stop(visualization);
+            app.stop(black);
             app.stop(camera);
 
             app.stop(locationApp);
@@ -642,6 +743,7 @@ void lever(App) {
                 app.start(rightWall);
                 app.start(adjustment);
                 app.start(visualization);
+                app.start(black);
                 app.start(camera);
 
                 app.start(locationApp);

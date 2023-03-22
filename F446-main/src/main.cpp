@@ -102,6 +102,7 @@ void setup() {
     app.create(locationApp, firstPriority);
     app.create(sideLEDApp);
     app.create(mapApp);
+    
 
     app.start(mainApp);
     app.start(inputMonitoringApp);
@@ -113,8 +114,8 @@ void mainApp(App) {
     app.start(servoApp);
     app.start(adjustment);
     app.start(rightWall);
+    app.start(black);
     app.start(monitor);
-    // app.start(black);
     app.start(camera);
     app.start(visualization);
     app.start(lever);

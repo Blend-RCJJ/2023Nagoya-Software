@@ -2,8 +2,8 @@
 #include <EEPROM.h>
 
 #include "./kit/IO-Kit.h"
-#include "./kit/RTOS-Kit.h"
 #include "./kit/Location-Kit.h"
+#include "./kit/RTOS-Kit.h"
 
 HardwareSerial uart1(PA10, PA9);
 HardwareSerial uart2(PA3, PA2);
@@ -17,17 +17,17 @@ Location_Kit location;
 
 #include "./lib/bno055.h"
 #include "./lib/floorSensor.h"
+#include "./lib/heatSensor.h"
+#include "./lib/loadcell.h"
 #include "./lib/mlt8530.h"
 #include "./lib/switchUI.h"
 #include "./lib/unitV.h"
 #include "./lib/vl53l0x.h"
 #include "./lib/ws2812b.h"
-#include "./lib/loadcell.h"
-#include "./lib/heatSensor.h"
 
-Adafruit_NeoPixel stripL = Adafruit_NeoPixel(7, PA15, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel stripR = Adafruit_NeoPixel(7, PB13, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel stripUI = Adafruit_NeoPixel(24, PB14, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripL   = Adafruit_NeoPixel(7, PA15, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripR   = Adafruit_NeoPixel(7, PB13, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel stripUI  = Adafruit_NeoPixel(24, PB14, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripTop = Adafruit_NeoPixel(24, PC1, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel stripFloor = Adafruit_NeoPixel(4, PB15, NEO_GRB + NEO_KHZ800);
 
@@ -71,9 +71,7 @@ void setup() {
     heatSensor.init();
     gyro.init();
 
-    
     speaker.bootSound();
-
 
     delay(500);
 
@@ -90,7 +88,7 @@ void setup() {
     // distanceCalibration();
 
     app.create(mainApp, firstPriority);
-    app.create(inputMonitoringApp, firstPriority);
+    app.create(inputMonitoringApp, secondPriority);
     app.create(servoApp);
     app.create(rightWall);
     // app.create(gridSpecification);

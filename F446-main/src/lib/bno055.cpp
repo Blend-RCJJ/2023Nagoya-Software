@@ -16,23 +16,23 @@ void BNO055::init(void) {
     adafruit_bno055_offsets_t calibrationData;
     sensor_t sensor;
 
-    sensorPtr->getSensor(&sensor);
+    // sensorPtr->getSensor(&sensor);
 
-    if (bnoID != sensor.sensor_id) {
-        // Serial.println(
-        //     "\nNo Calibration Data for this sensor exists in EEPROM");
-        // delay(500);
-        // while(1){}
-    } else {
-        // Serial.println("\nFound Calibration for this sensor in EEPROM.");
-        eeAddress += sizeof(long);
-        EEPROM.get(eeAddress, calibrationData);
-        // displaySensorOffsets(calibrationData);
-        // Serial.println("\n\nRestoring Calibration data to the BNO055...");
-        sensorPtr->setSensorOffsets(calibrationData);
-        // Serial.println("\n\nCalibration data loaded into BNO055");
-        foundCalib = true;
-    }
+    // if (bnoID != sensor.sensor_id) {
+    //     // Serial.println(
+    //     //     "\nNo Calibration Data for this sensor exists in EEPROM");
+    //     // delay(500);
+    //     // while(1){}
+    // } else {
+    //     // Serial.println("\nFound Calibration for this sensor in EEPROM.");
+    //     eeAddress += sizeof(long);
+    //     EEPROM.get(eeAddress, calibrationData);
+    //     // displaySensorOffsets(calibrationData);
+    //     // Serial.println("\n\nRestoring Calibration data to the BNO055...");
+    //     sensorPtr->setSensorOffsets(calibrationData);
+    //     // Serial.println("\n\nCalibration data loaded into BNO055");
+    //     foundCalib = true;
+    // }
 
     uint8_t system_status, self_test_results, system_error;
     system_status = self_test_results = system_error = 0;
@@ -45,11 +45,12 @@ void BNO055::init(void) {
 int BNO055::read(void) {
     sensors_event_t event;
     sensorPtr->getEvent(&event);
+
     if (isGyroDisabled) {
         magnetic = event.magnetic.x;
-        deg = (int)(magnetic - offset + 360) % 360;
+        deg      = (int)(magnetic - offset + 360) % 360;
     } else {
-        deg = event.orientation.x;
+        deg = (int)(event.orientation.x - offset + 360) % 360;
     }
 
     // if (abs(oldDeg - deg) > 30) {
@@ -67,7 +68,7 @@ int BNO055::read(void) {
     }
     slope *= -1;
 
-    if(abs(slope) <= 8) {
+    if (abs(slope) <= 8) {
         slope = 0;
     }
 
@@ -78,5 +79,10 @@ void BNO055::setOffset(void) {
     sensors_event_t event;
     sensorPtr->getEvent(&event);
     offset = event.magnetic.x;
+    if (isGyroDisabled) {
+        offset = event.magnetic.x;
+    } else {
+        offset = event.orientation.x;
+    }
     slopeOffset = event.orientation.z;
 }

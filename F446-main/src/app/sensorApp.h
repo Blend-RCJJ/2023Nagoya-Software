@@ -324,10 +324,12 @@ void locationMapping(App) {
         static int condition5 = 0;
         static int sum = 0;
 
-        sum = condition1 + condition2 + condition3 + condition4 + condition5;
+         sum = condition1 + condition2 + condition3 + condition4 + condition5;
+         count = 0;
         app.delay(50);
 
-        if (distanceSensor.val[3] > 300) {
+
+        if (distanceSensor.val[3] < 300) {
             condition1 = 1;
             app.delay(100);
         } else {
@@ -480,9 +482,8 @@ void leftWall(App) {
 
 void monitor(App) {
     while (1) {
-        uart1.print(heatSensor.val[0]);
-        uart1.print(" ");
-        uart1.println(heatSensor.val[1]);
+        // uart3.write(cameraRight.data);
+        // uart3.println(" ");
 
         uart3.print(location.x);
         uart3.print(" ");

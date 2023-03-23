@@ -400,7 +400,7 @@ void hitAvoid(App) {
             servo.driveAngularVelocity(-30, 45);
             app.delay(500);
             servo.driveAngularVelocity(0, -45);
-            app.delay(500);
+            app.delay(600);
 
             oldStatus = false;
         }
@@ -411,7 +411,7 @@ void hitAvoid(App) {
             servo.driveAngularVelocity(-30, -45);
             app.delay(500);
             servo.driveAngularVelocity(0, 45);
-            app.delay(500);
+            app.delay(600);
 
             oldStatus = false;
         }
@@ -428,73 +428,73 @@ void hitAvoid(App) {
     app.delay(10);
 }
 
-// void leftWall(App) {
-//     app.delay(500);
-//     while (1) {
-//         servo.velocity = SPEED;
-//         app.delay(10);
+void leftWall(App) {
+    app.delay(500);
+    while (1) {
+        servo.velocity = SPEED;
+        app.delay(10);
 
-//         while (count == 1) {
-//             app.delay(800);
-//             count = 2;
-//         }
+        while (count == 1) {
+            app.delay(800);
+            count = 2;
+        }
 
-//         while (count == 0) {
-//             val6  = distanceSensor.val[6];
-//             count = 2;
-//             app.delay(10);
-//         }
+        while (count == 0) {
+            val6  = distanceSensor.val[6];
+            count = 2;
+            app.delay(10);
+        }
 
-//         if (distanceSensor.val[9] > 200) {
-//             count = 2;
-//             if (val6 > 600) {
-//                 val6 = distanceSensor.val[0];
-//                 if ((val6 - 140) > distanceSensor.val[0]) {
-//                     servo.velocity = 0;
-//                     servo.angle -= 90;
-//                     app.delay(1000);
-//                     servo.velocity = 30;
-//                     app.delay(1000);
-//                 }
-//             } else if ((val6 + 140) < distanceSensor.val[6]) {
-//                 servo.velocity = 0;
-//                 servo.angle -= 90;
-//                 app.delay(1000);
-//                 servo.velocity = 30;
-//                 app.delay(3500);
-//             }
+        if (distanceSensor.val[9] > 200) {
+            count = 2;
+            if (val6 > 600) {
+                val6 = distanceSensor.val[0];
+                if ((val6 - 140) > distanceSensor.val[0]) {
+                    servo.velocity = 0;
+                    servo.angle -= 90;
+                    app.delay(1000);
+                    servo.velocity = 30;
+                    app.delay(1000);
+                }
+            } else if ((val6 + 140) < distanceSensor.val[6]) {
+                servo.velocity = 0;
+                servo.angle -= 90;
+                app.delay(1000);
+                servo.velocity = 30;
+                app.delay(3500);
+            }
 
-//         } else if ((distanceSensor.val[0] < 120) &&
-//                    (distanceSensor.val[9] < 230)) {
-//             app.stop(adjustment);
-//             servo.velocity = 0;
-//             app.delay(500);
-//             servo.angle += 90;
-//             count = 1;
-//             app.delay(500);
-//             app.start(adjustment);
-//         } else {
-//             count = 0;
-//             app.delay(10);
-//         }
-//     }
-// }
+        } else if ((distanceSensor.val[0] < 120) &&
+                   (distanceSensor.val[9] < 230)) {
+            app.stop(adjustment);
+            servo.velocity = 0;
+            app.delay(500);
+            servo.angle += 90;
+            count = 1;
+            app.delay(500);
+            app.start(adjustment);
+        } else {
+            count = 0;
+            app.delay(10);
+        }
+    }
+}
 
 void monitor(App) {
     while (1) {
-        uart3.write(cameraRight.data);
-        uart3.println(" ");
+        // uart3.write(cameraRight.data);
+        // uart3.println(" ");
 
-        // uart3.print(location.x);
-        // uart3.print(" ");
-        // uart3.print(location.y);
-        // uart3.print(" ");
-        // uart3.print((int)location.coordinateX);
-        // uart3.print(" ");
-        // uart3.print((int)location.coordinateY);
-        // uart3.print(" ");
-        // uart3.print((int)servo.rightWheelSpeed);
-        // uart3.println("");
+        uart3.print(location.x);
+        uart3.print(" ");
+        uart3.print(location.y);
+        uart3.print(" ");
+        uart3.print((int)location.coordinateX);
+        uart3.print(" ");
+        uart3.print((int)location.coordinateY);
+        uart3.print(" ");
+        uart3.print((int)servo.rightWheelSpeed);
+        uart3.println("");
 
         // for (int i = 13; i < 27; i++) {      // たて
         //     for (int j = 13; j < 27; j++) {  // 横

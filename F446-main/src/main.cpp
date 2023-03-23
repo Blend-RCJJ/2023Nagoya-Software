@@ -88,7 +88,7 @@ void setup() {
     // distanceCalibration();
 
     app.create(mainApp, firstPriority);
-    app.create(inputMonitoringApp, firstPriority);
+    app.create(inputMonitoringApp, secondPriority);
     app.create(servoApp);
     app.create(rightWall);
     // app.create(gridSpecification);

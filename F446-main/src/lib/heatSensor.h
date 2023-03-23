@@ -11,7 +11,7 @@
 
 class HEATSENSOR {
    public:
-    Input inputPin[2] = {PB1, PC4};  // 0が左
+    Input inputPin[2] = {PC4, PB1};  // 0が左
 
     int val[2] = {0};
     int offset[2] = {0};
@@ -19,18 +19,20 @@ class HEATSENSOR {
     bool l = false;
     bool r = false;
 
-    int cutOff = 20;  // 調整ゲー
+    int cutOff = 500;  // 調整ゲー
+
+    unsigned long timer = 0;
 
     void read(void) {
         for (int i = 0; i < 2; i++) {
             long temp = 0;
-            for (int j = 0; j < 50; j++) {
+            for (int j = 0; j < 100; j++) {
                 temp += inputPin[i].raw();
             }
-            val[i] = constrain(temp / 50 - offset[i], 0, 500) / 5;
+            val[i] = temp / 100;
         }
 
-        l = val[0] > cutOff;
+        l = val[0] > cutOff + 40;
         r = val[1] > cutOff;
     }
 
@@ -40,7 +42,7 @@ class HEATSENSOR {
             for (int j = 0; j < 1000; j++) {
                 temp += inputPin[i].raw();
             }
-            val[i] = temp / 1000;
+            offset[i] = temp / 1000;
         }
     }
 };

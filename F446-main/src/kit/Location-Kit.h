@@ -21,6 +21,8 @@ class MAP_Kit {
 
     int floorColor = 0;  // 床の色
 
+    bool isVictimDetected = false;
+
     unsigned long firstPassedTime = 0;
 };
 

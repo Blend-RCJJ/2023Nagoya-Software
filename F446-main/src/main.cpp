@@ -77,6 +77,8 @@ void setup() {
 
     gyro.setOffset();
 
+    location.mapData[MAP_ORIGIN][MAP_ORIGIN].isVictimDetected = true;
+
     // while(1){
     //     gyro.read();
     //     uart1.println(gyro.slope);
@@ -107,7 +109,6 @@ void setup() {
     app.create(mapApp);
 
     app.create(victimApp);
-    
 
     app.start(mainApp);
     app.start(inputMonitoringApp);

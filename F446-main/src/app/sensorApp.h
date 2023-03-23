@@ -284,8 +284,8 @@ void rightWall(App) {
                     servo.angle += 90;
                     servo.velocity = 0;
                     servo.stop();
+                    app.delay(500);
                     count = 0;
-                    app.delay(1500);
                     servo.velocity = SPEED;
                     app.delay(1500);
                 }
@@ -296,8 +296,8 @@ void rightWall(App) {
                 servo.angle += 90;
                 servo.velocity = 0;
                 servo.stop();
+                app.delay(500);
                 count = 0;
-                app.delay(1500);
                 servo.velocity = SPEED;
                 app.delay(1500);
             }

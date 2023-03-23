@@ -36,15 +36,13 @@ class LOADCELL {
             load[i] /= 8;
         }
 
-        if (load[0] > 5 || load[1] > 5) {
+        if (load[0] > 10 || load[1] > 10) {
             moment = degrees(atan2(load[0], load[1]));
 
-            if (moment < 20) {
+            if (moment < 45) {
                 status = LEFT;
-            } else if (moment > 70) {
-                status = RIGHT;
             } else {
-                status = CENTER;
+                status = RIGHT;
             }
         } else {
             status = 0;

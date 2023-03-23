@@ -105,7 +105,6 @@ void setup() {
     app.create(locationApp, firstPriority);
     app.create(sideLEDApp);
     app.create(mapApp);
-    app.create(locationMapping);
 
     app.create(victimApp);
     
@@ -127,7 +126,6 @@ void mainApp(App) {
     app.start(lever);
     app.start(hitAvoid);
     app.start(victimApp);
-    app.start(locationMapping);
     while (1) {
         app.delay(1);
     }

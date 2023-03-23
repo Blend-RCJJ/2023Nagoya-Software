@@ -19,7 +19,7 @@ class HEATSENSOR {
     bool l = false;
     bool r = false;
 
-    int cutOff = 500;  // 調整ゲー
+    int cutOff = 600;  // 調整ゲー
 
     unsigned long timer = 0;
 
@@ -32,8 +32,8 @@ class HEATSENSOR {
             val[i] = temp / 50;
         }
 
-        l = val[0] > cutOff + 40;
-        r = val[1] > cutOff;
+        l = val[0] > 650;
+        r = val[1] > 600;
     }
 
     void init(void) {

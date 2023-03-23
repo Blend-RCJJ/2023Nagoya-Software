@@ -308,83 +308,6 @@ void rightWall(App) {
             count = 1;
             app.delay(500);
         }
-
-        // if ((!location
-        //           .mapData[location.x + MAP_ORIGIN + 1][location.y +
-        //           MAP_ORIGIN] .isPassed) &&
-        //     (!location
-        //           .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN +
-        //           1] .isPassed)) {
-        //     app.delay(50);  // １つ先のx も　y も未探索なら放置
-        // }
-
-        // if ((!location
-        //           .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN +
-        //           1] .isPassed) &&
-        //     (location
-        //          .mapData[location.x + MAP_ORIGIN - 1][location.y +
-        //          MAP_ORIGIN] .isPassed) &&
-        //     gyro.slope == 0 && distanceSensor.val[9] > 300){
-        //         app.delay(1000);
-        //         servo.velocity = 0;
-        //         servo.stop();
-        //         app.delay(500);
-        //         count = 1;
-        //         servo.angle -= 90;
-        //         app.delay(500);
-
-        //     }
-
-        //      if ((!location
-        //           .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN -
-        //           1] .isPassed) &&
-        //     (location
-        //          .mapData[location.x + MAP_ORIGIN + 1][location.y +
-        //          MAP_ORIGIN] .isPassed) &&
-        //     gyro.slope == 0 && distanceSensor.val[9] > 300){
-        //         app.delay(1000);
-        //         servo.velocity = 0;
-        //         servo.stop();
-        //         app.delay(500);
-        //         count = 1;
-        //         servo.angle -= 90;
-        //         app.delay(500);
-
-        //     }
-
-        //      if ((!location
-        //           .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN -
-        //           1] .isPassed) &&
-        //     (location
-        //          .mapData[location.x + MAP_ORIGIN - 1][location.y +
-        //          MAP_ORIGIN] .isPassed) &&
-        //     gyro.slope == 0 && distanceSensor.val[9] > 300){
-        //         app.delay(1000);
-        //         servo.velocity = 0;
-        //         servo.stop();
-        //         app.delay(500);
-        //         count = 1;
-        //         servo.angle -= 90;
-        //         app.delay(500);
-
-        //     }
-
-        //      if ((!location
-        //           .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN +
-        //           1] .isPassed) &&
-        //     (location
-        //          .mapData[location.x + MAP_ORIGIN - 1][location.y +
-        //          MAP_ORIGIN] .isPassed) &&
-        //     gyro.slope == 0 && distanceSensor.val[9] > 300){
-        //         app.delay(1000);
-        //         servo.velocity = 0;
-        //         servo.stop();
-        //         app.delay(500);
-        //         count = 1;
-        //         servo.angle -= 90;
-        //         app.delay(500);
-
-        //     }
     }
 }
 
@@ -395,7 +318,7 @@ void locationMapping(App) {
         static int condition3 = 0;
         static int condition4 = 0;
         static int condition5 = 0;
-        int sum               = 0;
+        static int sum               = 0;
 
         if (distanceSensor.val[3] > 300) {
             condition1 = 1;
@@ -444,9 +367,7 @@ void locationMapping(App) {
             app.delay(500);
             servo.velocity = SPEED;
             app.delay(2500);
-        } else {
-            app.delay(100);
-        }
+        } 
     }
 }
 

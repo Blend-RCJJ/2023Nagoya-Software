@@ -37,6 +37,7 @@ class WS2812B {
     unsigned long yellow = colorHSV(45, 255, 255);
     unsigned long white = colorHSV(255, 0, 255);
     unsigned long blank = colorHSV(0, 0, 0);
+    unsigned long cyan = colorHSV(140, 255, 255);
 
     void setUIColor(unsigned long color);
     void setLeftColor(unsigned long color);

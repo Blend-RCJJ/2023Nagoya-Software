@@ -319,113 +319,134 @@ void rightWall(App) {
         // }
 
         // if ((!location
-        //           .mapData[location.x + MAP_ORIGIN + 1][location.y + MAP_ORIGIN]
-        //           .isPassed) &&
+        //           .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN +
+        //           1] .isPassed) &&
         //     (location
-        //          .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN + 1]
-        //          .isPassed) &&
-        //     (location
-        //          .mapData[location.x + MAP_ORIGIN - 1][location.y + MAP_ORIGIN]
-        //          .isPassed ||
-        //      distanceSensor.val[3] < 200) &&
-        //     (location
-        //          .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN - 1]
-        //          .isPassed)) {
-        //     if (distanceSensor.val[3] < 200) {
+        //          .mapData[location.x + MAP_ORIGIN - 1][location.y +
+        //          MAP_ORIGIN] .isPassed) &&
+        //     gyro.slope == 0 && distanceSensor.val[9] > 300){
         //         app.delay(1000);
         //         servo.velocity = 0;
         //         servo.stop();
         //         app.delay(500);
-        //         servo.angle -= 90;
         //         count = 1;
+        //         servo.angle -= 90;
         //         app.delay(500);
-        //         servo.velocity = SPEED;
-        //         app.delay(1700);
-        //     }
-        //     app.delay(50);
-        // }
 
-        // if ((!location
-        //           .mapData[location.x + MAP_ORIGIN - 1][location.y + MAP_ORIGIN]
-        //           .isPassed) &&
-        //     (location
-        //          .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN + 1]
-        //          .isPassed) &&
-        //     (location
-        //          .mapData[location.x + MAP_ORIGIN + 1][location.y + MAP_ORIGIN]
-        //          .isPassed ||
-        //      distanceSensor.val[3] < 200) &&
-        //     (location
-        //          .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN - 1]
-        //          .isPassed)) {
-        //     if (distanceSensor.val[3] < 200) {
-        //         app.delay(1000);
-        //         servo.velocity = 0;
-        //         servo.stop();
-        //         app.delay(500);
-        //         servo.angle -= 90;
-        //         count = 1;
-        //         app.delay(500);
-        //         servo.velocity = SPEED;
-        //         app.delay(1700);
         //     }
-        //     app.delay(50);
-        // }
 
-        // if ((!location
-        //           .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN + 1]
-        //           .isPassed) &&
+        //      if ((!location
+        //           .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN -
+        //           1] .isPassed) &&
         //     (location
-        //          .mapData[location.x - 1 + MAP_ORIGIN][location.y + MAP_ORIGIN]
-        //          .isPassed) &&
-        //     (location
-        //          .mapData[location.x + MAP_ORIGIN + 1][location.y + MAP_ORIGIN]
-        //          .isPassed ||
-        //      distanceSensor.val[3] < 200) &&
-        //     (location
-        //          .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN - 1]
-        //          .isPassed ||
-        //      distanceSensor.val[3] < 200)) {
-        //     if (distanceSensor.val[3] < 200) {
+        //          .mapData[location.x + MAP_ORIGIN + 1][location.y +
+        //          MAP_ORIGIN] .isPassed) &&
+        //     gyro.slope == 0 && distanceSensor.val[9] > 300){
         //         app.delay(1000);
         //         servo.velocity = 0;
         //         servo.stop();
         //         app.delay(500);
-        //         servo.angle -= 90;
         //         count = 1;
+        //         servo.angle -= 90;
         //         app.delay(500);
-        //         servo.velocity = SPEED;
-        //         app.delay(1700);
-        //     }
-        //     app.delay(50);
-        // }
 
-        // if ((!location
-        //           .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN - 1]
-        //           .isPassed) &&
+        //     }
+
+        //      if ((!location
+        //           .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN -
+        //           1] .isPassed) &&
         //     (location
-        //          .mapData[location.x - 1 + MAP_ORIGIN][location.y + MAP_ORIGIN]
-        //          .isPassed) &&
-        //     (location
-        //          .mapData[location.x + MAP_ORIGIN + 1][location.y + MAP_ORIGIN]
-        //          .isPassed) &&
-        //     (location
-        //          .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN + 1]
-        //          .isPassed ||
-        //      distanceSensor.val[3] < 200)) {
-        //     if (distanceSensor.val[3] < 200) {
+        //          .mapData[location.x + MAP_ORIGIN - 1][location.y +
+        //          MAP_ORIGIN] .isPassed) &&
+        //     gyro.slope == 0 && distanceSensor.val[9] > 300){
         //         app.delay(1000);
         //         servo.velocity = 0;
         //         servo.stop();
         //         app.delay(500);
-        //         servo.angle -= 90;
         //         count = 1;
+        //         servo.angle -= 90;
         //         app.delay(500);
-        //         servo.velocity = SPEED;
-        //         app.delay(1700);
+
         //     }
-        //     app.delay(50);
-        // }
+
+        //      if ((!location
+        //           .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN +
+        //           1] .isPassed) &&
+        //     (location
+        //          .mapData[location.x + MAP_ORIGIN - 1][location.y +
+        //          MAP_ORIGIN] .isPassed) &&
+        //     gyro.slope == 0 && distanceSensor.val[9] > 300){
+        //         app.delay(1000);
+        //         servo.velocity = 0;
+        //         servo.stop();
+        //         app.delay(500);
+        //         count = 1;
+        //         servo.angle -= 90;
+        //         app.delay(500);
+
+        //     }
+    }
+}
+
+void locationMapping(App) {
+    while (1) {
+        static int condition1 = 0;
+        static int condition2 = 0;
+        static int condition3 = 0;
+        static int condition4 = 0;
+        static int condition5 = 0;
+        int sum               = 0;
+
+        if (distanceSensor.val[3] > 300) {
+            condition1 = 1;
+        } else {
+            condition1 = 0;
+        }
+        if (location
+                .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN + 1]
+                .isPassed) {
+            condition2 = 1;
+        } else {
+            condition2 = 0;
+        }
+        if (location
+                .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN - 1]
+                .isPassed) {
+            condition3 = 1;
+        } else {
+            condition3 = 0;
+        }
+        if (location
+                .mapData[location.x + MAP_ORIGIN + 1][location.y + MAP_ORIGIN]
+                .isPassed) {
+            condition4 = 1;
+        } else {
+            condition4 = 0;
+        }
+        if (location
+                .mapData[location.x + MAP_ORIGIN - 1][location.y + MAP_ORIGIN]
+                .isPassed) {
+            condition5 = 1;
+        } else {
+            condition5 = 0;
+        }
+
+        sum = condition1 + condition2 + condition3 + condition4 + condition5;
+        app.delay(50);
+
+        if (sum == 3) {
+            app.delay(1200);
+            servo.velocity = 0;
+            servo.stop();
+            app.delay(500);
+            count = 1;
+            servo.angle -= 90;
+            app.delay(500);
+            servo.velocity = SPEED;
+            app.delay(2500);
+        } else {
+            app.delay(100);
+        }
     }
 }
 
@@ -570,9 +591,9 @@ void monitor(App) {
 void black(App) {
     while (1) {
         if (floorSensor.blueVal > 500) {
-            count          = 1;
+            count = 1;
             app.stop(servoApp);
-            servo.driveAngularVelocity(-SPEED,0);
+            servo.driveAngularVelocity(-SPEED, 0);
             led.setTopColor(led.red);
             led.show();
             app.delay(1500);
@@ -729,12 +750,13 @@ void lever(App) {
             app.stop(rightWall);
             app.stop(adjustment);
             app.stop(visualization);
-            app.stop(black);
+            // app.stop(black);
             app.stop(camera);
 
             app.stop(locationApp);
             app.stop(mapApp);
             app.stop(sideLEDApp);
+            app.stop(locationMapping);
             servo.stop();
             oldStatus = false;
         } else {
@@ -743,12 +765,13 @@ void lever(App) {
                 app.start(rightWall);
                 app.start(adjustment);
                 app.start(visualization);
-                app.start(black);
+                // app.start(black);
                 app.start(camera);
 
                 app.start(locationApp);
                 app.start(mapApp);
                 app.start(sideLEDApp);
+                app.start(locationMapping);
                 gyro.setOffset();
 
                 oldStatus = true;

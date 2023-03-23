@@ -8,7 +8,7 @@ void RTOS_Kit::create(TaskFunction_t funcPtr, int priority) {
         if (funcPtrArray[i] == NULL) {
             funcPtrArray[i] = funcPtr;
 
-            xTaskCreate(funcPtrArray[i], "app", 1000, NULL, priority,
+            xTaskCreate(funcPtrArray[i], "app", 256, NULL, priority,
                         &handlerArray[i]);
             vTaskSuspend(handlerArray[i]);
 

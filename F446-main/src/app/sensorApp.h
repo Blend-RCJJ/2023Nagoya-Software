@@ -312,16 +312,22 @@ void rightWall(App) {
 }
 
 void locationMapping(App) {
+    app.delay(500);
     while (1) {
         static int condition1 = 0;
         static int condition2 = 0;
         static int condition3 = 0;
         static int condition4 = 0;
         static int condition5 = 0;
-        static int sum               = 0;
+        static int sum        = 0;
+
+         sum = condition1 + condition2 + condition3 + condition4 + condition5;
+        app.delay(50);
+
 
         if (distanceSensor.val[3] > 300) {
             condition1 = 1;
+            app.delay(100);
         } else {
             condition1 = 0;
         }
@@ -329,36 +335,44 @@ void locationMapping(App) {
                 .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN + 1]
                 .isPassed) {
             condition2 = 1;
+            app.delay(100);
         } else {
             condition2 = 0;
+            app.delay(100);
         }
         if (location
                 .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN - 1]
                 .isPassed) {
             condition3 = 1;
+            app.delay(100);
         } else {
             condition3 = 0;
+            app.delay(100);
         }
         if (location
                 .mapData[location.x + MAP_ORIGIN + 1][location.y + MAP_ORIGIN]
                 .isPassed) {
             condition4 = 1;
+            app.delay(100);
         } else {
             condition4 = 0;
+            app.delay(100);
         }
         if (location
                 .mapData[location.x + MAP_ORIGIN - 1][location.y + MAP_ORIGIN]
                 .isPassed) {
             condition5 = 1;
+            app.delay(100);
         } else {
             condition5 = 0;
+            app.delay(100);
         }
 
         sum = condition1 + condition2 + condition3 + condition4 + condition5;
         app.delay(50);
 
         if (sum == 3) {
-            app.delay(1200);
+            app.delay(1500);
             servo.velocity = 0;
             servo.stop();
             app.delay(500);
@@ -366,8 +380,8 @@ void locationMapping(App) {
             servo.angle -= 90;
             app.delay(500);
             servo.velocity = SPEED;
-            app.delay(2500);
-        } 
+            app.delay(3000);
+        }
     }
 }
 
@@ -464,8 +478,8 @@ void hitAvoid(App) {
 
 void monitor(App) {
     while (1) {
-        // uart3.write(cameraRight.data);
-        // uart3.println(" ");
+        uart3.write(cameraRight.data);
+        uart3.println(" ");
 
         // uart3.print(location.x);
         // uart3.print(" ");
@@ -491,12 +505,12 @@ void monitor(App) {
 
         //     uart1.println("");
         // // }
-        uart3.print(floorSensor.redVal);
-        uart3.print(" ");
-        uart3.print(floorSensor.greenVal);
-        uart3.print(" ");
-        uart3.print(floorSensor.blueVal);
-        uart3.println(" ");
+        // uart3.print(floorSensor.redVal);
+        // uart3.print(" ");
+        // uart3.print(floorSensor.greenVal);
+        // uart3.print(" ");
+        // uart3.print(floorSensor.blueVal);
+        // uart3.println(" ");
 
         app.delay(100);
 
@@ -664,6 +678,7 @@ void lever(App) {
     static bool oldStatus = false;
     while (1) {
         if (ui.toggle == false) {
+            speaker.bootSound();
             led.setTopColor(led.green);
             led.show();
             servo.velocity = 0;
@@ -671,7 +686,7 @@ void lever(App) {
             app.stop(rightWall);
             app.stop(adjustment);
             app.stop(visualization);
-            // app.stop(black);
+            app.stop(black);
             app.stop(camera);
 
             app.stop(locationApp);
@@ -682,11 +697,12 @@ void lever(App) {
             oldStatus = false;
         } else {
             if (!oldStatus) {
+                speaker.bootSound();
                 app.start(servoApp);
                 app.start(rightWall);
                 app.start(adjustment);
                 app.start(visualization);
-                // app.start(black);
+                app.start(black);
                 app.start(camera);
 
                 app.start(locationApp);

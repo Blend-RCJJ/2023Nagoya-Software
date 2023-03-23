@@ -97,12 +97,12 @@ void setup() {
     app.create(rightGrid);
     app.create(lever);
     app.create(hitAvoid);
-    app.create(locationMapping);
 
 
     app.create(locationApp, firstPriority);
     app.create(sideLEDApp);
     app.create(mapApp);
+    app.create(locationMapping);
     
 
     app.start(mainApp);
@@ -115,7 +115,7 @@ void mainApp(App) {
     app.start(servoApp);
     app.start(adjustment);
     app.start(rightWall);
-    // app.start(black);
+    app.start(black);
     app.start(monitor);
     app.start(camera);
     app.start(visualization);

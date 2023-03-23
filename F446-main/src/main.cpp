@@ -93,12 +93,12 @@ void setup() {
     app.create(rightWall);
     // app.create(gridSpecification);
     app.create(adjustment);
-    // app.create(leftWall);
+    app.create(leftWall);
     app.create(monitor);
     app.create(black);
     app.create(camera);
     app.create(visualization);
-    app.create(rightGrid);
+    // app.create(rightGrid);
     app.create(lever);
     app.create(hitAvoid);
 
@@ -116,7 +116,7 @@ void setup() {
 void mainApp(App) {
     app.start(servoApp);
     app.start(adjustment);
-    app.start(rightWall);
+    // app.start(rightWall);
     app.start(black);
     app.start(monitor);
     app.start(camera);

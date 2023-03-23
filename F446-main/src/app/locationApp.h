@@ -31,8 +31,8 @@ extern UNITV cameraRight;
 
 void sideLEDApp(App) {
     while (1) {
-        if (millis() - location.lastCorrection <= 500) {
-            if ((millis() / 50 % 2)) {
+        if (millis() - location.lastCorrection <= 1000) {
+            if ((millis() / 50 % 2) && (millis() / 300 % 4) == 1) {
                 led.setLeftColor(led.white);
                 led.setRightColor(led.white);
             } else {
@@ -112,7 +112,7 @@ void mapApp(App) {
 
 void locationApp(App) {
     while (1) {
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 100; i++) {
             location.updateOdometory(servo.rightWheelSpeed,
                                      servo.leftWheelSpeed, gyro.deg,
                                      gyro.slope);

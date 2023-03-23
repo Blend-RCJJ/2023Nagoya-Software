@@ -38,9 +38,9 @@ extern void mapApp(App);
 extern void sideLEDApp(App);
 extern void locationApp(App);
 
-int count = 0;
-int val0 = 0;
-int val6 = 0;
+int count      = 0;
+int val0       = 0;
+int val6       = 0;
 int correction = 0;
 
 void camera(App);
@@ -56,16 +56,16 @@ void inputMonitoringApp(App) {
         ui.read();
 
         led.setFloorColor(led.white);
-        app.delay(3);
-        floorSensor.redVal = analogRead(PC0);
+        app.delay(5);
+        floorSensor.blueVal = analogRead(PC0);
 
-        led.setFloorColor(led.blue);
-        app.delay(3);
+        led.setFloorColor(led.blank);
+        app.delay(5);
         floorSensor.greenVal = analogRead(PC0);
 
-        led.setFloorColor(led.green);
-        app.delay(3);
-        floorSensor.blueVal = analogRead(PC0);
+        // led.setFloorColor(led.green);
+        // app.delay(3);
+        // floorSensor.greenVal = analogRead(PC0);
 
         cameraLeft.read();
         cameraRight.read();
@@ -126,10 +126,10 @@ void gridSpecification(App) {
 
 void adjustment(App) {
     while (1) {
-        app.delay(1);
+        app.delay(10);
 
         if (count == 1) {
-            app.delay(1200);
+            app.delay(900);
             count = 0;
         }
 
@@ -138,29 +138,31 @@ void adjustment(App) {
                 servo.velocity = 0;
             }
             if (distanceSensor.val[3] + distanceSensor.val[9] < 300) {
-                if (distanceSensor.val[3] > distanceSensor.val[9] + 20) {
-                    correction = 5;
-                } else if (distanceSensor.val[9] > distanceSensor.val[3] + 20) {
-                    correction = -5;
+                if (distanceSensor.val[3] > distanceSensor.val[9]) {
+                    correction = 7;
                 }
+                if (distanceSensor.val[9] > distanceSensor.val[3]) {
+                    correction = -7;
+                }
+                app.delay(50);
             } else {
-                if (distanceSensor.val[9] < 100) {
-                    correction = 5;
+                if (distanceSensor.val[9] < 120) {
+                    correction = 7;
                 }
-                if (distanceSensor.val[3] < 100) {
-                    correction = -5;
+                if (distanceSensor.val[3] < 120) {
+                    correction = -7;
                 }
             }
 
             if (distanceSensor.val[3] > 300 && distanceSensor.val[9] < 300) {
-                if (distanceSensor.val[9] > 120) {
-                    correction = -5;
+                if (distanceSensor.val[9] > 140) {
+                    correction = -7;
                 }
 
             } else if (distanceSensor.val[9] > 300 &&
                        distanceSensor.val[3] < 200) {
-                if (distanceSensor.val[3] > 120) {
-                    correction = 5;
+                if (distanceSensor.val[3] > 140) {
+                    correction = 7;
                 }
             } else {
                 correction = 0;
@@ -184,13 +186,13 @@ void rightGrid(App) {
         if ((distanceSensor.val[0] < 200) && (distanceSensor.val[3] < 250)) {
             app.delay(1000);
             servo.velocity = 0;
-            count = 1;
+            count          = 1;
             servo.stop();
             servo.angle -= 90;
             app.delay(1800);
         } else if (distanceSensor.val[3] > 300) {
             servo.velocity = 0;
-            count = 1;
+            count          = 1;
             servo.stop();
             servo.angle += 90;
             app.delay(1000);
@@ -263,16 +265,16 @@ void rightWall(App) {
         }
 
         while (count == 0) {
-            val6 = distanceSensor.val[6];
-            val0 = distanceSensor.val[0];
+            val6  = distanceSensor.val[6];
+            val0  = distanceSensor.val[0];
             count = 2;
             app.delay(10);
         }
 
-        if (distanceSensor.val[3] > 200) {
+        if (distanceSensor.val[3] > 200 && gyro.slope == 0) {
             count = 2;
             if (val6 > 600) {
-                if ((val0 - 140) > distanceSensor.val[0]) {
+                if ((val0 - 150) > distanceSensor.val[0]) {
                     servo.velocity = 0;
                     servo.stop();
                     app.delay(500);
@@ -282,7 +284,7 @@ void rightWall(App) {
                     servo.velocity = SPEED;
                     app.delay(1700);
                 }
-            } else if ((val6 + 140) < distanceSensor.val[6]) {
+            } else if ((val6 + 150) < distanceSensor.val[6]) {
                 servo.velocity = 0;
                 servo.stop();
                 app.delay(500);
@@ -298,7 +300,7 @@ void rightWall(App) {
             app.delay(10);
         }
 
-        if (distanceSensor.val[0] < 130) {
+        if (distanceSensor.val[0] < 110 && gyro.slope == 0) {
             servo.velocity = 0;
             servo.stop();
             app.delay(500);
@@ -309,98 +311,175 @@ void rightWall(App) {
     }
 }
 
-void hitAvoid(App) {
-     static bool oldStatus = false;
-    while (1) {
-        if (distanceSensor.val[0] > 300 && distanceSensor.val[1] < 100 &&
-            distanceSensor.val[2] < 100){
-                app.stop(servoApp);
-                app.stop(rightWall);
-                app.stop(adjustment);
-                servo.driveAngularVelocity(-30,45);
-                app.delay(2000);
-
-                oldStatus = false;
-            }else if(distanceSensor.val[0] > 300 && distanceSensor.val[11] < 100 &&
-            distanceSensor.val[10] < 100){
-                 app.stop(servoApp);
-                app.stop(rightWall);
-                app.stop(adjustment);
-                servo.driveAngularVelocity(-30,-45);
-                app.delay(2000);
-
-                oldStatus = false;
-            }else{
-                if(!oldStatus){
-                app.start(servoApp);
-                app.start(rightWall);
-                app.start(adjustment);
-
-                oldStatus = true;
-                }
-
-                app.delay(20);
-            }
-    }
-}
-
-
-void leftWall(App) {
+void locationMapping(App) {
     app.delay(500);
     while (1) {
-        servo.velocity = SPEED;
-        app.delay(10);
+        static int condition1 = 0;
+        static int condition2 = 0;
+        static int condition3 = 0;
+        static int condition4 = 0;
+        static int condition5 = 0;
+        static int sum        = 0;
 
-        while (count == 1) {
-            app.delay(800);
-            count = 2;
-        }
+         sum = condition1 + condition2 + condition3 + condition4 + condition5;
+        app.delay(50);
 
-        while (count == 0) {
-            val6 = distanceSensor.val[6];
-            count = 2;
-            app.delay(10);
-        }
 
-        if (distanceSensor.val[9] > 200) {
-            count = 2;
-            if (val6 > 600) {
-                val6 = distanceSensor.val[0];
-                if ((val6 - 120) > distanceSensor.val[0]) {
-                    servo.velocity = 0;
-                    servo.angle -= 90;
-                    app.delay(1000);
-                    servo.velocity = 30;
-                    app.delay(1000);
-                }
-            } else if ((val6 + 120) < distanceSensor.val[6]) {
-                servo.velocity = 0;
-                servo.angle -= 90;
-                app.delay(1000);
-                servo.velocity = 30;
-                app.delay(3500);
-            }
-
-        } else if ((distanceSensor.val[0] < 120) &&
-                   (distanceSensor.val[9] < 230)) {
-            app.stop(adjustment);
-            servo.velocity = 0;
-            app.delay(500);
-            servo.angle += 90;
-            count = 1;
-            app.delay(500);
-            app.start(adjustment);
+        if (distanceSensor.val[3] > 300) {
+            condition1 = 1;
+            app.delay(100);
         } else {
-            count = 0;
-            app.delay(10);
+            condition1 = 0;
+        }
+        if (location
+                .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN + 1]
+                .isPassed) {
+            condition2 = 1;
+            app.delay(100);
+        } else {
+            condition2 = 0;
+            app.delay(100);
+        }
+        if (location
+                .mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN - 1]
+                .isPassed) {
+            condition3 = 1;
+            app.delay(100);
+        } else {
+            condition3 = 0;
+            app.delay(100);
+        }
+        if (location
+                .mapData[location.x + MAP_ORIGIN + 1][location.y + MAP_ORIGIN]
+                .isPassed) {
+            condition4 = 1;
+            app.delay(100);
+        } else {
+            condition4 = 0;
+            app.delay(100);
+        }
+        if (location
+                .mapData[location.x + MAP_ORIGIN - 1][location.y + MAP_ORIGIN]
+                .isPassed) {
+            condition5 = 1;
+            app.delay(100);
+        } else {
+            condition5 = 0;
+            app.delay(100);
+        }
+
+        sum = condition1 + condition2 + condition3 + condition4 + condition5;
+        app.delay(50);
+
+        if (sum == 3) {
+            app.delay(1500);
+            servo.velocity = 0;
+            servo.stop();
+            app.delay(500);
+            count = 1;
+            servo.angle -= 90;
+            app.delay(500);
+            servo.velocity = SPEED;
+            app.delay(3000);
         }
     }
 }
+
+void hitAvoid(App) {
+    static bool oldStatus = false;
+    while (1) {
+        if (distanceSensor.val[0] > 300 && distanceSensor.val[1] < 100 &&
+            distanceSensor.val[2] < 150) {
+            app.stop(servoApp);
+            app.stop(rightWall);
+            app.stop(adjustment);
+            servo.driveAngularVelocity(-30, 45);
+            app.delay(1000);
+            servo.driveAngularVelocity(0, -45);
+            app.delay(200);
+
+            oldStatus = false;
+        }
+        if (distanceSensor.val[0] > 300 && distanceSensor.val[11] < 200 &&
+            distanceSensor.val[10] < 100) {
+            app.stop(servoApp);
+            app.stop(rightWall);
+            app.stop(adjustment);
+            servo.driveAngularVelocity(-30, -45);
+            app.delay(1000);
+            servo.driveAngularVelocity(0, 45);
+
+            oldStatus = false;
+        }
+        if (!oldStatus) {
+            app.start(servoApp);
+            app.start(rightWall);
+            app.start(adjustment);
+
+            oldStatus = true;
+        }
+
+        app.delay(20);
+    }
+    app.delay(10);
+}
+
+// void leftWall(App) {
+//     app.delay(500);
+//     while (1) {
+//         servo.velocity = SPEED;
+//         app.delay(10);
+
+//         while (count == 1) {
+//             app.delay(800);
+//             count = 2;
+//         }
+
+//         while (count == 0) {
+//             val6  = distanceSensor.val[6];
+//             count = 2;
+//             app.delay(10);
+//         }
+
+//         if (distanceSensor.val[9] > 200) {
+//             count = 2;
+//             if (val6 > 600) {
+//                 val6 = distanceSensor.val[0];
+//                 if ((val6 - 140) > distanceSensor.val[0]) {
+//                     servo.velocity = 0;
+//                     servo.angle -= 90;
+//                     app.delay(1000);
+//                     servo.velocity = 30;
+//                     app.delay(1000);
+//                 }
+//             } else if ((val6 + 140) < distanceSensor.val[6]) {
+//                 servo.velocity = 0;
+//                 servo.angle -= 90;
+//                 app.delay(1000);
+//                 servo.velocity = 30;
+//                 app.delay(3500);
+//             }
+
+//         } else if ((distanceSensor.val[0] < 120) &&
+//                    (distanceSensor.val[9] < 230)) {
+//             app.stop(adjustment);
+//             servo.velocity = 0;
+//             app.delay(500);
+//             servo.angle += 90;
+//             count = 1;
+//             app.delay(500);
+//             app.start(adjustment);
+//         } else {
+//             count = 0;
+//             app.delay(10);
+//         }
+//     }
+// }
 
 void monitor(App) {
     while (1) {
-        // uart3.write(cameraRight.data);
-        // uart3.println(" ");
+        uart3.write(cameraRight.data);
+        uart3.println(" ");
 
         // uart3.print(location.x);
         // uart3.print(" ");
@@ -413,38 +492,58 @@ void monitor(App) {
         // uart3.print((int)servo.rightWheelSpeed);
         // uart3.println("");
 
-        for (int i = 13; i < 27; i++) {      // たて
-            for (int j = 13; j < 27; j++) {  // 横
-                if (location.mapData[j][39 - i].isPassed == true) {
-                    uart1.print("■");
-                } else if (location.mapData[j][39 - i].isDetected == true) {
-                    uart1.print("□");
-                } else {
-                    uart1.print(" ");
-                }
-            }
+        // for (int i = 13; i < 27; i++) {      // たて
+        //     for (int j = 13; j < 27; j++) {  // 横
+        //         if (location.mapData[j][39 - i].isPassed == true) {
+        //             uart1.print("■");
+        //         } else if (location.mapData[j][39 - i].isDetected == true) {
+        //             uart1.print("□");
+        //         } else {
+        //             uart1.print(" ");
+        //         }
+        //     }
 
-            uart1.println("");
-        }
+        //     uart1.println("");
+        // // }
+        // uart3.print(floorSensor.redVal);
+        // uart3.print(" ");
+        // uart3.print(floorSensor.greenVal);
+        // uart3.print(" ");
+        // uart3.print(floorSensor.blueVal);
+        // uart3.println(" ");
 
-        app.delay(1000);
+        app.delay(100);
+
+        // uart3.print(distanceSensor.val[0]);
+        // uart3.print(" ");
+        // uart3.print(distanceSensor.val[1]);
+        // uart3.print(" ");
+        // uart3.println(distanceSensor.val[2]);
+        // app.delay(30);
     }
 }
 
 void black(App) {
     while (1) {
-        if (floorSensor.redVal > 150) {
+        if (floorSensor.blueVal > 500) {
             count = 1;
-            servo.velocity = -100;
+            app.stop(servoApp);
+            servo.driveAngularVelocity(-SPEED, 0);
             led.setTopColor(led.red);
             led.show();
-            app.delay(10);
-            if (servo.velocity == -100) {
-                servo.angle += 180;
-                app.delay(10);
-            }
+            app.delay(1500);
+            app.start(servoApp);
+            servo.velocity = 0;
+            servo.stop();
+            app.delay(500);
+            servo.angle -= 180;
+            count = 0;
+            app.delay(900);
+            servo.velocity = SPEED;
+            app.delay(1000);
+
         } else {
-            app.delay(1);
+            app.delay(50);
         }
     }
 }
@@ -452,13 +551,18 @@ void black(App) {
 void visualization(App) {
     while (1) {
         for (int i = 0; i < 24; i += 2) {
-            stripTop.setPixelColor(i, 0, 0,
+            stripTop.setPixelColor(i, (30000 / distanceSensor.val[i / 2]),
+                                   (30000 / distanceSensor.val[i / 2]),
                                    (30000 / distanceSensor.val[i / 2]));
         }
 
         for (int j = 1; j <= 12; j++) {
             stripTop.setPixelColor(
-                2 * j - 1, 0, 0,
+                2 * j - 1,
+                30000 /
+                    ((distanceSensor.val[j - 1] + distanceSensor.val[j]) / 2),
+                30000 /
+                    ((distanceSensor.val[j - 1] + distanceSensor.val[j]) / 2),
                 30000 /
                     ((distanceSensor.val[j - 1] + distanceSensor.val[j]) / 2));
         }
@@ -574,6 +678,7 @@ void lever(App) {
     static bool oldStatus = false;
     while (1) {
         if (ui.toggle == false) {
+            speaker.bootSound();
             led.setTopColor(led.green);
             led.show();
             servo.velocity = 0;
@@ -581,24 +686,29 @@ void lever(App) {
             app.stop(rightWall);
             app.stop(adjustment);
             app.stop(visualization);
+            app.stop(black);
             app.stop(camera);
 
             app.stop(locationApp);
             app.stop(mapApp);
             app.stop(sideLEDApp);
+            app.stop(locationMapping);
             servo.stop();
             oldStatus = false;
         } else {
             if (!oldStatus) {
+                speaker.bootSound();
                 app.start(servoApp);
                 app.start(rightWall);
                 app.start(adjustment);
                 app.start(visualization);
+                app.start(black);
                 app.start(camera);
 
                 app.start(locationApp);
                 app.start(mapApp);
                 app.start(sideLEDApp);
+                app.start(locationMapping);
                 gyro.setOffset();
 
                 oldStatus = true;

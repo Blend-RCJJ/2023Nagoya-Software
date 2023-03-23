@@ -39,9 +39,11 @@ void WS2812B::setTopColor(unsigned long color) {
 }
 
 void WS2812B::setFloorColor(unsigned long color) {
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 4; i++) {
         stripFloor.setPixelColor(i, color);
     }
+    // stripFloor.setPixelColor(1, color);
+    // stripFloor.setPixelColor(2, color);
     stripFloor.show();
 }
 
@@ -78,7 +80,7 @@ WS2812B::WS2812B(int brightness) {
     stripTop.show();
 
     stripFloor.begin();
-    stripFloor.setBrightness(50);
+    stripFloor.setBrightness(100);
     stripFloor.show();
 }
 

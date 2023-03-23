@@ -31,6 +31,8 @@ class STS3032 {
     int rightWheelSpeed = 0;
     int leftWheelSpeed = 0;
 
+    void rescueKit(int num, int position);
+
    private:
 };
 

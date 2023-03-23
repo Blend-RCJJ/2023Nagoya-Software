@@ -24,10 +24,10 @@ class HEATSENSOR {
     void read(void) {
         for (int i = 0; i < 2; i++) {
             long temp = 0;
-            for (int j = 0; j < 200; j++) {
-                temp += inputPin[i].analog();
+            for (int j = 0; j < 50; j++) {
+                temp += inputPin[i].raw();
             }
-            val[i] = constrain(temp / 200 - offset[i], 0, 500) / 5;
+            val[i] = constrain(temp / 50 - offset[i], 0, 500) / 5;
         }
 
         l = val[0] > cutOff;
@@ -38,7 +38,7 @@ class HEATSENSOR {
         for (int i = 0; i < 2; i++) {
             long temp = 0;
             for (int j = 0; j < 1000; j++) {
-                temp += inputPin[i].analog();
+                temp += inputPin[i].raw();
             }
             val[i] = temp / 1000;
         }

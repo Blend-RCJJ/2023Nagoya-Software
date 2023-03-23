@@ -22,10 +22,11 @@ class LOADCELL {
     int offset[2];
 
     int status = 0;
+    int moment = 0;
 
     void read(void) {
         for (int i = 0; i < 2; i++) {
-            load[i] = inputPin[i].analog();
+            load[i] = inputPin[i].raw();
         }
         load[1] = 1023 - load[1];
 
@@ -36,14 +37,14 @@ class LOADCELL {
         }
 
         if (load[0] > 5 || load[1] > 5) {
-            int moment = degrees(atan2(load[0], load[1]));
+            moment = degrees(atan2(load[0], load[1]));
 
-            if (moment < 35) {
-                moment = LEFT;
-            } else if (moment > 55) {
-                moment = RIGHT;
+            if (moment < 20) {
+                status = LEFT;
+            } else if (moment > 70) {
+                status = RIGHT;
             } else {
-                moment = CENTER;
+                status = CENTER;
             }
         } else {
             status = 0;
@@ -52,7 +53,7 @@ class LOADCELL {
 
     void init(void) {
         for (int i = 0; i < 2; i++) {
-            offset[i] = inputPin[i].analog();
+            offset[i] = inputPin[i].raw();
         }
         offset[1] = 1023 - offset[1];
     }

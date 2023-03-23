@@ -9,21 +9,32 @@ STS3032::STS3032(HardwareSerial *ptr) {
     serialPtr->begin(baudRate);
     serialServo.pSerial = serialPtr;
 
-    serialServo.WheelMode(1);
-
-    for (int i = 1; i <= 5; i++) {
+    // serialServo.WheelMode(1);
+    for (int i = 1; i <= 4; i++) {
         serialServo.unLockEprom(i);
         serialServo.EnableTorque(i, 1);
         serialServo.LockEprom(i);
     }
+
+    serialServo.unLockEprom(5);
+    serialServo.EnableTorque(5, 1);
+    serialServo.LockEprom(5);
 }
 
 void STS3032::directDrive(int id, int percent, int acceleration) {
-    int sendData;
-    sendData = percent * maximumSpeed / 100;
-    sendData = constrain(sendData, -maximumSpeed, maximumSpeed);
+    if (id != 4) {
+        int sendData;
+        sendData = percent * maximumSpeed / 100;
+        sendData = constrain(sendData, -maximumSpeed, maximumSpeed);
 
-    serialServo.WriteSpe(id + 1, sendData, acceleration);
+        serialServo.WriteSpe(id + 1, sendData, acceleration);
+    } else {
+        int sendData;
+        sendData = percent * 80;
+        sendData = constrain(sendData, -8000, 8000);
+
+        serialServo.WriteSpe(5, sendData, acceleration);
+    }
 }
 
 void STS3032::driveAngularVelocity(int velocity, int angularVelocity) {
@@ -45,7 +56,7 @@ void STS3032::driveAngularVelocity(int velocity, int angularVelocity) {
     for (int i = 2; i < 4; i++) {
         directDrive(i, data[1]);
     }
-     directDrive(4, 10);
+    // directDrive(4, 10);
 }
 
 void STS3032::drive(int velocity, int angle) {
@@ -76,6 +87,30 @@ void STS3032::drive(int velocity, int angle) {
     }
 }
 
-void STS3032::stop(void){
-    driveAngularVelocity(0,0);
+void STS3032::stop(void) {
+    driveAngularVelocity(0, 0);
+}
+
+void STS3032::rescueKit(int num, int position) {
+    for (int i = 0; i < num; i++) {
+        if (position == 1) {  // 左
+            directDrive(4, -100);
+            delay(300);
+            directDrive(4, 0);
+            delay(50);
+            directDrive(4, 100);
+            delay(130);
+            directDrive(4, 0);
+            delay(200);
+        } else {
+            directDrive(4, 100);
+            delay(300);
+            directDrive(4, 0);
+            delay(50);
+            directDrive(4, -100);
+            delay(130);
+            directDrive(4, 0);
+            delay(200);
+        }
+    }
 }

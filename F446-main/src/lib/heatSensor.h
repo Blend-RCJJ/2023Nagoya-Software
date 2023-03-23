@@ -26,10 +26,10 @@ class HEATSENSOR {
     void read(void) {
         for (int i = 0; i < 2; i++) {
             long temp = 0;
-            for (int j = 0; j < 100; j++) {
+            for (int j = 0; j < 50; j++) {
                 temp += inputPin[i].raw();
             }
-            val[i] = temp / 100;
+            val[i] = temp / 50;
         }
 
         l = val[0] > cutOff + 40;

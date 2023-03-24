@@ -2,7 +2,7 @@
 #define _SENSOR_APP_H
 #define FLOOR_NUMBER 2
 
-#define SPEED 50
+#define SPEED 40
 
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "Arduino.h"
@@ -196,7 +196,7 @@ void rightWall(App) {
                     app.delay(500);
                     count          = 0;
                     servo.velocity = SPEED;
-                    app.delay(1500);
+                    app.delay(1800);
                 }
             } else if ((val6 + 130) < distanceSensor.val[6]) {
                 servo.velocity = 0;
@@ -208,7 +208,7 @@ void rightWall(App) {
                 app.delay(500);
                 count          = 0;
                 servo.velocity = SPEED;
-                app.delay(1500);
+                app.delay(1800);
             }
 
         } else {
@@ -283,7 +283,7 @@ void leftWall(App) {
                     app.delay(500);
                     count          = 0;
                     servo.velocity = SPEED;
-                    app.delay(1500);
+                    app.delay(1800);
                 }
             } else if ((val6 + 130) < distanceSensor.val[6]) {
                 servo.velocity = 0;
@@ -295,7 +295,7 @@ void leftWall(App) {
                 app.delay(500);
                 count          = 0;
                 servo.velocity = SPEED;
-                app.delay(1500);
+                app.delay(1800);
             }
 
         } else {
@@ -339,7 +339,7 @@ void randomSwitching(App) {
                 oldstatus = false;
                 if (!oldstatus) {
                     servo.velocity = SPEED;
-                    app.delay(1500);
+                    app.delay(1800);
                     app.start(leftWall);
                     oldstatus = true;
                 }

@@ -329,10 +329,10 @@ void randomSwitching(App) {
         if (distanceSensor.val[3] < 280 && distanceSensor.val[9] < 280 &&
             gyro.slope == 0) {
             servo.velocity = SPEED;
-            Seed           = millis() % 2;
+            Seed           = millis() % 3;
             app.delay(20);
         } else {
-            if (oldTime + 10000 < millis()) {
+            if (oldTime + 20000 < millis()) {
                 if (Seed) {
                     app.stop(leftWall);
                     oldstatus = false;

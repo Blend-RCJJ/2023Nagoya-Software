@@ -552,11 +552,11 @@ void camera(App) {
                     }
 
                     if (buff == 'H') {
-                        servo.rescueKit(3, LEFT);
+                        servo.rescueKit(3, RIGHT);
                     } else if (buff == 'S') {
-                        servo.rescueKit(2, LEFT);
+                        servo.rescueKit(2, RIGHT);
                     } else if (buff == 'R' || buff == 'Y') {
-                        servo.rescueKit(1, LEFT);
+                        servo.rescueKit(1, RIGHT);
                     }
 
                     app.delay(5);

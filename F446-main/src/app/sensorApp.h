@@ -39,9 +39,9 @@ extern void mapApp(App);
 extern void sideLEDApp(App);
 extern void locationApp(App);
 
-int count      = 0;
-int val0       = 0;
-int val6       = 0;
+int count = 0;
+int val0 = 0;
+int val6 = 0;
 int correction = 0;
 
 void camera(App);
@@ -189,13 +189,13 @@ void rightGrid(App) {
         if ((distanceSensor.val[0] < 200) && (distanceSensor.val[3] < 250)) {
             app.delay(1000);
             servo.velocity = 0;
-            count          = 1;
+            count = 1;
             servo.stop();
             servo.angle -= 90;
             app.delay(1800);
         } else if (distanceSensor.val[3] > 300) {
             servo.velocity = 0;
-            count          = 1;
+            count = 1;
             servo.stop();
             servo.angle += 90;
             app.delay(1000);
@@ -268,8 +268,8 @@ void rightWall(App) {
         }
 
         while (count == 0) {
-            val6  = distanceSensor.val[6];
-            val0  = distanceSensor.val[0];
+            val6 = distanceSensor.val[6];
+            val0 = distanceSensor.val[0];
             count = 2;
             app.delay(10);
         }
@@ -368,7 +368,7 @@ void leftWall(App) {
         }
 
         while (count == 0) {
-            val6  = distanceSensor.val[6];
+            val6 = distanceSensor.val[6];
             count = 2;
             app.delay(10);
         }
@@ -506,67 +506,46 @@ void visualization(App) {
 }
 
 void camera(App) {
-    bool oldstatus = true;
+    unsigned long ignoreTimer = 0;
+
     while (1) {
         int rescueKitNum = 0;
-        int leftOrRight  = 1;
+        int leftOrRight = 1;
         if (!location.mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN]
                  .isVictimDetected) {
-            if (distanceSensor.val[3] < 200) {
-                while (cameraRight.data == 'H') {
-                    led.setUIColor(led.pink);
-                    servo.velocity = 0;
-                    app.stop(servoApp);
-                    servo.stop();
-                    app.stop(adjustment);
-                    app.stop(rightWall);
-                    led.setUIBrightness(127 * sin(millis() / 200.0) + 127);
-                    led.show();
-                    oldstatus = false;
-
-                    app.delay(5);
-
-                    rescueKitNum = 3;
-                    leftOrRight  = RIGHT;
-
-                    location
-                        .mapData[location.x + MAP_ORIGIN]
-                                [location.y + MAP_ORIGIN]
-                        .isVictimDetected = true;
-                }
-
-                while (cameraRight.data == 'S') {
-                    led.setUIColor(led.blue);
-                    servo.velocity = 0;
-                    servo.stop();
-                    app.stop(servoApp);
-                    app.stop(adjustment);
-                    app.stop(rightWall);
-                    led.setUIBrightness(127 * sin(millis() / 200.0) + 127);
-                    led.show();
-                    oldstatus = false;
-
-                    app.delay(5);
-
-                    rescueKitNum = 2;
-                    leftOrRight  = RIGHT;
-
-                    location
-                        .mapData[location.x + MAP_ORIGIN]
-                                [location.y + MAP_ORIGIN]
-                        .isVictimDetected = true;
-                }
-
-                while (cameraRight.data == 'U') {
+            if (cameraRight.data != 'N' && millis() - ignoreTimer >= 3000) {
+                if (distanceSensor.val[3] < 200) {
                     led.setUIColor(led.white);
-                    servo.velocity = 0;
-                    servo.stop();
+                    led.show();
+
                     app.stop(servoApp);
                     app.stop(adjustment);
                     app.stop(rightWall);
-                    led.setUIBrightness(127 * sin(millis() / 200.0) + 127);
-                    led.show();
-                    oldstatus = false;
+                    servo.velocity = 0;
+                    servo.stop();
+
+                    int buff = 0;
+
+                    unsigned long tikaTimer = millis();
+                    while (millis() - tikaTimer < 5500) {
+                        led.setUIColor(led.white);
+                        led.setUIBrightness(127 * sin(millis() / 200.0) + 127);
+                        led.show();
+
+                        if (cameraRight.data != 'N') {
+                            buff = cameraRight.data;
+                        }
+
+                        app.delay(5);
+                    }
+
+                    if (buff == 'H') {
+                        servo.rescueKit(3, LEFT);
+                    } else if (buff == 'S') {
+                        servo.rescueKit(2, LEFT);
+                    } else if (buff == 'R' || buff == 'Y') {
+                        servo.rescueKit(1, LEFT);
+                    }
 
                     app.delay(5);
 
@@ -574,122 +553,52 @@ void camera(App) {
                         .mapData[location.x + MAP_ORIGIN]
                                 [location.y + MAP_ORIGIN]
                         .isVictimDetected = true;
-                }
 
-                while (cameraRight.data == 'R') {
-                    led.setUIColor(led.red);
-                    servo.velocity = 0;
-                    servo.stop();
-                    app.stop(servoApp);
-                    app.stop(adjustment);
-                    app.stop(rightWall);
-                    led.setUIBrightness(127 * sin(millis() / 200.0) + 127);
-                    led.show();
-                    oldstatus = false;
-
-                    rescueKitNum = 3;
-                    leftOrRight  = RIGHT;
-
+                    app.start(servoApp);
+                    app.start(rightWall);
+                    app.start(adjustment);
                     app.delay(5);
 
-                    location
-                        .mapData[location.x + MAP_ORIGIN]
-                                [location.y + MAP_ORIGIN]
-                        .isVictimDetected = true;
-                }
-
-                while (cameraRight.data == 'G') {
-                    led.setUIColor(led.green);
-                    servo.velocity = 0;
-                    servo.stop();
-                    app.stop(servoApp);
-                    app.stop(adjustment);
-                    app.stop(rightWall);
-                    led.setUIBrightness(127 * sin(millis() / 200.0) + 127);
+                    led.setUIColor(led.blank);
                     led.show();
-                    oldstatus = false;
-
-                    app.delay(5);
-                }
-
-                while (cameraRight.data == 'Y') {
-                    led.setUIColor(led.yellow);
-                    servo.velocity = 0;
-                    servo.stop();
-                    app.stop(servoApp);
-                    app.stop(adjustment);
-                    app.stop(rightWall);
-                    led.setUIBrightness(127 * sin(millis() / 200.0) + 127);
-                    led.show();
-                    oldstatus = false;
-
-                    rescueKitNum = 2;
-                    leftOrRight  = RIGHT;
-
-                    app.delay(5);
-
-                    location
-                        .mapData[location.x + MAP_ORIGIN]
-                                [location.y + MAP_ORIGIN]
-                        .isVictimDetected = true;
+                } else {
+                    ignoreTimer = millis();
                 }
             }
 
-            if (distanceSensor.val[9] < 200) {
-                while (cameraLeft.data == 'H') {
-                    led.setUIColor(led.pink);
-                    servo.velocity = 0;
-                    app.stop(servoApp);
-                    servo.stop();
-                    app.stop(adjustment);
-                    app.stop(rightWall);
-                    led.setUIBrightness(127 * sin(millis() / 200.0) + 127);
-                    led.show();
-                    oldstatus = false;
-
-                    app.delay(5);
-
-                    rescueKitNum = 3;
-                    leftOrRight  = LEFT;
-
-                    location
-                        .mapData[location.x + MAP_ORIGIN]
-                                [location.y + MAP_ORIGIN]
-                        .isVictimDetected = true;
-                }
-
-                while (cameraLeft.data == 'S') {
-                    led.setUIColor(led.blue);
-                    servo.velocity = 0;
-                    servo.stop();
-                    app.stop(servoApp);
-                    app.stop(adjustment);
-                    app.stop(rightWall);
-                    led.setUIBrightness(127 * sin(millis() / 200.0) + 127);
-                    led.show();
-                    oldstatus = false;
-
-                    app.delay(5);
-
-                    rescueKitNum = 2;
-                    leftOrRight  = LEFT;
-
-                    location
-                        .mapData[location.x + MAP_ORIGIN]
-                                [location.y + MAP_ORIGIN]
-                        .isVictimDetected = true;
-                }
-
-                while (cameraLeft.data == 'U') {
+            if (cameraLeft.data != 'N') {  // 反応
+                if (distanceSensor.val[9] < 200) {
                     led.setUIColor(led.white);
-                    servo.velocity = 0;
-                    servo.stop();
+                    led.show();
+
                     app.stop(servoApp);
                     app.stop(adjustment);
                     app.stop(rightWall);
-                    led.setUIBrightness(127 * sin(millis() / 200.0) + 127);
-                    led.show();
-                    oldstatus = false;
+                    servo.velocity = 0;
+                    servo.stop();
+
+                    int buff = 0;
+
+                    unsigned long tikaTimer = millis();
+                    while (millis() - tikaTimer < 5500) {
+                        led.setUIColor(led.white);
+                        led.setUIBrightness(127 * sin(millis() / 200.0) + 127);
+                        led.show();
+
+                        if (cameraLeft.data != 'N') {
+                            buff = cameraLeft.data;
+                        }
+
+                        app.delay(5);
+                    }
+
+                    if (buff == 'H') {
+                        servo.rescueKit(3, LEFT);
+                    } else if (buff == 'S') {
+                        servo.rescueKit(2, LEFT);
+                    } else if (buff == 'R ' || buff == 'Y') {
+                        servo.rescueKit(1, LEFT);
+                    }
 
                     app.delay(5);
 
@@ -697,98 +606,34 @@ void camera(App) {
                         .mapData[location.x + MAP_ORIGIN]
                                 [location.y + MAP_ORIGIN]
                         .isVictimDetected = true;
-                }
 
-                while (cameraLeft.data == 'R') {
-                    led.setUIColor(led.red);
-                    servo.velocity = 0;
-                    servo.stop();
-                    app.stop(servoApp);
-                    app.stop(adjustment);
-                    app.stop(rightWall);
-                    led.setUIBrightness(127 * sin(millis() / 200.0) + 127);
-                    led.show();
-                    oldstatus = false;
-
-                    rescueKitNum = 3;
-                    leftOrRight  = LEFT;
-
+                    app.start(servoApp);
+                    app.start(rightWall);
+                    app.start(adjustment);
                     app.delay(5);
 
-                    location
-                        .mapData[location.x + MAP_ORIGIN]
-                                [location.y + MAP_ORIGIN]
-                        .isVictimDetected = true;
-                }
-
-                while (cameraLeft.data == 'G') {
-                    led.setUIColor(led.green);
-                    servo.velocity = 0;
-                    servo.stop();
-                    app.stop(servoApp);
-                    app.stop(adjustment);
-                    app.stop(rightWall);
-                    led.setUIBrightness(127 * sin(millis() / 200.0) + 127);
+                    led.setUIColor(led.blank);
                     led.show();
-                    oldstatus = false;
-
-                    app.delay(5);
-                }
-
-                while (cameraLeft.data == 'Y') {
-                    led.setUIColor(led.yellow);
-                    servo.velocity = 0;
-                    servo.stop();
-                    app.stop(servoApp);
-                    app.stop(adjustment);
-                    app.stop(rightWall);
-                    led.setUIBrightness(127 * sin(millis() / 200.0) + 127);
-                    led.show();
-                    oldstatus = false;
-
-                    rescueKitNum = 2;
-                    leftOrRight  = LEFT;
-
-                    app.delay(5);
-
-                    location
-                        .mapData[location.x + MAP_ORIGIN]
-                                [location.y + MAP_ORIGIN]
-                        .isVictimDetected = true;
+                } else {
+                    ignoreTimer = millis();
                 }
             }
         }
-
-        if (!oldstatus) {
-            if (rescueKitNum != 0) {
-                servo.rescueKit(rescueKitNum, leftOrRight);
-            }
-
-            app.start(servoApp);
-            app.start(rightWall);
-            app.start(adjustment);
-            app.delay(5);
-
-            oldstatus = true;
-
-            led.setUIColor(led.blank);
-            led.show();
-        }
-
-        app.delay(100);
+        
+        app.delay(10);
     }
 }
 
 void victimApp(App) {
     while (1) {
-        bool status      = false;
+        bool status = false;
         int rescueKitNum = 0;
-        int leftOrRight  = 0;
+        int leftOrRight = 0;
         if (!location.mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN]
                  .isVictimDetected) {
             if (heatSensor.r && distanceSensor.val[3] < 200) {
                 unsigned long timer = millis();
-                while (millis() - timer < 6000) {
+                while (millis() - timer < 5500) {
                     led.setUIColor(led.cyan);
                     servo.velocity = 0;
                     app.stop(servoApp);
@@ -802,7 +647,7 @@ void victimApp(App) {
                     app.delay(5);
 
                     rescueKitNum = 1;
-                    leftOrRight  = RIGHT;
+                    leftOrRight = RIGHT;
                 }
 
                 location
@@ -812,7 +657,7 @@ void victimApp(App) {
 
             if (heatSensor.l && distanceSensor.val[9] < 200) {
                 unsigned long timer = millis();
-                while (millis() - timer < 6000) {
+                while (millis() - timer < 5500) {
                     led.setUIColor(led.cyan);
                     servo.velocity = 0;
                     app.stop(servoApp);
@@ -826,7 +671,7 @@ void victimApp(App) {
                     app.delay(5);
 
                     rescueKitNum = 1;
-                    leftOrRight  = LEFT;
+                    leftOrRight = LEFT;
                 }
 
                 location

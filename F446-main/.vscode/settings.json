@@ -22,7 +22,8 @@
         "iterator": "cpp",
         "limits": "cpp",
         "algorithm": "cpp",
-        "locationapp": "cpp"
+        "locationapp": "cpp",
+        "ios": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

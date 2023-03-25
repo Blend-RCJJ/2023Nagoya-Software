@@ -105,7 +105,7 @@ void setup() {
     app.create(visualization);
     app.create(lever);
     app.create(hitAvoid);
-    app.create(randomSwitching,lowPriority);
+    app.create(randomSwitching);
 
     app.create(locationApp, firstPriority);
     app.create(sideLEDApp);
@@ -131,7 +131,6 @@ void mainApp(App) {
     app.start(lever);
     app.start(hitAvoid);
     app.start(victimApp);
-    ;
     while (1) {
         app.delay(1);
     }

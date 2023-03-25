@@ -43,6 +43,7 @@ int count = 0;
 int val0 = 0;
 int val6 = 0;
 int correction = 0;
+int Seed       = 1;
 
 void camera(App);
 void rightWall(App);
@@ -83,50 +84,6 @@ void servoApp(App) {
     }
 }
 
-void gridSpecification(App) {
-    while (1) {
-        if ((distanceSensor.val[0] > distanceSensor.val[3]) &&
-            (distanceSensor.val[0] > distanceSensor.val[9])) {
-            servo.velocity = SPEED;
-            app.delay(4200);
-            servo.velocity = 0;
-            app.delay(1000);
-        } else if (distanceSensor.val[3] > distanceSensor.val[9]) {
-            servo.velocity = 0;
-            servo.angle += 90;
-            app.delay(1000);
-            servo.velocity = SPEED;
-            app.delay(4200);
-            servo.velocity = 0;
-            app.delay(1000);
-        } else if (distanceSensor.val[3] < distanceSensor.val[9]) {
-            servo.velocity = 0;
-            servo.angle -= 90;
-            app.delay(1000);
-            servo.velocity = SPEED;
-            app.delay(4200);
-            servo.velocity = 0;
-            app.delay(1000);
-        } else {
-            app.delay(10);
-        }
-
-        if (distanceSensor.val[0] <= 150) {
-            if (distanceSensor.val[3] <= 150) {
-                if (distanceSensor.val[9] <= 150) {
-                    servo.velocity = 0;
-                    servo.angle += 180;
-                    app.delay(1000);
-                    servo.velocity = SPEED;
-                    app.delay(4200);
-                    servo.velocity = 0;
-                    app.delay(1000);
-                }
-            }
-        }
-    }
-}
-
 void adjustment(App) {
     while (1) {
         app.delay(10);
@@ -163,7 +120,7 @@ void adjustment(App) {
                 }
 
             } else if (distanceSensor.val[9] > 300 &&
-                       distanceSensor.val[3] < 200) {
+                       distanceSensor.val[3] < 300) {
                 if (distanceSensor.val[3] > 140) {
                     correction = 7;
                 }
@@ -183,8 +140,8 @@ void adjustment(App) {
 }
 // 2900で1マス
 
-void rightGrid(App) {
-    app.delay(100);
+void rightWall(App) {
+    app.delay(500);
     while (1) {
         if ((distanceSensor.val[0] < 200) && (distanceSensor.val[3] < 250)) {
             app.delay(1000);
@@ -212,8 +169,8 @@ void rightGrid(App) {
             app.delay(2000);
         }
 
-        if (location.x == 0 && location.y == 0 && distanceSensor.val[0] < 150) {
-            if (millis() > 30000) {
+        if (location.x == 0 && location.y == 0 && distanceSensor.val[0] < 180) {
+            if (millis() > 300000) {
                 servo.velocity = 0;
                 app.stop(servoApp);
                 app.stop(adjustment);
@@ -223,16 +180,72 @@ void rightGrid(App) {
                 led.setTopColor(led.white);
                 led.setLeftColor(led.white);
                 led.setRightColor(led.white);
-                led.setUIColor(led.white);
                 led.show();
+                app.delay(1000);
+
+                // speaker.matsukenShogun();
             } else {
-                app.delay(1);
+                app.delay(10);
             }
+        }
+
+        while (count == 1) {
+            app.delay(900);
+            count = 0;
+        }
+
+        while (count == 0) {
+            val6  = distanceSensor.val[6];
+            val0  = distanceSensor.val[0];
+            count = 2;
+            app.delay(10);
+        }
+
+        if (distanceSensor.val[3] > 200 && gyro.slope == 0) {
+            count = 2;
+            if (val6 > 600) {
+                if ((val0 - 130) > distanceSensor.val[0]) {
+                    servo.velocity = 0;
+                    servo.stop();
+                    app.delay(500);
+                    servo.angle += 90;
+                    servo.velocity = 0;
+                    servo.stop();
+                    app.delay(500);
+                    count          = 0;
+                    servo.velocity = SPEED;
+                    app.delay(1800);
+                }
+            } else if ((val6 + 130) < distanceSensor.val[6]) {
+                servo.velocity = 0;
+                servo.stop();
+                app.delay(500);
+                servo.angle += 90;
+                servo.velocity = 0;
+                servo.stop();
+                app.delay(500);
+                count          = 0;
+                servo.velocity = SPEED;
+                app.delay(1800);
+            }
+
+        } else {
+            count = 0;
+            app.delay(10);
+        }
+
+        if (distanceSensor.val[0] < 120 && gyro.slope == 0) {
+            servo.velocity = 0;
+            servo.stop();
+            app.delay(500);
+            servo.angle -= 90;
+            count = 1;
+            app.delay(1100);
         }
     }
 }
 
-void rightWall(App) {
+void leftWall(App) {
     app.delay(500);
     while (1) {
         servo.velocity = SPEED;
@@ -242,7 +255,7 @@ void rightWall(App) {
         // app.delay(1000);
 
         if (location.x == 0 && location.y == 0 && distanceSensor.val[0] < 180) {
-            if (millis() > 30000) {
+            if (millis() > 300000) {
                 servo.velocity = 0;
                 app.stop(servoApp);
                 app.stop(adjustment);
@@ -252,7 +265,6 @@ void rightWall(App) {
                 led.setTopColor(led.white);
                 led.setLeftColor(led.white);
                 led.setRightColor(led.white);
-                led.setUIColor(led.white);
                 led.show();
                 app.delay(1000);
 
@@ -274,32 +286,32 @@ void rightWall(App) {
             app.delay(10);
         }
 
-        if (distanceSensor.val[3] > 200 && gyro.slope == 0) {
+        if (distanceSensor.val[9] > 200 && gyro.slope == 0) {
             count = 2;
             if (val6 > 600) {
                 if ((val0 - 130) > distanceSensor.val[0]) {
                     servo.velocity = 0;
                     servo.stop();
                     app.delay(500);
-                    servo.angle += 90;
+                    servo.angle -= 90;
                     servo.velocity = 0;
                     servo.stop();
                     app.delay(500);
-                    count = 0;
+                    count          = 0;
                     servo.velocity = SPEED;
-                    app.delay(1500);
+                    app.delay(1800);
                 }
             } else if ((val6 + 130) < distanceSensor.val[6]) {
                 servo.velocity = 0;
                 servo.stop();
                 app.delay(500);
-                servo.angle += 90;
+                servo.angle -= 90;
                 servo.velocity = 0;
                 servo.stop();
                 app.delay(500);
-                count = 0;
+                count          = 0;
                 servo.velocity = SPEED;
-                app.delay(1500);
+                app.delay(1800);
             }
 
         } else {
@@ -307,14 +319,49 @@ void rightWall(App) {
             app.delay(10);
         }
 
-        if (distanceSensor.val[0] < 110 && gyro.slope == 0) {
+        if (distanceSensor.val[0] < 120 && gyro.slope == 0) {
             servo.velocity = 0;
             servo.stop();
             app.delay(500);
-            servo.angle -= 90;
+            servo.angle += 90;
             count = 1;
-            app.delay(1500);
+            app.delay(1100);
         }
+    }
+}
+
+void randomSwitching(App) {
+    app.delay(500);
+    bool oldstatus = false;
+    while (1) {
+        if (distanceSensor.val[3] < 280 && distanceSensor.val[9] < 280 && gyro.slope == 0) {
+            servo.velocity = SPEED;
+            Seed           = millis() % 2;
+            app.delay(20);
+        } else {
+            if (Seed) {
+                app.stop(leftWall);
+                oldstatus = false;
+                app.delay(50);
+
+                if (!oldstatus) {
+                    servo.velocity = SPEED;
+                    app.delay(1500);
+                    app.start(rightWall);
+                    oldstatus = true;
+                }
+            } else {
+                app.stop(rightWall);
+                oldstatus = false;
+                if (!oldstatus) {
+                    servo.velocity = SPEED;
+                    app.delay(1800);
+                    app.start(leftWall);
+                    oldstatus = true;
+                }
+            }
+        }
+        app.delay(49);
     }
 }
 
@@ -324,6 +371,7 @@ void hitAvoid(App) {
         if (loadcell.status == RIGHT) {
             app.stop(servoApp);
             app.stop(rightWall);
+            app.stop(leftWall);
             app.stop(adjustment);
             servo.driveAngularVelocity(-30, 45);
             app.delay(500);
@@ -335,6 +383,7 @@ void hitAvoid(App) {
         if (loadcell.status == LEFT) {
             app.stop(servoApp);
             app.stop(rightWall);
+            app.stop(leftWall);
             app.stop(adjustment);
             servo.driveAngularVelocity(-30, -45);
             app.delay(500);
@@ -344,8 +393,13 @@ void hitAvoid(App) {
             oldStatus = false;
         }
         if (!oldStatus) {
+            if(Seed){
+                app.start(rightWall);
+            }else{
+                app.start(leftWall);
+            }
             app.start(servoApp);
-            app.start(rightWall);
+            app.start(randomSwitching);
             app.start(adjustment);
 
             oldStatus = true;
@@ -412,17 +466,19 @@ void monitor(App) {
     while (1) {
         // uart3.write(cameraRight.data);
         // uart3.println(" ");
-
-        uart3.print(location.x);
-        uart3.print(" ");
-        uart3.print(location.y);
-        uart3.print(" ");
-        uart3.print((int)location.coordinateX);
-        uart3.print(" ");
-        uart3.print((int)location.coordinateY);
-        uart3.print(" ");
-        uart3.print((int)servo.rightWheelSpeed);
-        uart3.println("");
+        uart1.print(loadcell.load[0]);
+        uart1.print(" ");
+        uart1.println(loadcell.load[1]);
+        // uart3.print(location.x);
+        // uart3.print(" ");
+        // uart3.print(location.y);
+        // uart3.print(" ");
+        // uart3.print((int)location.coordinateX);
+        // uart3.print(" ");
+        // uart3.print((int)location.coordinateY);
+        // uart3.print(" ");
+        // uart3.print((int)servo.rightWheelSpeed);
+        // uart3.println("");
 
         // for (int i = 13; i < 27; i++) {      // たて
         //     for (int j = 13; j < 27; j++) {  // 横
@@ -460,7 +516,9 @@ void black(App) {
     while (1) {
         if (floorSensor.blueVal > 500) {
             app.stop(rightWall);
+            app.stop(leftWall);
             app.stop(adjustment);
+            app.stop(randomSwitching);
             servo.velocity = -SPEED;
             app.delay(1500);
             servo.velocity = 0;
@@ -471,7 +529,12 @@ void black(App) {
             oldstatus = false;
         }
         if (!oldstatus) {
-            app.start(rightWall);
+             if(Seed){
+                app.start(rightWall);
+            }else{
+                app.start(leftWall);
+            }
+            app.start(randomSwitching);
             app.start(adjustment);
             app.delay(5);
 
@@ -640,6 +703,7 @@ void victimApp(App) {
                     servo.stop();
                     app.stop(adjustment);
                     app.stop(rightWall);
+                    app.stop(leftWall);
                     led.setUIBrightness(127 * sin(millis() / 200.0) + 127);
                     led.show();
                     status = true;
@@ -663,6 +727,7 @@ void victimApp(App) {
                     app.stop(servoApp);
                     servo.stop();
                     app.stop(adjustment);
+                    app.stop(leftWall);
                     app.stop(rightWall);
                     led.setUIBrightness(127 * sin(millis() / 200.0) + 127);
                     led.show();
@@ -685,9 +750,14 @@ void victimApp(App) {
                 servo.rescueKit(rescueKitNum, leftOrRight);
             }
 
+             if(Seed){
+                app.start(rightWall);
+            }else{
+                app.start(leftWall);
+            }
             app.start(servoApp);
-            app.start(rightWall);
             app.start(adjustment);
+            app.start(randomSwitching);
             app.delay(5);
 
             status = false;
@@ -714,6 +784,7 @@ void lever(App) {
             app.stop(visualization);
             app.stop(black);
             app.stop(camera);
+            app.stop(randomSwitching);
 
             app.stop(locationApp);
             app.stop(mapApp);
@@ -731,6 +802,7 @@ void lever(App) {
                 app.start(visualization);
                 app.start(black);
                 app.start(camera);
+                app.start(randomSwitching);
 
                 app.start(victimApp);
 

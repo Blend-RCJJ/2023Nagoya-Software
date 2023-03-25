@@ -75,6 +75,15 @@ void setup() {
 
     delay(500);
 
+    // while (1) {
+    //     servo.directDrive(0,-60);
+    //     servo.directDrive(1,-20);
+    //     servo.directDrive(2,60);
+    //     servo.directDrive(3,20);
+    //     delay(800);
+
+    // }
+
     gyro.setOffset();
 
     location.mapData[MAP_ORIGIN][MAP_ORIGIN].isVictimDetected = true;
@@ -88,16 +97,15 @@ void setup() {
     app.create(inputMonitoringApp, secondPriority);
     app.create(servoApp);
     app.create(rightWall);
-    // app.create(gridSpecification);
+    app.create(leftWall);
     app.create(adjustment);
-    // app.create(leftWall);
     app.create(monitor);
     app.create(black);
     app.create(camera);
     app.create(visualization);
-    app.create(rightGrid);
     app.create(lever);
     app.create(hitAvoid);
+    app.create(randomSwitching,lowPriority);
 
     app.create(locationApp, firstPriority);
     app.create(sideLEDApp);
@@ -119,9 +127,11 @@ void mainApp(App) {
     app.start(monitor);
     app.start(camera);
     app.start(visualization);
+    app.start(randomSwitching);
     app.start(lever);
     app.start(hitAvoid);
     app.start(victimApp);
+    ;
     while (1) {
         app.delay(1);
     }

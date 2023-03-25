@@ -107,7 +107,7 @@ void setup() {
     app.create(monitor);
     app.create(black);
     app.create(camera);
-    // app.create(visualization);
+    app.create(visualization);
     app.create(lever);
     app.create(hitAvoid);
     app.create(randomSwitching,lowPriority);

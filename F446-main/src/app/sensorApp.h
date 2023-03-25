@@ -2,7 +2,7 @@
 #define _SENSOR_APP_H
 #define FLOOR_NUMBER 2
 
-#define SPEED 40
+#define SPEED 50
 
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "Arduino.h"
@@ -43,7 +43,7 @@ int count      = 0;
 int val0       = 0;
 int val6       = 0;
 int correction = 0;
-int Seed       = 0;
+int Seed       = 1;
 
 void camera(App);
 void rightWall(App);
@@ -143,8 +143,6 @@ void adjustment(App) {
 void rightWall(App) {
     app.delay(500);
     while (1) {
-        led.setTopColor(led.red);
-        led.show();
         servo.velocity = SPEED;
         app.delay(10);
         // app.delay(2700);
@@ -230,8 +228,6 @@ void rightWall(App) {
 void leftWall(App) {
     app.delay(500);
     while (1) {
-        led.setTopColor(led.blue);
-        led.show();
         servo.velocity = SPEED;
         app.delay(10);
         // app.delay(2700);

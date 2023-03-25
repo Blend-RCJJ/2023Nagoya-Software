@@ -452,7 +452,11 @@ void black(App) {
             servo.velocity = 0;
             servo.stop();
             app.delay(500);
-            servo.angle += 180;
+            if(Seed){
+                servo.angle -= 90;
+            }else{
+                servo.angle += 90;
+            }
             app.delay(1500);
             oldstatus = false;
         }

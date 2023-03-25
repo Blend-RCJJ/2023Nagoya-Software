@@ -301,7 +301,8 @@ void leftWall(App) {
             app.delay(10);
         }
 
-         if(distanceSensor.val[0] < 120 && distanceSensor.val[3] < 200 && distanceSensor.val[9] < 200){
+        if (distanceSensor.val[0] < 120 && distanceSensor.val[3] < 200 &&
+            distanceSensor.val[9] < 200) {
             servo.velocity = 0;
             servo.stop();
             app.delay(500);
@@ -323,17 +324,19 @@ void leftWall(App) {
 
 void randomSwitching(App) {
     app.delay(500);
-    int oldTime    = millis();
-    bool oldstatus = false;
+    int oldTime       = millis();
+    bool oldstatus    = false;
+    int temporarySave = 0;
     while (1) {
         if (distanceSensor.val[3] < 280 && distanceSensor.val[9] < 280 &&
             gyro.slope == 0) {
             servo.velocity = SPEED;
-            Seed           = millis() % 3;
+            temporarySave  = millis() % 5;
+            Seed  = temporarySave % 2;
             app.delay(20);
         } else {
-            if (oldTime + 20000 < millis()) {
-                if (Seed) {
+            if (oldTime + 15000 < millis()) {
+                if (!Seed) {
                     app.stop(leftWall);
                     oldstatus = false;
                     app.delay(50);
@@ -356,6 +359,9 @@ void randomSwitching(App) {
                 }
             }
         }
+        uart3.print(temporarySave);
+        uart3.print(" ");
+        uart3.println(Seed);
         app.delay(50);
     }
 }

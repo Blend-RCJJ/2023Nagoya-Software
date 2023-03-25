@@ -143,7 +143,6 @@ void adjustment(App) {
 void rightWall(App) {
     app.delay(500);
     while (1) {
-     
         if (location.x == 0 && location.y == 0 && distanceSensor.val[0] < 180) {
             if (millis() > 300000) {
                 servo.velocity = 0;
@@ -208,7 +207,15 @@ void rightWall(App) {
             count = 0;
             app.delay(10);
         }
-
+        if (distanceSensor.val[0] < 120 && distanceSensor.val[3] < 200 &&
+            distanceSensor.val[9] < 200) {
+            servo.velocity = 0;
+            servo.stop();
+            app.delay(500);
+            servo.angle -= 180;
+            count = 1;
+            app.delay(500);
+        }
         if (distanceSensor.val[0] < 120 && gyro.slope == 0) {
             servo.velocity = 0;
             servo.stop();
@@ -294,6 +301,15 @@ void leftWall(App) {
             app.delay(10);
         }
 
+         if(distanceSensor.val[0] < 120 && distanceSensor.val[3] < 200 && distanceSensor.val[9] < 200){
+            servo.velocity = 0;
+            servo.stop();
+            app.delay(500);
+            servo.angle -= 180;
+            count = 1;
+            app.delay(500);
+        }
+
         if (distanceSensor.val[0] < 120 && gyro.slope == 0) {
             servo.velocity = 0;
             servo.stop();
@@ -325,7 +341,7 @@ void randomSwitching(App) {
                     if (!oldstatus) {
                         servo.velocity = SPEED;
                         app.start(rightWall);
-                        oldTime = millis();
+                        oldTime   = millis();
                         oldstatus = true;
                     }
                 } else {
@@ -334,7 +350,7 @@ void randomSwitching(App) {
                     if (!oldstatus) {
                         servo.velocity = SPEED;
                         app.start(leftWall);
-                        oldTime = millis();
+                        oldTime   = millis();
                         oldstatus = true;
                     }
                 }
@@ -392,20 +408,20 @@ void hitAvoid(App) {
 void monitor(App) {
     while (1) {
         // uart3.write(cameraRight.data);
-        // uart3.println(" ");
-        uart1.print(loadcell.load[0]);
-        uart1.print(" ");
-        uart1.println(loadcell.load[1]);
-        // uart3.print(location.x);
-        // uart3.print(" ");
-        // uart3.print(location.y);
-        // uart3.print(" ");
-        // uart3.print((int)location.coordinateX);
-        // uart3.print(" ");
-        // uart3.print((int)location.coordinateY);
-        // uart3.print(" ");
-        // uart3.print((int)servo.rightWheelSpeed);
-        // uart3.println("");
+        // // uart3.println(" ");
+        // uart1.print(loadcell.load[0]);
+        // uart1.print(" ");
+        // uart1.println(loadcell.load[1]);
+        uart3.print(location.x);
+        uart3.print(" ");
+        uart3.print(location.y);
+        uart3.print(" ");
+        uart3.print((int)location.coordinateX);
+        uart3.print(" ");
+        uart3.print((int)location.coordinateY);
+        uart3.print(" ");
+        uart3.print((int)servo.rightWheelSpeed);
+        uart3.println(" ");
 
         // for (int i = 13; i < 27; i++) {      // たて
         //     for (int j = 13; j < 27; j++) {  // 横

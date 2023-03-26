@@ -160,9 +160,8 @@ void rightWall(App) {
                 led.setLeftColor(led.white);
                 led.setRightColor(led.white);
                 led.show();
-                app.delay(1000);
-
-                // speaker.matsukenShogun();
+                app.delay(20000);
+                speaker.matsukenShogun();
             } else {
                 app.delay(10);
             }
@@ -256,9 +255,8 @@ void leftWall(App) {
                 led.setLeftColor(led.white);
                 led.setRightColor(led.white);
                 led.show();
-                app.delay(1000);
-
-                // speaker.matsukenShogun();
+                app.delay(20000);
+                speaker.matsukenShogun();
             } else {
                 app.delay(10);
             }

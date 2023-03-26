@@ -10,6 +10,8 @@
 #include "WProgram.h"
 #endif
 
+bool HidariWALL = false;
+
 extern HardwareSerial uart1;
 extern HardwareSerial uart3;
 extern RTOS_Kit app;
@@ -39,11 +41,11 @@ extern void mapApp(App);
 extern void sideLEDApp(App);
 extern void locationApp(App);
 
-int count      = 0;
-int val0       = 0;
-int val6       = 0;
+int count = 0;
+int val0 = 0;
+int val6 = 0;
 int correction = 0;
-int Seed       = 1;
+int Seed = 1;
 
 void camera(App);
 void rightWall(App);
@@ -140,12 +142,13 @@ void adjustment(App) {
 void rightWall(App) {
     app.delay(500);
     while (1) {
-
         servo.velocity = SPEED;
         app.delay(10);
-
-        if (location.x == 0 && location.y == 0 && distanceSensor.val[0] < 180) {
-            if (millis() > 300000) {
+        if (abs(location.x) <= 2 && abs(location.y) <= 2 &&
+            distanceSensor.val[(location.minIndex + 3) % 12] < 180 &&
+            distanceSensor.val[(location.minIndex + 6) % 12] < 180) {
+            if (millis() > 300000 ||
+                (servo.sumOfRescueKit >= 6 && millis() > 240000)) {
                 servo.velocity = 0;
                 app.stop(servoApp);
                 app.stop(adjustment);
@@ -156,9 +159,8 @@ void rightWall(App) {
                 led.setLeftColor(led.white);
                 led.setRightColor(led.white);
                 led.show();
-                app.delay(1000);
-
-                // speaker.matsukenShogun();
+                app.delay(20000);
+                speaker.matsukenShogun();
             } else {
                 app.delay(10);
             }
@@ -170,8 +172,8 @@ void rightWall(App) {
         }
 
         while (count == 0) {
-            val6  = distanceSensor.val[6];
-            val0  = distanceSensor.val[0];
+            val6 = distanceSensor.val[6];
+            val0 = distanceSensor.val[0];
             count = 2;
             app.delay(10);
         }
@@ -187,7 +189,7 @@ void rightWall(App) {
                     servo.velocity = 0;
                     servo.stop();
                     app.delay(500);
-                    count          = 0;
+                    count = 0;
                     servo.velocity = SPEED;
                     app.delay(1800);
                 }
@@ -200,7 +202,7 @@ void rightWall(App) {
                 servo.velocity = 0;
                 servo.stop();
                 app.delay(500);
-                count          = 0;
+                count = 0;
                 servo.velocity = SPEED;
                 app.delay(1800);
             }
@@ -230,8 +232,11 @@ void leftWall(App) {
         // servo.velocity = 0;
         // app.delay(1000);
 
-        if (location.x == 0 && location.y == 0 && distanceSensor.val[0] < 180) {
-            if (millis() > 300000) {
+        if (abs(location.x) <= 2 && abs(location.y) <= 2 &&
+            distanceSensor.val[(location.minIndex + 3) % 12] < 180 &&
+            distanceSensor.val[(location.minIndex + 6) % 12] < 180) {
+            if (millis() > 300000 ||
+                (servo.sumOfRescueKit >= 6 && millis() > 240000)) {
                 servo.velocity = 0;
                 app.stop(servoApp);
                 app.stop(adjustment);
@@ -242,9 +247,8 @@ void leftWall(App) {
                 led.setLeftColor(led.white);
                 led.setRightColor(led.white);
                 led.show();
-                app.delay(1000);
-
-                // speaker.matsukenShogun();
+                app.delay(20000);
+                speaker.matsukenShogun();
             } else {
                 app.delay(10);
             }
@@ -256,8 +260,8 @@ void leftWall(App) {
         }
 
         while (count == 0) {
-            val6  = distanceSensor.val[6];
-            val0  = distanceSensor.val[0];
+            val6 = distanceSensor.val[6];
+            val0 = distanceSensor.val[0];
             count = 2;
             app.delay(10);
         }
@@ -273,7 +277,7 @@ void leftWall(App) {
                     servo.velocity = 0;
                     servo.stop();
                     app.delay(500);
-                    count          = 0;
+                    count = 0;
                     servo.velocity = SPEED;
                     app.delay(1800);
                 }
@@ -285,7 +289,7 @@ void leftWall(App) {
                 servo.velocity = 0;
                 servo.stop();
                 app.delay(500);
-                count          = 0;
+                count = 0;
                 servo.velocity = SPEED;
                 app.delay(1800);
             }
@@ -330,7 +334,7 @@ void randomSwitching(App) {
                     if (!oldstatus) {
                         servo.velocity = SPEED;
                         app.start(rightWall);
-                        oldTime   = millis();
+                        oldTime = millis();
                         oldstatus = true;
                     }
                 } else {
@@ -339,7 +343,7 @@ void randomSwitching(App) {
                     if (!oldstatus) {
                         servo.velocity = SPEED;
                         app.start(leftWall);
-                        oldTime   = millis();
+                        oldTime = millis();
                         oldstatus = true;
                     }
                 }
@@ -515,11 +519,11 @@ void camera(App) {
 
     while (1) {
         int rescueKitNum = 0;
-        int leftOrRight  = 1;
+        int leftOrRight = 1;
         if (!location.mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN]
                  .isVictimDetected) {
             if (cameraRight.data != 'N' && millis() - ignoreTimer >= 3000) {
-                if (distanceSensor.val[3] < 200) {
+                if (distanceSensor.val[3] < 160) {
                     led.setUIColor(led.white);
                     led.show();
 
@@ -546,11 +550,11 @@ void camera(App) {
                     }
 
                     if (buff == 'H') {
-                        servo.rescueKit(3, LEFT);
+                        servo.rescueKit(3, RIGHT);
                     } else if (buff == 'S') {
-                        servo.rescueKit(2, LEFT);
+                        servo.rescueKit(2, RIGHT);
                     } else if (buff == 'R' || buff == 'Y') {
-                        servo.rescueKit(1, LEFT);
+                        servo.rescueKit(1, RIGHT);
                     }
 
                     app.delay(5);
@@ -581,7 +585,7 @@ void camera(App) {
             }
 
             if (cameraLeft.data != 'N') {  // 反応
-                if (distanceSensor.val[9] < 200) {
+                if (distanceSensor.val[9] < 160) {
                     led.setUIColor(led.white);
                     led.show();
 
@@ -649,12 +653,12 @@ void camera(App) {
 
 void victimApp(App) {
     while (1) {
-        bool status      = false;
+        bool status = false;
         int rescueKitNum = 0;
-        int leftOrRight  = 0;
+        int leftOrRight = 0;
         if (!location.mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN]
                  .isVictimDetected) {
-            if (heatSensor.r && distanceSensor.val[3] < 200) {
+            if (heatSensor.r && distanceSensor.val[3] < 160) {
                 unsigned long timer = millis();
                 while (millis() - timer < 5500) {
                     led.setUIColor(led.cyan);
@@ -671,7 +675,7 @@ void victimApp(App) {
                     app.delay(5);
 
                     rescueKitNum = 1;
-                    leftOrRight  = RIGHT;
+                    leftOrRight = RIGHT;
                 }
 
                 location
@@ -679,7 +683,7 @@ void victimApp(App) {
                     .isVictimDetected = true;
             }
 
-            if (heatSensor.l && distanceSensor.val[9] < 200) {
+            if (heatSensor.l && distanceSensor.val[9] < 160) {
                 unsigned long timer = millis();
                 while (millis() - timer < 5500) {
                     led.setUIColor(led.cyan);
@@ -696,7 +700,7 @@ void victimApp(App) {
                     app.delay(5);
 
                     rescueKitNum = 1;
-                    leftOrRight  = LEFT;
+                    leftOrRight = LEFT;
                 }
 
                 location
@@ -760,6 +764,7 @@ void lever(App) {
         } else {
             if (!oldStatus) {
                 speaker.bootSound();
+                servo.velocity = SPEED;
                 app.start(servoApp);
                 app.start(rightWall);
                 app.start(adjustment);
@@ -778,6 +783,16 @@ void lever(App) {
                 gyro.setOffset();
 
                 oldStatus = true;
+
+                app.delay(5000);
+
+                app.start(randomSwitching);
+
+                if (distanceSensor.val[9] < 180) {
+                    HidariWALL = true;
+                } else {
+                    HidariWALL = false;
+                }
             }
         }
         app.delay(10);

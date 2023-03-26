@@ -525,7 +525,7 @@ void camera(App) {
         if (!location.mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN]
                  .isVictimDetected) {
             if (cameraRight.data != 'N' && millis() - ignoreTimer >= 3000) {
-                if (distanceSensor.val[3] < 200) {
+                if (distanceSensor.val[3] < 160) {
                     led.setUIColor(led.white);
                     led.show();
 
@@ -585,7 +585,7 @@ void camera(App) {
             }
 
             if (cameraLeft.data != 'N') {  // 反応
-                if (distanceSensor.val[9] < 200) {
+                if (distanceSensor.val[9] < 160) {
                     led.setUIColor(led.white);
                     led.show();
 
@@ -656,7 +656,7 @@ void victimApp(App) {
         int leftOrRight = 0;
         if (!location.mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN]
                  .isVictimDetected) {
-            if (heatSensor.r && distanceSensor.val[3] < 200) {
+            if (heatSensor.r && distanceSensor.val[3] < 160) {
                 unsigned long timer = millis();
                 while (millis() - timer < 5500) {
                     led.setUIColor(led.cyan);
@@ -681,7 +681,7 @@ void victimApp(App) {
                     .isVictimDetected = true;
             }
 
-            if (heatSensor.l && distanceSensor.val[9] < 200) {
+            if (heatSensor.l && distanceSensor.val[9] < 160) {
                 unsigned long timer = millis();
                 while (millis() - timer < 5500) {
                     led.setUIColor(led.cyan);

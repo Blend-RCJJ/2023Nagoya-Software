@@ -32,7 +32,7 @@ class Location_Kit {
 
     MAP_Kit mapData[MAP_ORIGIN * 2][MAP_ORIGIN * 2];
     // double velocityConstant = 0.00192;
-    double velocityConstant = 0.00241449;  // 0.00241449
+    double velocityConstant = 0.0021;  // 0.00241449
 
     double coordinateX = 0;  // 時刻t時の予測された絶対座標（ワールド座標系）
     double coordinateY = 0;  // 時刻t時の予測された絶対座標（ワールド座標系）

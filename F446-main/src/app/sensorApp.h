@@ -10,6 +10,8 @@
 #include "WProgram.h"
 #endif
 
+bool HidariWALL = false;
+
 extern HardwareSerial uart1;
 extern HardwareSerial uart3;
 extern RTOS_Kit app;
@@ -143,8 +145,11 @@ void adjustment(App) {
 void rightWall(App) {
     app.delay(500);
     while (1) {
-        if (location.x == 0 && location.y == 0 && distanceSensor.val[0] < 180) {
-            if (millis() > 300000) {
+        if (abs(location.x) <= 2 && abs(location.y) <= 2 &&
+            distanceSensor.val[(location.minIndex + 3) % 12] < 180 &&
+            distanceSensor.val[(location.minIndex + 6) % 12] < 180) {
+            if (millis() > 300000 ||
+                (servo.sumOfRescueKit >= 6 && millis() > 240000)) {
                 servo.velocity = 0;
                 app.stop(servoApp);
                 app.stop(adjustment);
@@ -236,8 +241,11 @@ void leftWall(App) {
         // servo.velocity = 0;
         // app.delay(1000);
 
-        if (location.x == 0 && location.y == 0 && distanceSensor.val[0] < 180) {
-            if (millis() > 300000) {
+        if (abs(location.x) <= 2 && abs(location.y) <= 2 &&
+            distanceSensor.val[(location.minIndex + 3) % 12] < 180 &&
+            distanceSensor.val[(location.minIndex + 6) % 12] < 180) {
+            if (millis() > 300000 ||
+                (servo.sumOfRescueKit >= 6 && millis() > 240000)) {
                 servo.velocity = 0;
                 app.stop(servoApp);
                 app.stop(adjustment);
@@ -780,6 +788,12 @@ void lever(App) {
                 app.delay(5000);
 
                 app.start(randomSwitching);
+
+                if (distanceSensor.val[9] < 180) {
+                    HidariWALL = true;
+                } else {
+                    HidariWALL = false;
+                }
             }
         }
         app.delay(10);

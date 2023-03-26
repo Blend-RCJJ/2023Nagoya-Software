@@ -10,6 +10,8 @@
 #include "WProgram.h"
 #endif
 
+bool HidariWALL = false;
+
 extern HardwareSerial uart1;
 extern HardwareSerial uart3;
 extern RTOS_Kit app;
@@ -143,8 +145,11 @@ void adjustment(App) {
 void rightWall(App) {
     app.delay(500);
     while (1) {
-        if (location.x == 0 && location.y == 0 && distanceSensor.val[0] < 180) {
-            if (millis() > 300000) {
+        if (abs(location.x) <= 2 && abs(location.y) <= 2 &&
+            distanceSensor.val[(location.minIndex + 3) % 12] < 180 &&
+            distanceSensor.val[(location.minIndex + 6) % 12] < 180) {
+            if (millis() > 300000 ||
+                (servo.sumOfRescueKit >= 6 && millis() > 240000)) {
                 servo.velocity = 0;
                 app.stop(servoApp);
                 app.stop(adjustment);
@@ -155,9 +160,8 @@ void rightWall(App) {
                 led.setLeftColor(led.white);
                 led.setRightColor(led.white);
                 led.show();
-                app.delay(1000);
-
-                // speaker.matsukenShogun();
+                app.delay(20000);
+                speaker.matsukenShogun();
             } else {
                 app.delay(10);
             }
@@ -236,8 +240,11 @@ void leftWall(App) {
         // servo.velocity = 0;
         // app.delay(1000);
 
-        if (location.x == 0 && location.y == 0 && distanceSensor.val[0] < 180) {
-            if (millis() > 300000) {
+        if (abs(location.x) <= 2 && abs(location.y) <= 2 &&
+            distanceSensor.val[(location.minIndex + 3) % 12] < 180 &&
+            distanceSensor.val[(location.minIndex + 6) % 12] < 180) {
+            if (millis() > 300000 ||
+                (servo.sumOfRescueKit >= 6 && millis() > 240000)) {
                 servo.velocity = 0;
                 app.stop(servoApp);
                 app.stop(adjustment);
@@ -248,9 +255,8 @@ void leftWall(App) {
                 led.setLeftColor(led.white);
                 led.setRightColor(led.white);
                 led.show();
-                app.delay(1000);
-
-                // speaker.matsukenShogun();
+                app.delay(20000);
+                speaker.matsukenShogun();
             } else {
                 app.delay(10);
             }
@@ -525,7 +531,7 @@ void camera(App) {
         if (!location.mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN]
                  .isVictimDetected) {
             if (cameraRight.data != 'N' && millis() - ignoreTimer >= 3000) {
-                if (distanceSensor.val[3] < 200) {
+                if (distanceSensor.val[3] < 160) {
                     led.setUIColor(led.white);
                     led.show();
 
@@ -585,7 +591,7 @@ void camera(App) {
             }
 
             if (cameraLeft.data != 'N') {  // 反応
-                if (distanceSensor.val[9] < 200) {
+                if (distanceSensor.val[9] < 160) {
                     led.setUIColor(led.white);
                     led.show();
 
@@ -656,7 +662,7 @@ void victimApp(App) {
         int leftOrRight = 0;
         if (!location.mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN]
                  .isVictimDetected) {
-            if (heatSensor.r && distanceSensor.val[3] < 200) {
+            if (heatSensor.r && distanceSensor.val[3] < 160) {
                 unsigned long timer = millis();
                 while (millis() - timer < 5500) {
                     led.setUIColor(led.cyan);
@@ -681,7 +687,7 @@ void victimApp(App) {
                     .isVictimDetected = true;
             }
 
-            if (heatSensor.l && distanceSensor.val[9] < 200) {
+            if (heatSensor.l && distanceSensor.val[9] < 160) {
                 unsigned long timer = millis();
                 while (millis() - timer < 5500) {
                     led.setUIColor(led.cyan);
@@ -780,6 +786,12 @@ void lever(App) {
                 app.delay(5000);
 
                 app.start(randomSwitching);
+
+                if (distanceSensor.val[9] < 180) {
+                    HidariWALL = true;
+                } else {
+                    HidariWALL = false;
+                }
             }
         }
         app.delay(10);

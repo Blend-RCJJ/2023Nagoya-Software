@@ -17,6 +17,7 @@
 #define _FA 349
 #define _FAS 370
 #define _SO 392
+#define _SOS 415
 #define _RA 440
 #define _RAS 466
 #define _SHI 494
@@ -57,6 +58,7 @@ class MLT8530 {
     void beat(int freq, double beat);
 
     void matsukenShogun(void);
+    void matsukenSamba(void);
 };
 
 #endif

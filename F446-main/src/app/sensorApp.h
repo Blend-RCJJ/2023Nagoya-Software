@@ -41,11 +41,11 @@ extern void mapApp(App);
 extern void sideLEDApp(App);
 extern void locationApp(App);
 
-int count = 0;
-int val0 = 0;
-int val6 = 0;
+int count      = 0;
+int val0       = 0;
+int val6       = 0;
 int correction = 0;
-int Seed = 1;
+int Seed       = 1;
 
 void camera(App);
 void rightWall(App);
@@ -139,6 +139,46 @@ void adjustment(App) {
 }
 // 2900で1マス
 
+void searchRight(App) {
+    app.delay(500);
+    int oldLocationX = 0;
+    int oldLocationY = 0;
+    while (1) {
+
+        if (distanceSensor.val[0] < 140) {
+            servo.velocity = 0;
+            servo.stop();
+            app.delay(500);
+            servo.angle -= 90;
+            app.delay(1000);
+        }
+
+        if (distanceSensor.val[3] > 250 && distanceSensor.val[4] > 250) {
+            oldLocationX   = location.x;
+            oldLocationY   = location.y;
+            servo.velocity = 0;
+            servo.stop();
+            app.delay(500);
+            servo.angle += 90;
+            app.delay(1000);
+            while (oldLocationX == location.x && oldLocationY == location.y) {
+                servo.velocity = SPEED;
+                app.delay(100);
+            }
+        }
+
+        servo.velocity = SPEED;    
+        uart3.print(oldLocationX);
+        uart3.print(" ");
+        uart3.print(oldLocationY);
+        uart3.print(" ");
+        uart3.print(location.x);
+        uart3.print(" ");
+        uart3.println(location.y);
+        app.delay(50);
+    }
+}
+
 void rightWall(App) {
     app.delay(500);
     while (1) {
@@ -172,8 +212,8 @@ void rightWall(App) {
         }
 
         while (count == 0) {
-            val6 = distanceSensor.val[6];
-            val0 = distanceSensor.val[0];
+            val6  = distanceSensor.val[6];
+            val0  = distanceSensor.val[0];
             count = 2;
             app.delay(10);
         }
@@ -189,7 +229,7 @@ void rightWall(App) {
                     servo.velocity = 0;
                     servo.stop();
                     app.delay(500);
-                    count = 0;
+                    count          = 0;
                     servo.velocity = SPEED;
                     app.delay(1800);
                 }
@@ -202,7 +242,7 @@ void rightWall(App) {
                 servo.velocity = 0;
                 servo.stop();
                 app.delay(500);
-                count = 0;
+                count          = 0;
                 servo.velocity = SPEED;
                 app.delay(1800);
             }
@@ -211,7 +251,7 @@ void rightWall(App) {
             count = 0;
             app.delay(10);
         }
-      
+
         if (distanceSensor.val[0] < 140) {
             servo.velocity = 0;
             servo.stop();
@@ -260,8 +300,8 @@ void leftWall(App) {
         }
 
         while (count == 0) {
-            val6 = distanceSensor.val[6];
-            val0 = distanceSensor.val[0];
+            val6  = distanceSensor.val[6];
+            val0  = distanceSensor.val[0];
             count = 2;
             app.delay(10);
         }
@@ -277,7 +317,7 @@ void leftWall(App) {
                     servo.velocity = 0;
                     servo.stop();
                     app.delay(500);
-                    count = 0;
+                    count          = 0;
                     servo.velocity = SPEED;
                     app.delay(1800);
                 }
@@ -289,7 +329,7 @@ void leftWall(App) {
                 servo.velocity = 0;
                 servo.stop();
                 app.delay(500);
-                count = 0;
+                count          = 0;
                 servo.velocity = SPEED;
                 app.delay(1800);
             }
@@ -298,8 +338,6 @@ void leftWall(App) {
             count = 0;
             app.delay(10);
         }
-
-       
 
         if (distanceSensor.val[0] < 140) {
             servo.velocity = 0;
@@ -334,7 +372,7 @@ void randomSwitching(App) {
                     if (!oldstatus) {
                         servo.velocity = SPEED;
                         app.start(rightWall);
-                        oldTime = millis();
+                        oldTime   = millis();
                         oldstatus = true;
                     }
                 } else {
@@ -343,7 +381,7 @@ void randomSwitching(App) {
                     if (!oldstatus) {
                         servo.velocity = SPEED;
                         app.start(leftWall);
-                        oldTime = millis();
+                        oldTime   = millis();
                         oldstatus = true;
                     }
                 }
@@ -362,8 +400,9 @@ void hitAvoid(App) {
         app.delay(20);
         if (loadcell.status == RIGHT) {
             app.stop(servoApp);
-            app.stop(rightWall);
-            app.stop(leftWall);
+            // app.stop(rightWall);
+            // app.stop(leftWall);
+            app.stop(searchRight);
             app.stop(adjustment);
             servo.driveAngularVelocity(-30, 45);
             app.delay(500);
@@ -374,8 +413,9 @@ void hitAvoid(App) {
         }
         if (loadcell.status == LEFT) {
             app.stop(servoApp);
-            app.stop(rightWall);
-            app.stop(leftWall);
+            // app.stop(rightWall);
+            // app.stop(leftWall);
+            app.stop(searchRight);
             app.stop(adjustment);
             servo.driveAngularVelocity(-30, -45);
             app.delay(500);
@@ -385,13 +425,14 @@ void hitAvoid(App) {
             oldStatus = false;
         }
         if (!oldStatus) {
-            if (!Seed) {
-                servo.velocity = SPEED;
-                app.start(rightWall);
-            } else {
-                servo.velocity = SPEED;
-                app.start(leftWall);
-            }
+            // if (!Seed) {
+            //     servo.velocity = SPEED;
+            //     app.start(rightWall);
+            // } else {
+            //     servo.velocity = SPEED;
+            //     app.start(leftWall);
+            // }
+            app.start(searchRight);
             app.start(servoApp);
             app.start(randomSwitching);
             app.start(adjustment);
@@ -439,6 +480,11 @@ void monitor(App) {
         // uart3.print(floorSensor.blueVal);
         // uart3.println(" ");
 
+        // for(int i = 0; i < 6; i++){
+        //     uart3.print(distanceSensor.val[i]);
+        //     uart3.print(" ");
+        //     }
+        //     uart3.println("\t");
         app.delay(100);
 
         // uart3.print(distanceSensor.val[0]);
@@ -519,7 +565,7 @@ void camera(App) {
 
     while (1) {
         int rescueKitNum = 0;
-        int leftOrRight = 1;
+        int leftOrRight  = 1;
         if (!location.mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN]
                  .isVictimDetected) {
             if (cameraRight.data != 'N' && millis() - ignoreTimer >= 3000) {
@@ -653,9 +699,9 @@ void camera(App) {
 
 void victimApp(App) {
     while (1) {
-        bool status = false;
+        bool status      = false;
         int rescueKitNum = 0;
-        int leftOrRight = 0;
+        int leftOrRight  = 0;
         if (!location.mapData[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN]
                  .isVictimDetected) {
             if (heatSensor.r && distanceSensor.val[3] < 160) {
@@ -675,7 +721,7 @@ void victimApp(App) {
                     app.delay(5);
 
                     rescueKitNum = 1;
-                    leftOrRight = RIGHT;
+                    leftOrRight  = RIGHT;
                 }
 
                 location
@@ -700,7 +746,7 @@ void victimApp(App) {
                     app.delay(5);
 
                     rescueKitNum = 1;
-                    leftOrRight = LEFT;
+                    leftOrRight  = LEFT;
                 }
 
                 location
@@ -753,6 +799,7 @@ void lever(App) {
             app.stop(camera);
             app.stop(randomSwitching);
             app.stop(hitAvoid);
+            app.stop(searchRight);
 
             app.stop(locationApp);
             app.stop(mapApp);
@@ -773,6 +820,7 @@ void lever(App) {
                 app.start(camera);
                 app.start(randomSwitching);
                 app.start(hitAvoid);
+                app.start(searchRight);
 
                 app.start(victimApp);
 

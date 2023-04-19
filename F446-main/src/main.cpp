@@ -96,8 +96,8 @@ void setup() {
     app.create(mainApp, firstPriority);
     app.create(inputMonitoringApp, secondPriority);
     app.create(servoApp);
-    // app.create(rightWall);
-    // app.create(leftWall);
+    app.create(rightWall);
+    app.create(leftWall);
     app.create(adjustment,lowPriority);
     app.create(monitor);
     // app.create(black);
@@ -105,8 +105,8 @@ void setup() {
     app.create(visualization);
     app.create(lever);
     app.create(hitAvoid);
-    // app.create(randomSwitching);
-    app.create(searchRight);
+    app.create(wallCondition);
+    // app.create(searchRight);
 
     app.create(locationApp, firstPriority);
     app.create(sideLEDApp);
@@ -123,12 +123,11 @@ void setup() {
 void mainApp(App) {
     app.start(servoApp);
     app.start(adjustment);
-    app.start(searchRight);
+    app.start(wallCondition);
     app.start(black);
     app.start(monitor);
     app.start(camera);
     app.start(visualization);
-    app.start(randomSwitching);
     app.start(lever);
     app.start(hitAvoid);
     app.start(victimApp);

@@ -3,6 +3,10 @@
 #define FLOOR_NUMBER 2
 
 #define SPEED 50
+#define NORTH 0
+#define EAST 1
+#define SOUTH 2
+#define WEST 3
 
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "Arduino.h"
@@ -41,11 +45,15 @@ extern void mapApp(App);
 extern void sideLEDApp(App);
 extern void locationApp(App);
 
-int count      = 0;
-int val0       = 0;
-int val6       = 0;
-int correction = 0;
-int Seed       = 1;
+int count                                               = 0;
+int val0                                                = 0;
+int val6                                                = 0;
+int correction                                          = 0;
+bool NorthWall                                          = false;
+bool EastWall                                           = false;
+bool SouthWall                                          = false;
+bool WestWall                                           = false;
+bool coordinate_Wall[MAP_ORIGIN * 2][MAP_ORIGIN * 2][4] = {0};
 
 void camera(App);
 void rightWall(App);
@@ -139,48 +147,138 @@ void adjustment(App) {
 }
 // 2900で1マス
 
-void searchRight(App) {
-    app.delay(500);
-    int oldLocationX = 0;
-    int oldLocationY = 0;
+// void extensionRight(App) {
+//     while (1) {
+//         if (gyro.deg > 350 || gyro.deg < 10) {
+//         }
+//         if (gyro.deg > 80 && gyro.deg < 100) {
+//         }
+//         if (gyro.deg > 170 && gyro.deg < 190) {
+//             if (location
+//                     .mapData[location.x + MAP_ORIGIN]
+//                             [location.y + MAP_ORIGIN - 1]
+//                     .isPassed) {
+//                 servo.angle = 90;
+//             }
+//         }
+//         if (gyro.deg > 260 && gyro.deg < 280) {
+//         }
+//     }
+// }
+
+void wallCondition(App) {
     while (1) {
+        if (gyro.deg > 350 || gyro.deg < 10) {
+            if (distanceSensor.val[0] > 250) {
+                NorthWall = false;
+            } else {
+                NorthWall = true;
+            }
 
-        if (distanceSensor.val[0] < 140) {
-            servo.velocity = 0;
-            servo.stop();
-            app.delay(500);
-            servo.angle -= 90;
-            app.delay(1000);
+            if (distanceSensor.val[3] > 250) {
+                EastWall = false;
+            } else {
+                EastWall = true;
+            }
+
+            if (distanceSensor.val[6] > 250) {
+                SouthWall = false;
+            } else {
+                SouthWall = true;
+            }
+
+            if (distanceSensor.val[9] > 250) {
+                WestWall = false;
+            } else {
+                WestWall = true;
+            }
         }
+        if (gyro.deg > 80 && gyro.deg < 100) {
+            if (distanceSensor.val[9] > 250) {
+                NorthWall = false;
+            } else {
+                NorthWall = true;
+            }
 
-        if (distanceSensor.val[3] > 250 && distanceSensor.val[4] > 250) {
-            oldLocationX   = location.x;
-            oldLocationY   = location.y;
-            servo.velocity = 0;
-            servo.stop();
-            app.delay(500);
-            servo.angle += 90;
-            app.delay(1000);
-            while (oldLocationX == location.x && oldLocationY == location.y) {
-                servo.velocity = SPEED;
-                app.delay(100);
+            if (distanceSensor.val[0] > 250) {
+                EastWall = false;
+            } else {
+                EastWall = true;
+            }
+
+            if (distanceSensor.val[3] > 250) {
+                SouthWall = false;
+            } else {
+                SouthWall = true;
+            }
+
+            if (distanceSensor.val[6] > 250) {
+                WestWall = false;
+            } else {
+                WestWall = true;
+            }
+        }
+        if (gyro.deg > 170 && gyro.deg < 190) {
+            if (distanceSensor.val[6] > 250) {
+                NorthWall = false;
+            } else {
+                NorthWall = true;
+            }
+
+            if (distanceSensor.val[9] > 250) {
+                EastWall = false;
+            } else {
+                EastWall = true;
+            }
+
+            if (distanceSensor.val[0] > 250) {
+                SouthWall = false;
+            } else {
+                SouthWall = true;
+            }
+
+            if (distanceSensor.val[3] > 250) {
+                WestWall = false;
+            } else {
+                WestWall = true;
+            }
+        }
+        if (gyro.deg > 260 && gyro.deg < 280) {
+            if (distanceSensor.val[3] > 250) {
+                NorthWall = false;
+            } else {
+                NorthWall = true;
+            }
+
+            if (distanceSensor.val[6] > 250) {
+                EastWall = false;
+            } else {
+                EastWall = true;
+            }
+
+            if (distanceSensor.val[9] > 250) {
+                SouthWall = false;
+            } else {
+                SouthWall = true;
+            }
+
+            if (distanceSensor.val[0] > 250) {
+                WestWall = false;
+            } else {
+                WestWall = true;
             }
         }
 
-        servo.velocity = SPEED;    
-        uart3.print(oldLocationX);
-        uart3.print(" ");
-        uart3.print(oldLocationY);
-        uart3.print(" ");
-        uart3.print(location.x);
-        uart3.print(" ");
-        uart3.println(location.y);
-        app.delay(50);
+        coordinate_Wall[location.x][location.y][NORTH] = NorthWall;
+        coordinate_Wall[location.x][location.y][EAST]  = EastWall;
+        coordinate_Wall[location.x][location.y][SOUTH] = SouthWall;
+        coordinate_Wall[location.x][location.y][WEST]  = WestWall;
+
+        app.delay(100);
     }
 }
 
 void rightWall(App) {
-    app.delay(500);
     while (1) {
         servo.velocity = SPEED;
         app.delay(10);
@@ -350,59 +448,13 @@ void leftWall(App) {
     }
 }
 
-void randomSwitching(App) {
-    app.delay(500);
-    int oldTime       = millis();
-    bool oldstatus    = false;
-    int temporarySave = 0;
-    while (1) {
-        if (distanceSensor.val[3] < 280 && distanceSensor.val[9] < 280 &&
-            gyro.slope == 0) {
-            servo.velocity = SPEED;
-            temporarySave  = millis() % 5;
-            Seed           = temporarySave % 2;
-            app.delay(20);
-        } else {
-            if (oldTime + 15000 < millis()) {
-                if (!Seed) {
-                    app.stop(leftWall);
-                    oldstatus = false;
-                    app.delay(50);
-
-                    if (!oldstatus) {
-                        servo.velocity = SPEED;
-                        app.start(rightWall);
-                        oldTime   = millis();
-                        oldstatus = true;
-                    }
-                } else {
-                    app.stop(rightWall);
-                    oldstatus = false;
-                    if (!oldstatus) {
-                        servo.velocity = SPEED;
-                        app.start(leftWall);
-                        oldTime   = millis();
-                        oldstatus = true;
-                    }
-                }
-            }
-        }
-        uart3.print(temporarySave);
-        uart3.print(" ");
-        uart3.println(Seed);
-        app.delay(50);
-    }
-}
-
 void hitAvoid(App) {
     static bool oldStatus = false;
     while (1) {
         app.delay(20);
         if (loadcell.status == RIGHT) {
             app.stop(servoApp);
-            // app.stop(rightWall);
-            // app.stop(leftWall);
-            app.stop(searchRight);
+            // app.stop(searchRight);
             app.stop(adjustment);
             servo.driveAngularVelocity(-30, 45);
             app.delay(500);
@@ -413,9 +465,7 @@ void hitAvoid(App) {
         }
         if (loadcell.status == LEFT) {
             app.stop(servoApp);
-            // app.stop(rightWall);
-            // app.stop(leftWall);
-            app.stop(searchRight);
+            // app.stop(searchRight);
             app.stop(adjustment);
             servo.driveAngularVelocity(-30, -45);
             app.delay(500);
@@ -425,16 +475,10 @@ void hitAvoid(App) {
             oldStatus = false;
         }
         if (!oldStatus) {
-            // if (!Seed) {
-            //     servo.velocity = SPEED;
-            //     app.start(rightWall);
-            // } else {
-            //     servo.velocity = SPEED;
-            //     app.start(leftWall);
-            // }
-            app.start(searchRight);
+            servo.velocity = SPEED;
+            app.start(rightWall);
+            // app.start(searchRight);
             app.start(servoApp);
-            app.start(randomSwitching);
             app.start(adjustment);
 
             oldStatus = true;
@@ -444,55 +488,34 @@ void hitAvoid(App) {
 
 void monitor(App) {
     while (1) {
-        // uart3.write(cameraRight.data);
-        // // uart3.println(" ");
-        // uart1.print(loadcell.load[0]);
-        // uart1.print(" ");
-        // uart1.println(loadcell.load[1]);
-        // uart3.print(location.x);
-        // uart3.print(" ");
-        // uart3.print(location.y);
-        // uart3.print(" ");
-        // uart3.print((int)location.coordinateX);
-        // uart3.print(" ");
-        // uart3.print((int)location.coordinateY);
-        // uart3.print(" ");
-        // uart3.print((int)servo.rightWheelSpeed);
-        // uart3.println(" ");
+      uart3.print(location.x);
+        uart3.print(",");
+        uart3.print(location.y);
 
-        // for (int i = 13; i < 27; i++) {      // たて
-        //     for (int j = 13; j < 27; j++) {  // 横
-        //         if (location.mapData[j][39 - i].isPassed == true) {
-        //             uart1.print("■");
-        //         } else if (location.mapData[j][39 - i].isDetected == true) {
-        //             uart1.print("□");
-        //         } else {
-        //             uart1.print(" ");
-        //         }
-        //     }
+        if (NorthWall) {
+            uart3.print("北　");
+        }
 
-        //     uart1.println("");
-        // // }
-        // uart3.print(floorSensor.redVal);
-        // uart3.print(" ");
-        // uart3.print(floorSensor.greenVal);
-        // uart3.print(" ");
-        // uart3.print(floorSensor.blueVal);
-        // uart3.println(" ");
+        if (EastWall) {
+            uart3.print("東　");
+        }
 
-        // for(int i = 0; i < 6; i++){
-        //     uart3.print(distanceSensor.val[i]);
-        //     uart3.print(" ");
-        //     }
-        //     uart3.println("\t");
-        app.delay(100);
+        if (SouthWall) {
+            uart3.print("南　");
+        }
 
-        // uart3.print(distanceSensor.val[0]);
-        // uart3.print(" ");
-        // uart3.print(distanceSensor.val[1]);
-        // uart3.print(" ");
-        // uart3.println(distanceSensor.val[2]);
-        // app.delay(30);
+        if (WestWall) {
+            uart3.print("西　");
+        }
+
+        if (NorthWall || EastWall || SouthWall || WestWall) {
+            uart3.println("に壁");
+            app.delay(100);
+        } else {
+            uart3.println("壁がありません");
+            app.delay(100);
+        }
+
     }
 }
 
@@ -503,30 +526,20 @@ void black(App) {
             app.stop(rightWall);
             app.stop(leftWall);
             app.stop(adjustment);
-            app.stop(randomSwitching);
             servo.velocity = -SPEED;
             app.delay(1500);
             servo.velocity = 0;
             servo.stop();
             app.delay(500);
-            if (!Seed) {
-                servo.angle -= 90;
-            } else {
-                servo.angle += 90;
-            }
+
+            servo.angle -= 90;
             servo.velocity = SPEED;
             app.delay(1500);
             oldstatus = false;
         }
         if (!oldstatus) {
-            if (!Seed) {
-                servo.velocity = SPEED;
-                app.start(rightWall);
-            } else {
-                servo.velocity = SPEED;
-                app.start(leftWall);
-            }
-            app.start(randomSwitching);
+            servo.velocity = SPEED;
+            app.start(rightWall);
             app.start(adjustment);
             app.delay(5);
 
@@ -610,15 +623,9 @@ void camera(App) {
                                 [location.y + MAP_ORIGIN]
                         .isVictimDetected = true;
 
-                    if (!Seed) {
-                        servo.velocity = SPEED;
-                        app.start(rightWall);
-                    } else {
-                        servo.velocity = SPEED;
-                        app.start(leftWall);
-                    }
+                    servo.velocity = SPEED;
+                    app.start(rightWall);
                     app.start(servoApp);
-                    app.start(randomSwitching);
                     app.start(adjustment);
 
                     app.delay(5);
@@ -672,15 +679,9 @@ void camera(App) {
                                 [location.y + MAP_ORIGIN]
                         .isVictimDetected = true;
 
-                    if (!Seed) {
-                        servo.velocity = SPEED;
-                        app.start(rightWall);
-                    } else {
-                        servo.velocity = SPEED;
-                        app.start(leftWall);
-                    }
+                    servo.velocity = SPEED;
+                    app.start(rightWall);
                     app.start(servoApp);
-                    app.start(randomSwitching);
                     app.start(adjustment);
 
                     app.delay(5);
@@ -760,15 +761,9 @@ void victimApp(App) {
                 servo.rescueKit(rescueKitNum, leftOrRight);
             }
 
-            if (!Seed) {
-                servo.velocity = SPEED;
-                app.start(rightWall);
-            } else {
-                servo.velocity = SPEED;
-                app.start(leftWall);
-            }
+            servo.velocity = SPEED;
+            app.start(rightWall);
             app.start(servoApp);
-            app.start(randomSwitching);
             app.start(adjustment);
 
             app.delay(5);
@@ -797,9 +792,8 @@ void lever(App) {
             app.stop(visualization);
             app.stop(black);
             app.stop(camera);
-            app.stop(randomSwitching);
             app.stop(hitAvoid);
-            app.stop(searchRight);
+            // app.stop(searchRight);
 
             app.stop(locationApp);
             app.stop(mapApp);
@@ -818,9 +812,8 @@ void lever(App) {
                 app.start(visualization);
                 app.start(black);
                 app.start(camera);
-                app.start(randomSwitching);
                 app.start(hitAvoid);
-                app.start(searchRight);
+                // app.start(searchRight);
 
                 app.start(victimApp);
 
@@ -833,8 +826,6 @@ void lever(App) {
                 oldStatus = true;
 
                 app.delay(5000);
-
-                app.start(randomSwitching);
 
                 if (distanceSensor.val[9] < 180) {
                     HidariWALL = true;

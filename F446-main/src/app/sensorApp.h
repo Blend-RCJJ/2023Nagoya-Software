@@ -282,80 +282,32 @@ void rightWall(App) {
     while (1) {
         servo.velocity = SPEED;
         app.delay(10);
-        if (abs(location.x) <= 2 && abs(location.y) <= 2 &&
-            distanceSensor.val[(location.minIndex + 3) % 12] < 180 &&
-            distanceSensor.val[(location.minIndex + 6) % 12] < 180) {
-            if (millis() > 300000 ||
-                (servo.sumOfRescueKit >= 6 && millis() > 240000)) {
-                servo.velocity = 0;
-                app.stop(servoApp);
-                app.stop(adjustment);
-                servo.stop();
-                app.stop(camera);
-                app.stop(visualization);
-                led.setTopColor(led.white);
-                led.setLeftColor(led.white);
-                led.setRightColor(led.white);
-                led.show();
-                app.delay(20000);
-                speaker.matsukenShogun();
-            } else {
-                app.delay(10);
-            }
-        }
 
         while (count == 1) {
-            app.delay(900);
+            app.delay(1200);
             count = 0;
         }
 
-        while (count == 0) {
-            val6  = distanceSensor.val[6];
-            val0  = distanceSensor.val[0];
-            count = 2;
-            app.delay(10);
-        }
-
-        if (distanceSensor.val[3] > 200 && gyro.slope == 0) {
-            count = 2;
-            if (val6 > 600) {
-                if ((val0 - 130) > distanceSensor.val[0]) {
-                    servo.velocity = 0;
-                    servo.stop();
-                    app.delay(500);
-                    servo.angle += 90;
-                    servo.velocity = 0;
-                    servo.stop();
-                    app.delay(500);
-                    count          = 0;
-                    servo.velocity = SPEED;
-                    app.delay(1800);
-                }
-                app.delay(50);
-            } else if ((val6 + 130) < distanceSensor.val[6]) {
-                servo.velocity = 0;
-                servo.stop();
-                app.delay(500);
-                servo.angle += 90;
-                servo.velocity = 0;
-                servo.stop();
-                app.delay(500);
-                count          = 0;
-                servo.velocity = SPEED;
-                app.delay(1800);
-            }
-
-        } else {
-            count = 0;
-            app.delay(10);
-        }
-
-        if (distanceSensor.val[0] < 140) {
+        if (distanceSensor.val[3] > 300 && distanceSensor.val[4] > 250 &&
+            !gyro.slope) {
             servo.velocity = 0;
             servo.stop();
             app.delay(500);
-            servo.angle -= 90;
             count = 1;
+            servo.angle += 90;
+            servo.velocity = 0;
+            servo.stop();
+            app.delay(500);
+            servo.velocity = SPEED;
+            app.delay(1800);
+        }
+
+        if (distanceSensor.val[0] < 140 && !gyro.slope) {
+            servo.velocity = 0;
+            servo.stop();
+            app.delay(500);
+            count = 1;
+            servo.angle -= 90;
             app.delay(500);
         }
     }
@@ -366,83 +318,34 @@ void leftWall(App) {
     while (1) {
         servo.velocity = SPEED;
         app.delay(10);
-        // app.delay(2700);
-        // servo.velocity = 0;
-        // app.delay(1000);
-
-        if (abs(location.x) <= 2 && abs(location.y) <= 2 &&
-            distanceSensor.val[(location.minIndex + 3) % 12] < 180 &&
-            distanceSensor.val[(location.minIndex + 6) % 12] < 180) {
-            if (millis() > 300000 ||
-                (servo.sumOfRescueKit >= 6 && millis() > 240000)) {
-                servo.velocity = 0;
-                app.stop(servoApp);
-                app.stop(adjustment);
-                servo.stop();
-                app.stop(camera);
-                app.stop(visualization);
-                led.setTopColor(led.white);
-                led.setLeftColor(led.white);
-                led.setRightColor(led.white);
-                led.show();
-                app.delay(20000);
-                speaker.matsukenShogun();
-            } else {
-                app.delay(10);
-            }
-        }
 
         while (count == 1) {
-            app.delay(900);
+            app.delay(1200);
             count = 0;
         }
 
-        while (count == 0) {
-            val6  = distanceSensor.val[6];
-            val0  = distanceSensor.val[0];
+        if (distanceSensor.val[9] > 300 && distanceSensor.val[8] > 250 &&
+            !gyro.slope) {
             count = 2;
-            app.delay(10);
-        }
 
-        if (distanceSensor.val[9] > 200 && gyro.slope == 0) {
-            count = 2;
-            if (val6 > 600) {
-                if ((val0 - 130) > distanceSensor.val[0]) {
-                    servo.velocity = 0;
-                    servo.stop();
-                    app.delay(500);
-                    servo.angle -= 90;
-                    servo.velocity = 0;
-                    servo.stop();
-                    app.delay(500);
-                    count          = 0;
-                    servo.velocity = SPEED;
-                    app.delay(1800);
-                }
-            } else if ((val6 + 130) < distanceSensor.val[6]) {
-                servo.velocity = 0;
-                servo.stop();
-                app.delay(500);
-                servo.angle -= 90;
-                servo.velocity = 0;
-                servo.stop();
-                app.delay(500);
-                count          = 0;
-                servo.velocity = SPEED;
-                app.delay(1800);
-            }
-
-        } else {
-            count = 0;
-            app.delay(10);
-        }
-
-        if (distanceSensor.val[0] < 140) {
             servo.velocity = 0;
             servo.stop();
             app.delay(500);
-            servo.angle += 90;
+            servo.angle -= 90;
+            servo.velocity = 0;
+            servo.stop();
+            app.delay(500);
+            count          = 0;
+            servo.velocity = SPEED;
+            app.delay(1800);
+        }
+
+        if (distanceSensor.val[0] < 140 && !gyro.slope) {
+            servo.velocity = 0;
+            servo.stop();
+            app.delay(500);
             count = 1;
+            servo.angle += 90;
             app.delay(500);
         }
     }
@@ -456,6 +359,7 @@ void hitAvoid(App) {
             app.stop(servoApp);
             // app.stop(searchRight);
             app.stop(adjustment);
+            count = 1;
             servo.driveAngularVelocity(-30, 45);
             app.delay(500);
             servo.driveAngularVelocity(-30, -45);
@@ -467,6 +371,7 @@ void hitAvoid(App) {
             app.stop(servoApp);
             // app.stop(searchRight);
             app.stop(adjustment);
+            count = 1;
             servo.driveAngularVelocity(-30, -45);
             app.delay(500);
             servo.driveAngularVelocity(-30, 45);
@@ -476,7 +381,7 @@ void hitAvoid(App) {
         }
         if (!oldStatus) {
             servo.velocity = SPEED;
-            app.start(rightWall);
+            // app.start(rightWall);
             // app.start(searchRight);
             app.start(servoApp);
             app.start(adjustment);
@@ -488,34 +393,41 @@ void hitAvoid(App) {
 
 void monitor(App) {
     while (1) {
-      uart3.print(location.x);
-        uart3.print(",");
-        uart3.print(location.y);
+        // uart3.print(location.x);
+        // uart3.print(",");
+        // uart3.print(location.y);
 
-        if (NorthWall) {
-            uart3.print("北　");
-        }
+        // if (NorthWall) {
+        //     uart3.print("北　");
+        // }
 
-        if (EastWall) {
-            uart3.print("東　");
-        }
+        // if (EastWall) {
+        //     uart3.print("東　");
+        // }
 
-        if (SouthWall) {
-            uart3.print("南　");
-        }
+        // if (SouthWall) {
+        //     uart3.print("南　");
+        // }
 
-        if (WestWall) {
-            uart3.print("西　");
-        }
+        // if (WestWall) {
+        //     uart3.print("西　");
+        // }
 
-        if (NorthWall || EastWall || SouthWall || WestWall) {
-            uart3.println("に壁");
-            app.delay(100);
-        } else {
-            uart3.println("壁がありません");
-            app.delay(100);
-        }
+        // if (NorthWall || EastWall || SouthWall || WestWall) {
+        //     uart3.println("に壁");
+        //     app.delay(100);
+        // } else {
+        //     uart3.println("壁がありません");
+        //     app.delay(100);
+        // }
 
+        uart3.print(distanceSensor.val[3]);
+        uart3.print(" ");
+        uart3.print(distanceSensor.val[4]);
+        uart3.print(" ");
+        uart3.print(distanceSensor.val[5]);
+        uart3.println(" ");
+        app.delay(500);
     }
 }
 

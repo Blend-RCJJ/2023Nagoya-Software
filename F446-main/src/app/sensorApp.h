@@ -54,7 +54,7 @@ bool NorthWall                                          = false;
 bool EastWall                                           = false;
 bool SouthWall                                          = false;
 bool WestWall                                           = false;
-bool coordinate_Wall[MAP_ORIGIN * 2][MAP_ORIGIN * 2][4] = {0};
+// bool coordinate_Wall[MAP_ORIGIN * 2][MAP_ORIGIN * 2][4] = {0};
 
 void camera(App);
 void rightWall(App);
@@ -168,7 +168,13 @@ void adjustment(App) {
 // }
 
 void wallCondition(App) {
+    app.delay(1000);
     while (1) {
+        // coordinate_Wall[location.x + MAP_ORIGIN][location.y +MAP_ORIGIN][NORTH] = NorthWall;
+        // coordinate_Wall[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN][EAST]  = EastWall;
+        // coordinate_Wall[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN][SOUTH] = SouthWall;
+        // coordinate_Wall[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN][WEST]  = WestWall;
+        app.delay(100);
         if (gyro.deg > 350 || gyro.deg < 10) {
             if (distanceSensor.val[0] > 250) {
                 NorthWall = false;
@@ -193,8 +199,7 @@ void wallCondition(App) {
             } else {
                 WestWall = true;
             }
-        }
-        if (gyro.deg > 80 && gyro.deg < 100) {
+        } else if (gyro.deg > 80 && gyro.deg < 100) {
             if (distanceSensor.val[9] > 280) {
                 NorthWall = false;
             } else {
@@ -218,8 +223,7 @@ void wallCondition(App) {
             } else {
                 WestWall = true;
             }
-        }
-        if (gyro.deg > 170 && gyro.deg < 190) {
+        } else if (gyro.deg > 170 && gyro.deg < 190) {
             if (distanceSensor.val[6] > 280) {
                 NorthWall = false;
             } else {
@@ -243,8 +247,7 @@ void wallCondition(App) {
             } else {
                 WestWall = true;
             }
-        }
-        if (gyro.deg > 260 && gyro.deg < 280) {
+        } else if (gyro.deg > 260 && gyro.deg < 280) {
             if (distanceSensor.val[3] > 280) {
                 NorthWall = false;
             } else {
@@ -268,21 +271,16 @@ void wallCondition(App) {
             } else {
                 WestWall = true;
             }
+        }else{
+            app.delay(100);
         }
-
-        coordinate_Wall[location.x][location.y][NORTH] = NorthWall;
-        coordinate_Wall[location.x][location.y][EAST]  = EastWall;
-        coordinate_Wall[location.x][location.y][SOUTH] = SouthWall;
-        coordinate_Wall[location.x][location.y][WEST]  = WestWall;
-
-        app.delay(100);
     }
 }
 
 void rightWall(App) {
     while (1) {
-        led.setTopColor(led.blue);
-        led.show();
+        // led.setTopColor(led.blue);
+        // led.show();
         servo.velocity = SPEED;
         app.delay(10);
 
@@ -694,10 +692,10 @@ void victimApp(App) {
 }
 
 void lever(App) {
-    static bool oldStatus = false;
+    static bool mochinyamu = false;
     while (1) {
         if (ui.toggle == false) {
-            // speaker.bootSound();
+            // speaker.validationSound();
             led.setTopColor(led.green);
             led.show();
             servo.velocity = 0;
@@ -716,11 +714,10 @@ void lever(App) {
             app.stop(sideLEDApp);
             // app.stop(locationMapping);
             servo.stop();
-            oldStatus = false;
+            mochinyamu = false;
         } else {
-            if (!oldStatus) {
+            if (!mochinyamu) {
                 speaker.checkSound();
-                servo.velocity = SPEED;
                 app.start(servoApp);
                 app.start(rightWall);
                 app.start(adjustment);
@@ -738,15 +735,15 @@ void lever(App) {
                 // app.start(locationMapping);
                 gyro.setOffset();
 
-                oldStatus = true;
+                mochinyamu = true;
 
                 app.delay(5000);
 
-                if (distanceSensor.val[9] < 180) {
-                    HidariWALL = true;
-                } else {
-                    HidariWALL = false;
-                }
+                // if (distanceSensor.val[9] < 180) {
+                //     HidariWALL = true;
+                // } else {
+                //     HidariWALL = false;
+                // }
             }
             app.delay(10);
         }

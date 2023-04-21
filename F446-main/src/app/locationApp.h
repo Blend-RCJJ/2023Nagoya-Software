@@ -146,25 +146,17 @@ void locationApp(App) {
 }
 
 void Astar(App) {
+    app.delay(500);
     int Ndistance = MAX_DISTANCE;
     int Edistance = MAX_DISTANCE;
     int Sdistance = MAX_DISTANCE;
     int Wdistance = MAX_DISTANCE;  // 値の初期化(最大値に設定)
     bool status   = true;
-    app.delay(1000);
+    app.delay(500);
     const int initialWall[4] = {(NorthWall), (EastWall), (SouthWall),
                                 (WestWall)};  //(0,0)の壁の状態を記憶
     while (1) {
-        uart3.print(Ndistance);
-        uart3.print(" ");
-        uart3.print(Edistance);
-        uart3.print(" ");
-        uart3.print(Sdistance);
-        uart3.print(" ");
-        uart3.print(Wdistance);
-        uart3.println(" ");
-        app.delay(500);
-
+       app.delay(100);
         if (millis() > 30000) {
             if (status) {
                 servo.velocity = 0;
@@ -186,7 +178,7 @@ void Astar(App) {
                 servo.velocity = 0;
                 servo.stop();
                 app.stop(servoApp);
-                ABARENBO_SHOGUN_MATSUKEN_LOVE();
+                // ABARENBO_SHOGUN_MATSUKEN_LOVE();
                 app.delay(20000);
             }
 

@@ -29,6 +29,26 @@ extern WS2812B led;
 extern UNITV cameraLeft;
 extern UNITV cameraRight;
 
+extern void rightWall(App);
+extern void leftWall(App);
+extern void wallCondition(App);
+extern void adjustment(App);
+extern void servoApp(App);
+extern void victimApp(App);
+
+extern void ABARENBO_SHOGUN_MATSUKEN_LOVE(void);
+
+extern bool NorthWall;
+extern bool EastWall;
+extern bool SouthWall;
+extern bool WestWall;
+
+#define MAX_DISTANCE 800
+#define NORTH 0
+#define EAST 1
+#define SOUTH 2
+#define WEST 3
+
 void sideLEDApp(App) {
     while (1) {
         if (millis() - location.lastCorrection <= 1000) {
@@ -55,8 +75,8 @@ void mapApp(App) {
         int tempY = constrain(location.y + MAP_ORIGIN, 3, MAP_ORIGIN * 2 - 3);
 
         if (location.mapData[tempX][tempY].isPassed == false) {
-            location.mapData[tempX][tempY].isPassed = true;
-            location.mapData[tempX][tempY].isDetected = true;
+            location.mapData[tempX][tempY].isPassed        = true;
+            location.mapData[tempX][tempY].isDetected      = true;
             location.mapData[tempX][tempY].firstPassedTime = millis();
         }
 
@@ -122,6 +142,113 @@ void locationApp(App) {
 
         location.updateObservationData(distanceSensor.vecX, distanceSensor.vecY,
                                        gyro.deg);
+    }
+}
+
+void Astar(App) {
+    int Ndistance = MAX_DISTANCE;
+    int Edistance = MAX_DISTANCE;
+    int Sdistance = MAX_DISTANCE;
+    int Wdistance = MAX_DISTANCE;  // 値の初期化(最大値に設定)
+    bool status   = true;
+    app.delay(1000);
+    const int initialWall[4] = {(NorthWall), (EastWall), (SouthWall),
+                                (WestWall)};  //(0,0)の壁の状態を記憶
+    while (1) {
+        uart3.print(Ndistance);
+        uart3.print(" ");
+        uart3.print(Edistance);
+        uart3.print(" ");
+        uart3.print(Sdistance);
+        uart3.print(" ");
+        uart3.print(Wdistance);
+        uart3.println(" ");
+        app.delay(500);
+
+        if (millis() > 30000) {
+            if (status) {
+                servo.velocity = 0;
+                app.stop(victimApp);
+                app.stop(rightWall);
+                app.stop(leftWall);
+                app.stop(adjustment);
+                app.delay(2000);
+                status = false;
+            }
+            led.setTopColor(led.white);
+            led.show();
+            app.delay(100);
+        MEASURE_DISTANCE:
+            if (!location.x && !location.y && initialWall[NORTH] == NorthWall &&
+                initialWall[EAST] == EastWall &&
+                initialWall[SOUTH] == SouthWall &&
+                initialWall[WEST] == WestWall) {
+                servo.velocity = 0;
+                servo.stop();
+                app.stop(servoApp);
+                ABARENBO_SHOGUN_MATSUKEN_LOVE();
+                app.delay(20000);
+            }
+
+            if (!NorthWall) {
+                Ndistance = location.x * location.x +
+                            (location.y + 1) * (location.y + 1);
+            }
+            if (!EastWall) {
+                Edistance = (location.x + 1) * (location.x + 1) +
+                            location.y * location.y;
+            }
+            if (!SouthWall) {
+                Sdistance = location.x * location.x +
+                            (location.y - 1) * (location.y - 1);
+            }
+            if (!WestWall) {
+                Wdistance = (location.x - 1) * (location.x - 1) +
+                            location.y * location.y;
+            }
+        MOVE_COORDINATE:
+            if (Ndistance < Edistance && Ndistance < Sdistance &&
+                Ndistance < Wdistance) {
+                servo.angle    = 0;
+                servo.velocity = 50;
+                app.delay(2900);
+                servo.velocity = 0;
+                app.delay(1000);
+                goto MEASURE_DISTANCE;
+
+            } else if (Edistance < Sdistance && Edistance < Wdistance) {
+                servo.angle    = 90;
+                servo.velocity = 50;
+                app.delay(2900);
+                servo.velocity = 0;
+                app.delay(1000);
+                goto MEASURE_DISTANCE;
+
+            } else if (Sdistance < Wdistance) {
+                servo.angle    = 180;
+                servo.velocity = 50;
+                app.delay(2900);
+                servo.velocity = 0;
+                app.delay(1000);
+                goto MEASURE_DISTANCE;
+
+            } else {
+                servo.angle    = 270;
+                servo.velocity = 50;
+                app.delay(2900);
+                servo.velocity = 0;
+                app.delay(1000);
+                goto MEASURE_DISTANCE;
+            }
+        } else {
+            app.delay(100);
+        }
+    }
+}
+
+void DFS(App) {
+    while (1) {
+        app.delay(100);
     }
 }
 

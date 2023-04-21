@@ -99,14 +99,14 @@ void setup() {
     app.create(rightWall);
     app.create(leftWall);
     app.create(adjustment,lowPriority);
-    app.create(monitor);
+    // app.create(monitor);
     // app.create(black);
     // app.create(camera);
-    app.create(visualization);
+    // app.create(visualization);
     app.create(lever);
     app.create(hitAvoid);
     app.create(wallCondition);
-    // app.create(searchRight);
+    app.create(Astar,secondPriority);
 
     app.create(locationApp, firstPriority);
     app.create(sideLEDApp);
@@ -131,6 +131,7 @@ void mainApp(App) {
     app.start(lever);
     app.start(hitAvoid);
     app.start(victimApp);
+    app.start(Astar);
     while (1) {
         app.delay(1);
     }

@@ -44,6 +44,7 @@ extern HEATSENSOR heatSensor;
 extern void mapApp(App);
 extern void sideLEDApp(App);
 extern void locationApp(App);
+extern void Astar(App);
 
 int count                                               = 0;
 int val0                                                = 0;
@@ -194,75 +195,75 @@ void wallCondition(App) {
             }
         }
         if (gyro.deg > 80 && gyro.deg < 100) {
-            if (distanceSensor.val[9] > 250) {
+            if (distanceSensor.val[9] > 280) {
                 NorthWall = false;
             } else {
                 NorthWall = true;
             }
 
-            if (distanceSensor.val[0] > 250) {
+            if (distanceSensor.val[0] > 280) {
                 EastWall = false;
             } else {
                 EastWall = true;
             }
 
-            if (distanceSensor.val[3] > 250) {
+            if (distanceSensor.val[3] > 280) {
                 SouthWall = false;
             } else {
                 SouthWall = true;
             }
 
-            if (distanceSensor.val[6] > 250) {
+            if (distanceSensor.val[6] > 280) {
                 WestWall = false;
             } else {
                 WestWall = true;
             }
         }
         if (gyro.deg > 170 && gyro.deg < 190) {
-            if (distanceSensor.val[6] > 250) {
+            if (distanceSensor.val[6] > 280) {
                 NorthWall = false;
             } else {
                 NorthWall = true;
             }
 
-            if (distanceSensor.val[9] > 250) {
+            if (distanceSensor.val[9] > 280) {
                 EastWall = false;
             } else {
                 EastWall = true;
             }
 
-            if (distanceSensor.val[0] > 250) {
+            if (distanceSensor.val[0] > 280) {
                 SouthWall = false;
             } else {
                 SouthWall = true;
             }
 
-            if (distanceSensor.val[3] > 250) {
+            if (distanceSensor.val[3] > 280) {
                 WestWall = false;
             } else {
                 WestWall = true;
             }
         }
         if (gyro.deg > 260 && gyro.deg < 280) {
-            if (distanceSensor.val[3] > 250) {
+            if (distanceSensor.val[3] > 280) {
                 NorthWall = false;
             } else {
                 NorthWall = true;
             }
 
-            if (distanceSensor.val[6] > 250) {
+            if (distanceSensor.val[6] > 280) {
                 EastWall = false;
             } else {
                 EastWall = true;
             }
 
-            if (distanceSensor.val[9] > 250) {
+            if (distanceSensor.val[9] > 280) {
                 SouthWall = false;
             } else {
                 SouthWall = true;
             }
 
-            if (distanceSensor.val[0] > 250) {
+            if (distanceSensor.val[0] > 280) {
                 WestWall = false;
             } else {
                 WestWall = true;
@@ -280,6 +281,8 @@ void wallCondition(App) {
 
 void rightWall(App) {
     while (1) {
+        led.setTopColor(led.blue);
+        led.show();
         servo.velocity = SPEED;
         app.delay(10);
 
@@ -716,7 +719,7 @@ void lever(App) {
             oldStatus = false;
         } else {
             if (!oldStatus) {
-                speaker.bootSound();
+                speaker.checkSound();
                 servo.velocity = SPEED;
                 app.start(servoApp);
                 app.start(rightWall);
@@ -745,6 +748,7 @@ void lever(App) {
                     HidariWALL = false;
                 }
             }
+            app.delay(10);
         }
         app.delay(10);
     }

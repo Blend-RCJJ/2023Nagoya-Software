@@ -35,6 +35,7 @@ extern void wallCondition(App);
 extern void adjustment(App);
 extern void servoApp(App);
 extern void victimApp(App);
+extern void adjustment(App);
 
 extern void ABARENBO_SHOGUN_MATSUKEN_LOVE(void);
 
@@ -156,8 +157,8 @@ void Astar(App) {
     const int initialWall[4] = {(NorthWall), (EastWall), (SouthWall),
                                 (WestWall)};  //(0,0)の壁の状態を記憶
     while (1) {
-       app.delay(100);
-        if (millis() > 30000) {
+        app.delay(100);
+        if (millis() > 30000 && servo.velocity == 50) {
             if (status) {
                 servo.velocity = 0;
                 app.stop(victimApp);
@@ -169,7 +170,7 @@ void Astar(App) {
             }
             led.setTopColor(led.white);
             led.show();
-            app.delay(100);
+            app.delay(10);
         MEASURE_DISTANCE:
             if (!location.x && !location.y && initialWall[NORTH] == NorthWall &&
                 initialWall[EAST] == EastWall &&
@@ -177,26 +178,36 @@ void Astar(App) {
                 initialWall[WEST] == WestWall) {
                 servo.velocity = 0;
                 servo.stop();
+                app.stop(rightWall);
                 app.stop(servoApp);
-                // ABARENBO_SHOGUN_MATSUKEN_LOVE();
+                app.stop(adjustment);
+                ABARENBO_SHOGUN_MATSUKEN_LOVE();
                 app.delay(20000);
             }
 
             if (!NorthWall) {
                 Ndistance = location.x * location.x +
                             (location.y + 1) * (location.y + 1);
+            } else {
+                Ndistance = MAX_DISTANCE;
             }
             if (!EastWall) {
                 Edistance = (location.x + 1) * (location.x + 1) +
                             location.y * location.y;
+            } else {
+                Edistance = MAX_DISTANCE;
             }
             if (!SouthWall) {
                 Sdistance = location.x * location.x +
                             (location.y - 1) * (location.y - 1);
+            } else {
+                Sdistance = MAX_DISTANCE;
             }
             if (!WestWall) {
                 Wdistance = (location.x - 1) * (location.x - 1) +
                             location.y * location.y;
+            } else {
+                Wdistance = MAX_DISTANCE;
             }
         MOVE_COORDINATE:
             if (Ndistance < Edistance && Ndistance < Sdistance &&
@@ -206,22 +217,25 @@ void Astar(App) {
                 app.delay(2900);
                 servo.velocity = 0;
                 app.delay(1000);
+                SouthWall = true;
                 goto MEASURE_DISTANCE;
 
-            } else if (Edistance < Sdistance && Edistance < Wdistance) {
-                servo.angle    = 90;
-                servo.velocity = 50;
-                app.delay(2900);
-                servo.velocity = 0;
-                app.delay(1000);
-                goto MEASURE_DISTANCE;
-
-            } else if (Sdistance < Wdistance) {
+            } else if (Sdistance < Edistance && Sdistance < Wdistance) {
                 servo.angle    = 180;
                 servo.velocity = 50;
                 app.delay(2900);
                 servo.velocity = 0;
                 app.delay(1000);
+                NorthWall = true;
+                goto MEASURE_DISTANCE;
+
+            } else if (Edistance < Wdistance) {
+                servo.angle    = 90;
+                servo.velocity = 50;
+                app.delay(2900);
+                servo.velocity = 0;
+                app.delay(1000);
+                WestWall = true;
                 goto MEASURE_DISTANCE;
 
             } else {
@@ -230,10 +244,11 @@ void Astar(App) {
                 app.delay(2900);
                 servo.velocity = 0;
                 app.delay(1000);
+                EastWall = true;
                 goto MEASURE_DISTANCE;
             }
         } else {
-            app.delay(100);
+            app.delay(10);
         }
     }
 }

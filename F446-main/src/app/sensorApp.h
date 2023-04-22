@@ -168,105 +168,100 @@ void adjustment(App) {
 // }
 
 void wallCondition(App) {
-    app.delay(1000);
     while (1) {
-        // coordinate_Wall[location.x + MAP_ORIGIN][location.y +MAP_ORIGIN][NORTH] = NorthWall;
-        // coordinate_Wall[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN][EAST]  = EastWall;
-        // coordinate_Wall[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN][SOUTH] = SouthWall;
-        // coordinate_Wall[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN][WEST]  = WestWall;
         app.delay(100);
         if (gyro.deg > 350 || gyro.deg < 10) {
-            if (distanceSensor.val[0] > 250) {
+            if (distanceSensor.val[0] > 200) {
                 NorthWall = false;
             } else {
                 NorthWall = true;
             }
 
-            if (distanceSensor.val[3] > 250) {
+            if (distanceSensor.val[3] > 200) {
                 EastWall = false;
             } else {
                 EastWall = true;
             }
 
-            if (distanceSensor.val[6] > 250) {
+            if (distanceSensor.val[6] > 200) {
                 SouthWall = false;
             } else {
                 SouthWall = true;
             }
 
-            if (distanceSensor.val[9] > 250) {
+            if (distanceSensor.val[9] > 200) {
                 WestWall = false;
             } else {
                 WestWall = true;
             }
         } else if (gyro.deg > 80 && gyro.deg < 100) {
-            if (distanceSensor.val[9] > 280) {
+            if (distanceSensor.val[9] > 200) {
                 NorthWall = false;
             } else {
                 NorthWall = true;
             }
 
-            if (distanceSensor.val[0] > 280) {
+            if (distanceSensor.val[0] > 200) {
                 EastWall = false;
             } else {
                 EastWall = true;
             }
 
-            if (distanceSensor.val[3] > 280) {
+            if (distanceSensor.val[3] > 200) {
                 SouthWall = false;
             } else {
                 SouthWall = true;
             }
 
-            if (distanceSensor.val[6] > 280) {
+            if (distanceSensor.val[6] > 200) {
                 WestWall = false;
             } else {
                 WestWall = true;
             }
         } else if (gyro.deg > 170 && gyro.deg < 190) {
-            if (distanceSensor.val[6] > 280) {
+            if (distanceSensor.val[6] > 200) {
                 NorthWall = false;
             } else {
                 NorthWall = true;
             }
 
-            if (distanceSensor.val[9] > 280) {
+            if (distanceSensor.val[9] > 200) {
                 EastWall = false;
             } else {
                 EastWall = true;
             }
 
-            if (distanceSensor.val[0] > 280) {
+            if (distanceSensor.val[0] > 200) {
                 SouthWall = false;
             } else {
                 SouthWall = true;
             }
 
-            if (distanceSensor.val[3] > 280) {
+            if (distanceSensor.val[3] > 200) {
                 WestWall = false;
             } else {
                 WestWall = true;
             }
         } else if (gyro.deg > 260 && gyro.deg < 280) {
-            if (distanceSensor.val[3] > 280) {
+            if (distanceSensor.val[3] > 200) {
                 NorthWall = false;
             } else {
                 NorthWall = true;
             }
 
-            if (distanceSensor.val[6] > 280) {
+            if (distanceSensor.val[6] > 200) {
                 EastWall = false;
             } else {
                 EastWall = true;
             }
 
-            if (distanceSensor.val[9] > 280) {
+            if (distanceSensor.val[9] > 200) {
                 SouthWall = false;
             } else {
                 SouthWall = true;
             }
 
-            if (distanceSensor.val[0] > 280) {
+            if (distanceSensor.val[0] > 200) {
                 WestWall = false;
             } else {
                 WestWall = true;
@@ -359,7 +354,7 @@ void hitAvoid(App) {
         if (loadcell.status == RIGHT) {
             app.stop(servoApp);
             // app.stop(searchRight);
-            app.stop(adjustment);
+            // app.stop(adjustment);
             count = 1;
             servo.driveAngularVelocity(-30, 45);
             app.delay(500);
@@ -371,7 +366,7 @@ void hitAvoid(App) {
         if (loadcell.status == LEFT) {
             app.stop(servoApp);
             // app.stop(searchRight);
-            app.stop(adjustment);
+            // app.stop(adjustment);
             count = 1;
             servo.driveAngularVelocity(-30, -45);
             app.delay(500);
@@ -385,7 +380,7 @@ void hitAvoid(App) {
             // app.start(rightWall);
             // app.start(searchRight);
             app.start(servoApp);
-            app.start(adjustment);
+            // app.start(adjustment);
 
             oldStatus = true;
         }

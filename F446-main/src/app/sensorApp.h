@@ -99,12 +99,12 @@ void adjustment(App) {
     while (1) {
         app.delay(10);
 
-        if (count == 1) {
-            app.delay(900);
-            count = 0;
-        }
+        // if (count == 1) {
+        //     app.delay(900);
+        //     count = 0;
+        // }
 
-        while (count == 0) {
+        // while (count == 0) {
             if (distanceSensor.val[0] < 110) {
                 servo.velocity = 0;
             }
@@ -136,14 +136,14 @@ void adjustment(App) {
                 }
             }
 
-            if ((distanceSensor.val[0] > 200) &&
-                (distanceSensor.val[0] < 250)) {
-                servo.velocity = SPEED;
+            // if ((distanceSensor.val[0] > 200) &&
+            //     (distanceSensor.val[0] < 250)) {
+            //     servo.velocity = SPEED;
 
-                correction = 0;
-            }
+            //     correction = 0;
+            // }
             app.delay(20);
-        }
+        // }
     }
 }
 // 2900で1マス
@@ -274,15 +274,15 @@ void wallCondition(App) {
 
 void rightWall(App) {
     while (1) {
-        // led.setTopColor(led.blue);
-        // led.show();
+        led.setTopColor(led.blue);
+        led.show();
         servo.velocity = SPEED;
         app.delay(10);
 
-        while (count == 1) {
-            app.delay(1200);
-            count = 0;
-        }
+        // while (count == 1) {
+        //     app.delay(1200);
+        //     count = 0;
+        // }
 
         if (distanceSensor.val[3] > 300 && distanceSensor.val[4] > 250 &&
             !gyro.slope) {

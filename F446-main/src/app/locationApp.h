@@ -164,7 +164,7 @@ void Astar(App) {
                 app.stop(victimApp);
                 app.stop(rightWall);
                 app.stop(leftWall);
-                app.stop(adjustment);
+                // app.stop(adjustment);
                 app.delay(2000);
                 status = false;
             }

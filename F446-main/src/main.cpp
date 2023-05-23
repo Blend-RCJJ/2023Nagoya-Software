@@ -98,11 +98,11 @@ void setup() {
     app.create(servoApp);
     app.create(rightWall);
     app.create(leftWall);
-    app.create(adjustment,lowPriority);
+    // app.create(adjustment,lowPriority);
     // app.create(monitor);
     // app.create(black);
-    // app.create(camera);
-    // app.create(visualization);
+    app.create(camera);
+    app.create(DepthFirstSearchApp);
     app.create(lever);
     app.create(hitAvoid);
     app.create(wallCondition);
@@ -112,7 +112,7 @@ void setup() {
     app.create(sideLEDApp);
     app.create(mapApp);
 
-    app.create(victimApp);
+    // app.create(victimApp);
 
     app.start(mainApp);
     app.start(inputMonitoringApp);
@@ -132,6 +132,7 @@ void mainApp(App) {
     app.start(hitAvoid);
     app.start(victimApp);
     app.start(Astar);
+    app.start(DepthFirstSearchApp);
     while (1) {
         app.delay(1);
     }

@@ -158,7 +158,7 @@ void Astar(App) {
                                 (WestWall)};  //(0,0)の壁の状態を記憶
     while (1) {
         app.delay(100);
-        if (millis() > 30000 && servo.velocity == 50) {
+        if (millis() > 180000 && servo.velocity == 50) {
             if (status) {
                 servo.velocity = 0;
                 app.stop(victimApp);
@@ -172,7 +172,9 @@ void Astar(App) {
             led.show();
             app.delay(10);
         MEASURE_DISTANCE:
-            if (!location.x && !location.y && initialWall[NORTH] == NorthWall &&
+            if ((-1 <= location.x && location.x <= 1) &&
+                (-1 <= location.y && location.y <= 1) && !location.y &&
+                initialWall[NORTH] == NorthWall &&
                 initialWall[EAST] == EastWall &&
                 initialWall[SOUTH] == SouthWall &&
                 initialWall[WEST] == WestWall) {

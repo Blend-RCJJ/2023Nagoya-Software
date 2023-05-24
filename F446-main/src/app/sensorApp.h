@@ -170,7 +170,7 @@ void adjustment(App) {
 
 void wallCondition(App) {
     while (1) {
-        app.delay(100);
+        app.delay(50);
         if (gyro.deg > 350 || gyro.deg < 10) {
             if (distanceSensor.val[0] > 230) {
                 NorthWall = false;
@@ -268,7 +268,7 @@ void wallCondition(App) {
                 WestWall = true;
             }
         } else {
-            app.delay(100);
+            app.delay(50);
         }
     }
 }
@@ -304,11 +304,11 @@ void rightWall(App) {
             servo.angle -= 90;
             app.delay(500);
             servo.velocity = SPEED;
-            app.delay(2300);
+            app.delay(2700);
         } else if (virtualWall[location.x + MAP_ORIGIN]
                               [location.y + MAP_ORIGIN - 1] &&
                    (160 < gyro.deg && gyro.deg < 190) &&
-                   distanceSensor.val[3] > 300 && distanceSensor.val[4] > 250 &&
+                   distanceSensor.val[3] > 300 && distanceSensor.val[4] > 200 &&
                    !location
                         .mapData[location.x + MAP_ORIGIN - 1]
                                 [location.y + MAP_ORIGIN]
@@ -320,11 +320,11 @@ void rightWall(App) {
             servo.angle += 90;
             app.delay(500);
             servo.velocity = SPEED;
-            app.delay(2300);
+            app.delay(2700);
         } else if (virtualWall[location.x + MAP_ORIGIN + 1]
                               [location.y + MAP_ORIGIN] &&
                    (80 < gyro.deg && gyro.deg < 100) &&
-                   distanceSensor.val[9] > 300 && distanceSensor.val[8] > 250 &&
+                   distanceSensor.val[9] > 300 && distanceSensor.val[8] > 200 &&
                    !location
                         .mapData[location.x + MAP_ORIGIN]
                                 [location.y + MAP_ORIGIN + 1]
@@ -336,11 +336,11 @@ void rightWall(App) {
             servo.angle -= 90;
             app.delay(500);
             servo.velocity = SPEED;
-            app.delay(2300);
+            app.delay(2700);
         } else if (virtualWall[location.x + MAP_ORIGIN - 1]
                               [location.y + MAP_ORIGIN] &&
                    (260 < gyro.deg && gyro.deg < 280) &&
-                   distanceSensor.val[3] > 300 && distanceSensor.val[4] > 250 &&
+                   distanceSensor.val[3] > 300 && distanceSensor.val[4] > 200 &&
                    !location
                         .mapData[location.x + MAP_ORIGIN]
                                 [location.y + MAP_ORIGIN + 1]
@@ -352,10 +352,10 @@ void rightWall(App) {
             servo.angle += 90;
             app.delay(500);
             servo.velocity = SPEED;
-            app.delay(2300);
+            app.delay(2700);
         }
         if (!DFS) {
-            if (distanceSensor.val[3] > 300 && distanceSensor.val[4] > 250 &&
+            if (distanceSensor.val[3] > 300 && distanceSensor.val[4] > 200 &&
                 !gyro.slope) {
                 servo.velocity = 0;
                 servo.stop();
@@ -365,7 +365,7 @@ void rightWall(App) {
                 servo.stop();
                 app.delay(500);
                 servo.velocity = SPEED;
-                app.delay(1800);
+                app.delay(2700);
             }
         }
         if (distanceSensor.val[3] < 120) {

@@ -99,7 +99,7 @@ void setup() {
     app.create(rightWall);
     app.create(leftWall);
     // app.create(adjustment,lowPriority);
-    // app.create(monitor);
+    app.create(monitor);
     // app.create(black);
     app.create(camera);
     app.create(DepthFirstSearchApp);

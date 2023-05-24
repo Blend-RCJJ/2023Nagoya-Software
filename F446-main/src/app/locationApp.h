@@ -35,7 +35,8 @@ extern void wallCondition(App);
 extern void adjustment(App);
 extern void servoApp(App);
 extern void victimApp(App);
-extern void adjustment(App);
+extern void DepthFirstSearchApp(App);
+extern int correction;
 
 extern void ABARENBO_SHOGUN_MATSUKEN_LOVE(void);
 
@@ -164,7 +165,7 @@ void Astar(App) {
                 app.stop(victimApp);
                 app.stop(rightWall);
                 app.stop(leftWall);
-                // app.stop(adjustment);
+                app.stop(DepthFirstSearchApp);
                 app.delay(2000);
                 status = false;
             }
@@ -214,7 +215,7 @@ void Astar(App) {
         MOVE_COORDINATE:
             if (Ndistance < Edistance && Ndistance < Sdistance &&
                 Ndistance < Wdistance) {
-                servo.angle    = 0;
+                servo.angle    = 0 + correction;
                 servo.velocity = 50;
                 app.delay(2900);
                 servo.velocity = 0;
@@ -223,7 +224,7 @@ void Astar(App) {
                 goto MEASURE_DISTANCE;
 
             } else if (Sdistance < Edistance && Sdistance < Wdistance) {
-                servo.angle    = 180;
+                servo.angle    = 180 + correction;
                 servo.velocity = 50;
                 app.delay(2900);
                 servo.velocity = 0;
@@ -232,7 +233,7 @@ void Astar(App) {
                 goto MEASURE_DISTANCE;
 
             } else if (Edistance < Wdistance) {
-                servo.angle    = 90;
+                servo.angle    = 90 + correction;
                 servo.velocity = 50;
                 app.delay(2900);
                 servo.velocity = 0;
@@ -241,7 +242,7 @@ void Astar(App) {
                 goto MEASURE_DISTANCE;
 
             } else {
-                servo.angle    = 270;
+                servo.angle    = 270 + correction;
                 servo.velocity = 50;
                 app.delay(2900);
                 servo.velocity = 0;

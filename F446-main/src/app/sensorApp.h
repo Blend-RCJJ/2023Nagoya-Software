@@ -99,52 +99,24 @@ void servoApp(App) {
 void adjustment(App) {
     while (1) {
         app.delay(10);
-
-        // if (count == 1) {
-        //     app.delay(900);
-        //     count = 0;
-        // }
-
-        // while (count == 0) {
-        if (distanceSensor.val[0] < 110) {
-            servo.velocity = 0;
-        }
-        if (distanceSensor.val[3] + distanceSensor.val[9] < 300) {
-            if (distanceSensor.val[3] > distanceSensor.val[9]) {
-                correction = 7;
-            }
-            if (distanceSensor.val[9] > distanceSensor.val[3]) {
-                correction = -7;
-            }
-            app.delay(50);
-        } else {
-            if (distanceSensor.val[9] < 120) {
-                correction = 7;
-            }
+        if (count) {
             if (distanceSensor.val[3] < 120) {
-                correction = -7;
+                correction = -3;  // 接近しすぎたら離れる
+            } else if (distanceSensor.val[3] < 230 &&
+                       distanceSensor.val[2] < 265) {
+                if (radius + distanceSensor.val[3] + 30 <
+                    0.8660254038 *
+                        (radius +
+                         distanceSensor
+                             .val[2])) {  // √3/2(distanceSensorが30°間隔)
+                    correction += 1;      // 一度ずつ補正
+                }
+                if (radius + distanceSensor.val[3] - 30 >
+                    0.8660254038 * (radius + distanceSensor.val[2])) {
+                    correction -= 1;
+                }
             }
         }
-
-        if (distanceSensor.val[3] > 300 && distanceSensor.val[9] < 300) {
-            if (distanceSensor.val[9] > 140) {
-                correction = -7;
-            }
-        }
-        if (distanceSensor.val[9] > 300 && distanceSensor.val[3] < 300) {
-            if (distanceSensor.val[3] > 140) {
-                correction = 7;
-            }
-        }
-
-        // if ((distanceSensor.val[0] > 200) &&
-        //     (distanceSensor.val[0] < 250)) {
-        //     servo.velocity = SPEED;
-
-        //     correction = 0;
-        // }
-        app.delay(20);
-        // }
     }
 }
 // 2900で1マス
@@ -284,78 +256,148 @@ void rightWall(App) {
         app.delay(10);
 
         if (distanceSensor.val[0] < 140 && !gyro.slope) {
+            DFS            = true;
             servo.velocity = 0;
             servo.stop();
             app.delay(500);
             servo.angle -= 90;
-            app.delay(500);
+            app.delay(1000);
         }
 
         if (virtualWall[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN + 1] &&
-            (350 < gyro.deg || gyro.deg < 10) && distanceSensor.val[9] > 300 &&
-            distanceSensor.val[8] > 250 &&
-            !location
-                 .mapData[location.x + MAP_ORIGIN - 1][location.y + MAP_ORIGIN]
-                 .isPassed) {
-            DFS            = true;
-            servo.velocity = 0;
-            servo.stop();
-            app.delay(500);
-            servo.angle -= 90;
-            app.delay(500);
-            servo.velocity = SPEED;
-            app.delay(2700);
+            (350 < gyro.deg || gyro.deg < 10)) {
+            if (distanceSensor.val[9] > 300 && distanceSensor.val[8] > 250 &&
+                !location
+                     .mapData[location.x + MAP_ORIGIN - 1]
+                             [location.y + MAP_ORIGIN]
+                     .isPassed) {
+                DFS            = true;
+                servo.velocity = 0;
+                servo.stop();
+                app.delay(500);
+                servo.angle -= 90;
+                app.delay(500);
+                servo.velocity = SPEED;
+                app.delay(2700);
+            } else if (distanceSensor.val[3] > 300 &&
+                       distanceSensor.val[4] > 200 &&
+                       !location
+                            .mapData[location.x + MAP_ORIGIN + 1]
+                                    [location.y + MAP_ORIGIN]
+                            .isPassed) {
+                DFS            = true;
+                servo.velocity = 0;
+                servo.stop();
+                app.delay(500);
+                servo.angle += 90;
+                app.delay(500);
+                servo.velocity = SPEED;
+                app.delay(2700);
+            } else {
+                app.delay(10);
+            }
         } else if (virtualWall[location.x + MAP_ORIGIN]
                               [location.y + MAP_ORIGIN - 1] &&
-                   (160 < gyro.deg && gyro.deg < 190) &&
-                   distanceSensor.val[3] > 300 && distanceSensor.val[4] > 200 &&
-                   !location
-                        .mapData[location.x + MAP_ORIGIN - 1]
-                                [location.y + MAP_ORIGIN]
-                        .isPassed) {
-            DFS            = true;
-            servo.velocity = 0;
-            servo.stop();
-            app.delay(500);
-            servo.angle += 90;
-            app.delay(500);
-            servo.velocity = SPEED;
-            app.delay(2700);
+                   (160 < gyro.deg && gyro.deg < 190)) {
+            if (distanceSensor.val[3] > 300 && distanceSensor.val[4] > 200 &&
+                !location
+                     .mapData[location.x + MAP_ORIGIN - 1]
+                             [location.y + MAP_ORIGIN]
+                     .isPassed) {
+                DFS            = true;
+                servo.velocity = 0;
+                servo.stop();
+                app.delay(500);
+                servo.angle += 90;
+                app.delay(500);
+                servo.velocity = SPEED;
+                app.delay(2700);
+            } else if (distanceSensor.val[9] > 300 &&
+                       distanceSensor.val[8] > 200 &&
+                       !location
+                            .mapData[location.x + MAP_ORIGIN + 1]
+                                    [location.y + MAP_ORIGIN]
+                            .isPassed) {
+                DFS            = true;
+                servo.velocity = 0;
+                servo.stop();
+                app.delay(500);
+                servo.angle -= 90;
+                app.delay(500);
+                servo.velocity = SPEED;
+                app.delay(2700);
+            } else {
+                app.delay(10);
+            }
         } else if (virtualWall[location.x + MAP_ORIGIN + 1]
                               [location.y + MAP_ORIGIN] &&
-                   (80 < gyro.deg && gyro.deg < 100) &&
-                   distanceSensor.val[9] > 300 && distanceSensor.val[8] > 200 &&
-                   !location
-                        .mapData[location.x + MAP_ORIGIN]
-                                [location.y + MAP_ORIGIN + 1]
-                        .isPassed) {
-            DFS            = true;
-            servo.velocity = 0;
-            servo.stop();
-            app.delay(500);
-            servo.angle -= 90;
-            app.delay(500);
-            servo.velocity = SPEED;
-            app.delay(2700);
+                   (80 < gyro.deg && gyro.deg < 100)) {
+            if (distanceSensor.val[9] > 300 && distanceSensor.val[8] > 200 &&
+                !location
+                     .mapData[location.x + MAP_ORIGIN]
+                             [location.y + MAP_ORIGIN + 1]
+                     .isPassed) {
+                DFS            = true;
+                servo.velocity = 0;
+                servo.stop();
+                app.delay(500);
+                servo.angle -= 90;
+                app.delay(500);
+                servo.velocity = SPEED;
+                app.delay(2700);
+            } else if (distanceSensor.val[3] > 300 &&
+                       distanceSensor.val[4] > 200 &&
+                       !location
+                            .mapData[location.x + MAP_ORIGIN]
+                                    [location.y + MAP_ORIGIN - 1]
+                            .isPassed) {
+                DFS            = true;
+                servo.velocity = 0;
+                servo.stop();
+                app.delay(500);
+                servo.angle -= 90;
+                app.delay(500);
+                servo.velocity = SPEED;
+                app.delay(2700);
+            } else {
+                app.delay(10);
+            }
         } else if (virtualWall[location.x + MAP_ORIGIN - 1]
                               [location.y + MAP_ORIGIN] &&
-                   (260 < gyro.deg && gyro.deg < 280) &&
-                   distanceSensor.val[3] > 300 && distanceSensor.val[4] > 200 &&
-                   !location
-                        .mapData[location.x + MAP_ORIGIN]
-                                [location.y + MAP_ORIGIN + 1]
-                        .isPassed) {
-            DFS            = true;
-            servo.velocity = 0;
-            servo.stop();
-            app.delay(500);
-            servo.angle += 90;
-            app.delay(500);
-            servo.velocity = SPEED;
-            app.delay(2700);
+                   (260 < gyro.deg && gyro.deg < 280)) {
+            if (distanceSensor.val[3] > 300 && distanceSensor.val[4] > 200 &&
+                !location
+                     .mapData[location.x + MAP_ORIGIN]
+                             [location.y + MAP_ORIGIN + 1]
+                     .isPassed) {
+                DFS            = true;
+                servo.velocity = 0;
+                servo.stop();
+                app.delay(500);
+                servo.angle += 90;
+                app.delay(500);
+                servo.velocity = SPEED;
+                app.delay(2700);
+            } else if (distanceSensor.val[9] > 300 &&
+                       distanceSensor.val[8] > 200 &&
+                       !location
+                            .mapData[location.x + MAP_ORIGIN]
+                                    [location.y + MAP_ORIGIN - 1]
+                            .isPassed) {
+                DFS            = true;
+                servo.velocity = 0;
+                servo.stop();
+                app.delay(500);
+                servo.angle -= 90;
+                app.delay(500);
+                servo.velocity = SPEED;
+                app.delay(2700);
+            } else {
+                app.delay(10);
+            }
         }
         if (!DFS) {
-            if (distanceSensor.val[3] > 300 && distanceSensor.val[4] > 200 &&
+            if (distanceSensor.val[3] > 300 && distanceSensor.val[4] > 280 &&
                 !gyro.slope) {
                 servo.velocity = 0;
                 servo.stop();
@@ -368,25 +410,10 @@ void rightWall(App) {
                 app.delay(2700);
             }
         }
-        if (distanceSensor.val[3] < 120) {
-            correction = -3;  // 接近しすぎたら離れる
-        } else if (distanceSensor.val[3] < 230 && distanceSensor.val[2] < 265) {
-            if (radius + distanceSensor.val[3] + 30 <
-                0.8660254038 *
-                    (radius +
-                     distanceSensor.val[2])) {  // √3/2(distanceSensorが30°間隔)
-                correction += 1;                // 一度ずつ補正
-            }
-            if (radius + distanceSensor.val[3] - 30 >
-                0.8660254038 * (radius + distanceSensor.val[2])) {
-                correction -= 1;
-            }
-        }
     }
 }
 
 void leftWall(App) {
-    app.delay(500);
     while (1) {
         led.setTopColor(led.red);
         led.show();
@@ -823,13 +850,14 @@ void DepthFirstSearchApp(App) {  // NOTE 二方向以上進める座標を記録
         virtualWall[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN] =
             true;  // 仮想壁
         app.delay(10);
-        if (distanceSensor.val[0] > 350 &&
+        if (distanceSensor.val[0] > 450 &&
             (distanceSensor.val[3] > 230 || distanceSensor.val[9] > 230)) {
             JCT[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN] = true;
             oldmillis                                             = millis();
         }
 
-        if (!count && JCT[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN]) {
+        if (!count && JCT[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN] &&
+            (distanceSensor.val[3] > 230 || distanceSensor.val[9] > 230)) {
             servo.velocity = 0;
             servo.stop();
             app.stop(leftWall);

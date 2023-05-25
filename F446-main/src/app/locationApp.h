@@ -159,12 +159,13 @@ void Astar(App) {
                                 (WestWall)};  //(0,0)の壁の状態を記憶
     while (1) {
         app.delay(100);
-        if (millis() > 180000 && servo.velocity == 50) {
+        if (millis() > 300000 && servo.velocity == 50) {
             if (status) {
                 servo.velocity = 0;
                 app.stop(victimApp);
                 app.stop(rightWall);
                 app.stop(leftWall);
+                app.stop(adjustment);
                 app.stop(DepthFirstSearchApp);
                 app.delay(2000);
                 status = false;

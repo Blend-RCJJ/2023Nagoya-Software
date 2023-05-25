@@ -98,7 +98,7 @@ void setup() {
     app.create(servoApp);
     app.create(rightWall);
     app.create(leftWall);
-    // app.create(adjustment,lowPriority);
+    app.create(adjustment,lowPriority);
     app.create(monitor);
     // app.create(black);
     app.create(camera);

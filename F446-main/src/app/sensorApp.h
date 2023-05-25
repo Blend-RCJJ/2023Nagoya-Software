@@ -244,7 +244,7 @@ void wallCondition(App) {
         }
     }
 }
-
+//DFS開始した時点の座標覚えといて、戻ってきたら何かしらしてnotフローティングウォールに切り替え
 void rightWall(App) {
     static bool DFS = false;
     while (1) {

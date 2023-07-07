@@ -175,7 +175,7 @@ void Astar(App) {
             app.delay(10);
         MEASURE_DISTANCE:
             if ((-1 <= location.x && location.x <= 1) &&
-                (-1 <= location.y && location.y <= 1) && !location.y &&
+                (-1 <= location.y && location.y <= 1) &&
                 initialWall[NORTH] == NorthWall &&
                 initialWall[EAST] == EastWall &&
                 initialWall[SOUTH] == SouthWall &&

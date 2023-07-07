@@ -74,9 +74,6 @@ void inputMonitoringApp(App) {
         led.setFloorColor(led.white);
         app.delay(5);
         floorSensor.blueVal = analogRead(PC0);
-
-        led.setFloorColor(led.blank);
-        app.delay(5);
         floorSensor.greenVal = analogRead(PC0);
 
         // led.setFloorColor(led.green);
@@ -244,7 +241,7 @@ void wallCondition(App) {
         }
     }
 }
-//DFS開始した時点の座標覚えといて、戻ってきたら何かしらしてnotフローティングウォールに切り替え
+// DFS開始した時点の座標覚えといて、戻ってきたら何かしらしてnotフローティングウォールに切り替え
 void rightWall(App) {
     static bool DFS = false;
     while (1) {
@@ -484,41 +481,13 @@ void hitAvoid(App) {
 
 void monitor(App) {
     while (1) {
-        // uart3.print(location.x);
-        // uart3.print(",");
-        // uart3.print(location.y);
-
-        // if (NorthWall) {
-        //     uart3.print("北　");
-        // }
-
-        // if (EastWall) {
-        //     uart3.print("東　");
-        // }
-
-        // if (SouthWall) {
-        //     uart3.print("南　");
-        // }
-
-        // if (WestWall) {
-        //     uart3.print("西　");
-        // }
-
-        // if (NorthWall || EastWall || SouthWall || WestWall) {
-        //     uart3.println("に壁");
-        //     app.delay(100);
-        // } else {
-        //     uart3.println("壁がありません");
-        //     app.delay(100);
-        // }
-
-        uart3.print(distanceSensor.val[3]);
-        uart3.print(" ");
-        uart3.print(distanceSensor.val[4]);
-        uart3.print(" ");
-        uart3.print(distanceSensor.val[5]);
-        uart3.println(" ");
-        app.delay(500);
+        uart1.print(floorSensor.redVal);
+        uart1.print(",");
+        uart1.print(floorSensor.greenVal);
+        uart1.print(",");
+        uart1.print(floorSensor.blueVal);
+        uart1.println("\t");
+        app.delay(300);
     }
 }
 
@@ -842,9 +811,9 @@ void lever(App) {
 }
 
 void DepthFirstSearchApp(App) {  // NOTE 二方向以上進める座標を記録する変数"JCT"
-    static int JCT[MAP_ORIGIN * 2][MAP_ORIGIN * 2] = {false};
-    bool oldstatus                                 = false;
-    static int oldmillis                           = 0;
+    static bool JCT[MAP_ORIGIN * 2][MAP_ORIGIN * 2] = {false};
+    bool oldstatus                                  = false;
+    static int oldmillis                            = 0;
     app.delay(500);
     while (1) {
         virtualWall[location.x + MAP_ORIGIN][location.y + MAP_ORIGIN] =

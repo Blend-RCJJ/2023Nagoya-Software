@@ -55,6 +55,7 @@ class MLT8530 {
     void mute(void);
 
     void bootSound(void);
+    void checkSound(void);
     void beat(int freq, double beat);
 
     void matsukenShogun(void);

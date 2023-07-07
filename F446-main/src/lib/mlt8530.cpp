@@ -17,6 +17,16 @@ void MLT8530::bootSound(void) {
     mute();
 }
 
+void MLT8530::checkSound(void){
+    setFrequency(DO);
+    delay(100);
+    setFrequency(RE);
+    delay(100);
+    setFrequency(MI);
+    delay(100);
+    mute();
+}
+
 void MLT8530::beat(int freq, double beat) {
     int interval = 2;
     if (freq == 0) {
